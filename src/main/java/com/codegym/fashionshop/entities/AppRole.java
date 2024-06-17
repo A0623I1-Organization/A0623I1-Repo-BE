@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
                 @UniqueConstraint(name = "APP_ROLE_UK", columnNames = "role_name") })
 public class AppRole{
 
+//    ROLE_ADMIN
 //    ROLE_STORE_MANAGER
 //    ROLE_WAREHOUSE_MANAGER
 //    ROLE_SALES
