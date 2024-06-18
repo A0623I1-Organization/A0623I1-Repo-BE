@@ -29,7 +29,4 @@ public class Bill {
     @Column(name = "qr_code")
     private String qrCode;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
 }
