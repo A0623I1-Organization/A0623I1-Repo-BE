@@ -48,8 +48,4 @@ public class Pricing {
 
     @Column(name = "pricing_image")
     private String pricingImgUrl;
-
-    @ManyToOne
-    @JoinColumn(name = "promotion_id")
-    private Promotion promotion;
 }

@@ -18,6 +18,9 @@ public class Customer {
     @Column(name = "customer_id")
     private Long customerId;
 
+    @Column(name = "customer_code")
+    private String customerCode;
+
     @Column(name = "customer_name")
     private String customerName;
 
@@ -46,11 +49,4 @@ public class Customer {
     @JoinColumn(name = "type_id")
     private CustomerType customerType;
 
-    @ManyToOne
-    @JoinColumn(name = "promotions_for_customer")
-    private PromotionForCustomer promotionForCustomer;
-
-    @ManyToOne
-    @JoinColumn(name = "gift")
-    private Gift gift;
 }
