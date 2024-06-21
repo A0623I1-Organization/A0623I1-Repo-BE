@@ -52,6 +52,11 @@ public class AuthenticationController {
 
     @PutMapping("/admin/update/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequest updateUser){
-        return ResponseEntity.ok(service.updateUser(userId, updateUser));
+//        return ResponseEntity.ok(service.updateUser(userId, updateUser));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        AuthenticationResponse response = service.updatePassword(updateUser, username);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
 }

@@ -17,7 +17,11 @@ public class UpdateUserRequest {
 
     private String username;
 
-    private String password;
+    private String oldPassword;
+
+    private String newPassword;
+
+    private String confirmPassword;
 
     private String userCode;
 
