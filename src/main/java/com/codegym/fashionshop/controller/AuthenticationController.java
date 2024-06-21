@@ -2,7 +2,9 @@ package com.codegym.fashionshop.controller;
 
 import com.codegym.fashionshop.dto.request.AuthenticationRequest;
 import com.codegym.fashionshop.dto.request.RegisterRequest;
+import com.codegym.fashionshop.dto.request.UpdateUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
+import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.exceptions.UserIsExistException;
 import com.codegym.fashionshop.service.impl.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -47,4 +49,14 @@ public class AuthenticationController {
         AuthenticationResponse response = service.getMyInfo(username);
         return  ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @PutMapping("/admin/update/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UpdateUserRequest updateUser){
+//        return ResponseEntity.ok(service.updateUser(userId, updateUser));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        AuthenticationResponse response = service.updatePassword(updateUser, username);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
 }

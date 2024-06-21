@@ -23,6 +23,8 @@ public class AuthenticationResponse {
 
     private String token;
 
+    private Long userId;
+
     private String username;
 
     private LocalDate dateCreate;
@@ -46,4 +48,6 @@ public class AuthenticationResponse {
     private AppRole role;
 
     private List<AppUser> users;
+
+    private List<AppRole> roles;
 }
