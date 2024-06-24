@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +17,9 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bill_id")
     private Long billId;
+
+    @Column(name = "date_create")
+    private LocalDate dateCreate;
 
     @Column(name = "customer_name")
     private String customerName;

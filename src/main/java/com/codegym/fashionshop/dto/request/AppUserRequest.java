@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateUserRequest {
+public class AppUserRequest {
     private Long userId;
 
     private String username;

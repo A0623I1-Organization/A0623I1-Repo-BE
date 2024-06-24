@@ -38,5 +38,4 @@ public class RegisterRequest {
     private String address;
 
     private AppRole role;
-
 }
