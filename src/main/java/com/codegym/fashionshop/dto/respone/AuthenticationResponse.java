@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,7 +48,7 @@ public class AuthenticationResponse {
 
     private AppRole role;
 
-    private List<AppUser> users;
+    private Page<AppUser> users;
 
     private List<AppRole> roles;
 }
