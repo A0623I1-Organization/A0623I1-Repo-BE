@@ -17,7 +17,7 @@ public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "promotion_id")
-    private Integer promotionId;
+    private Long promotionId;
 
     @Column(name = "promotion_name")
     @NotBlank(message = "Tên khuyến mãi không được để trống!")
@@ -27,4 +27,13 @@ public class Promotion {
     @Min(value = 0, message = "tỉ lệ không được nhỏ hơn 0 và phải từ 0 đến 1!")
     @Max(value = 1, message = "tỉ lệ không được lớn hơn 1 và phải từ 0 đến 1!")
     private Double discount;
+
+    @Column(name = "gift")
+    private String gift;
+
+    @Column(name = "required_bill")
+    private Double requiredBill;
+
+    @Column(name = "accumulated_points")
+    private int accumulatedPoints;
 }

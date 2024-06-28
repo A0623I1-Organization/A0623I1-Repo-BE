@@ -25,4 +25,12 @@ public class BillItem {
     private Pricing pricing;
 
     private int quantity;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
+    @ManyToOne
+    @JoinColumn(name="promotion_id")
+    private Promotion promotion;
 }
