@@ -18,6 +18,9 @@ public class Bill {
     @Column(name = "bill_id")
     private Long billId;
 
+    @Column(name = "date_create")
+    private LocalDate dateCreate;
+
     @Column(name = "customer_name")
     private String customerName;
     @Column(name = "date_create")
