@@ -1,7 +1,8 @@
-package com.codegym.fashionshop.service.customer;
+package com.codegym.fashionshop.service.customer.impl;
 
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.repository.customer.ICustomerRepository;
+import com.codegym.fashionshop.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
