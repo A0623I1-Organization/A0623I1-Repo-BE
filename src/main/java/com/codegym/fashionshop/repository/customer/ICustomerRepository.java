@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.repository;
+package com.codegym.fashionshop.repository.customer;
 
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.entities.CustomerType;
