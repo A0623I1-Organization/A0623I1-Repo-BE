@@ -45,9 +45,9 @@ public class Pricing {
     @Column(name = "qr_code")
     private String qrCode;
 
-    @Column(name = "inventory")
+    @Column(name = "quantity")
     @Min(value = 0, message = "Số lượng tồn kho phải lớn hơn hoặc bằng 0!")
-    private Integer inventory;
+    private Integer quantity;
 
     @ManyToOne()
     @JoinColumn(name = "color_id")
@@ -56,5 +56,9 @@ public class Pricing {
     @Column(name = "pricing_image")
     private String pricingImgUrl;
 
+
+    @ManyToOne
+    @JoinColumn(name = "inventory_id")
+    private Inventory inventory;
 
 }
