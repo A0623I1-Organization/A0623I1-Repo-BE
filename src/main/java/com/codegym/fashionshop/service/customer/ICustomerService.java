@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.service;
+package com.codegym.fashionshop.service.customer;
 
 import com.codegym.fashionshop.entities.Customer;
 
