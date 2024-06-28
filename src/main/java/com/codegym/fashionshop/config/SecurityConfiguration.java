@@ -34,6 +34,10 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST).authenticated()
                         .requestMatchers(HttpMethod.PUT).authenticated()
                         .requestMatchers(HttpMethod.DELETE).authenticated()
+                        .requestMatchers("/pricing/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
+                        .requestMatchers("/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
+                        .requestMatchers("/api/bills/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
+                        .requestMatchers("/api/bill-items/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
