@@ -7,29 +7,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class AppUserRequest {
+    private Long userId;
 
     private String username;
 
-    private String password;
+    private String oldPassword;
 
-    private LocalDate dateCreate;
+    private String newPassword;
+
+    private String confirmPassword;
+
+    private String userCode;
 
     private String avatar;
 
     private String fullName;
 
-    private String userCode;
+    private LocalDate dateOfBirth;
 
     private Integer gender;
-
-    private LocalDate dateOfBirth;
 
     private String phoneNumber;
 
@@ -38,4 +40,6 @@ public class RegisterRequest {
     private String address;
 
     private AppRole role;
+
+    private LocalDate dateCreate;
 }

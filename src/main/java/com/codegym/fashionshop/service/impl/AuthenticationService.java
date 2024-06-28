@@ -3,9 +3,8 @@ package com.codegym.fashionshop.service.impl;
 import com.codegym.fashionshop.dto.UserInforUserDetails;
 import com.codegym.fashionshop.dto.request.AuthenticationRequest;
 import com.codegym.fashionshop.dto.request.RegisterRequest;
-import com.codegym.fashionshop.dto.request.UpdateUserRequest;
+import com.codegym.fashionshop.dto.request.AppUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
-import com.codegym.fashionshop.dto.respone.UserInformation;
 import com.codegym.fashionshop.entities.AppRole;
 import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.exceptions.UserIsExistException;
@@ -63,7 +62,7 @@ public class AuthenticationService {
         userRepository.save(user);
         return AuthenticationResponse.builder()
                 .statusCode(200)
-                .message("User registered successfully")
+                .message("Đăng ký thành công!")
                 .build();
     }
 
@@ -75,13 +74,14 @@ public class AuthenticationService {
                             request.getPassword()
                     )
             );
+            System.out.println("Call-------");
             var user = userRepository.findByUsername(request.getUsername());
             UserInforUserDetails userDetails = new UserInforUserDetails(user);
             var jwtToken = jwtService.generateToken(userDetails);
             return AuthenticationResponse.builder()
                     .statusCode(200)
                     .token(jwtToken)
-                    .message("Successfully Logged In!!!")
+                    .message("Đăng nhập thành công!!!")
                     .build();
         } catch (Exception e) {
             return AuthenticationResponse.builder()
@@ -90,14 +90,12 @@ public class AuthenticationService {
         }
     }
 
-
     public AuthenticationResponse getMyInfo(String username) {
-        try {
-            AppUser user = userRepository.findByUsername(username);
-            List<AppRole> roles = roleRepository.findAll();
+        AppUser user = userRepository.findByUsername(username);
+        if (user != null) {
             return AuthenticationResponse.builder()
                     .statusCode(200)
-                    .message("Successfully!")
+                    .message("Thành công!")
                     .userId(user.getUserId())
                     .username(user.getUsername())
                     .userCode(user.getUserCode())
@@ -110,65 +108,106 @@ public class AuthenticationService {
                     .gender(user.getGender())
                     .avatar(user.getAvatar())
                     .address(user.getAddress())
-                    .roles(roles)
                     .build();
-        } catch (Exception e) {
+        } else {
             return AuthenticationResponse.builder()
-                    .statusCode(500)
-                    .message("Error occurred while getting user info: " + e.getMessage()).build();
+                    .statusCode(404)
+                    .message("Người dùng không được tìm thấy!")
+                    .build();
         }
     }
 
-    public AuthenticationResponse updateUser(Long userId, UpdateUserRequest updatedUser) {
-        try {
-            Optional<AppUser> user = userRepository.findById(userId);
-            List<AppRole> roles = roleRepository.findAll();
-            if (user.isPresent()) {
-                AppUser appUser = user.get();
-                appUser.setAvatar(updatedUser.getAvatar());
-                appUser.setFullName(updatedUser.getFullName());
-                appUser.setGender(updatedUser.getGender());
-                appUser.setEmail(updatedUser.getEmail());
-                appUser.setPhoneNumber(updatedUser.getPhoneNumber());
-                appUser.setRole(updatedUser.getRole());
-                appUser.setDateCreate(updatedUser.getDateCreate());
-                appUser.setDateOfBirth(updatedUser.getDateOfBirth());
-
-                // Check if password is present in the request
-                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                    // Encode the password and update it
-                    appUser.setEncryptedPassword(passwordEncoder.encode(updatedUser.getPassword()));
-                }
-
-                AppUser appUser1 = userRepository.save(appUser);
-                return AuthenticationResponse.builder()
-                        .statusCode(200)
-                        .message("User updated successfully")
-                        .userId(appUser1.getUserId())
-                        .username(appUser1.getUsername())
-                        .userCode(appUser1.getUserCode())
-                        .dateCreate(appUser1.getDateCreate())
-                        .dateOfBirth(appUser1.getDateOfBirth())
-                        .email(appUser1.getEmail())
-                        .phoneNumber(appUser1.getPhoneNumber())
-                        .role(appUser1.getRole())
-                        .fullName(appUser1.getFullName())
-                        .gender(appUser1.getGender())
-                        .avatar(appUser1.getAvatar())
-                        .address(appUser1.getAddress())
-                        .roles(roles)
-                        .build();
-            } else {
-                return AuthenticationResponse.builder()
-                        .statusCode(404)
-                        .message("User not found for update")
-                        .build();
-            }
-        } catch (Exception e) {
+    public AuthenticationResponse updateUser(Long userId, AppUserRequest updatedUser) {
+        Optional<AppUser> user = userRepository.findById(userId);
+        List<AppRole> roles = roleRepository.findAll();
+        if (user.isEmpty()) {
             return AuthenticationResponse.builder()
-                    .statusCode(500)
-                    .message("Error occurred while updating user: " + e.getMessage())
+                    .statusCode(404)
+                    .message("Người dùng không được tìm thấy!")
                     .build();
+
         }
+        AppUser appUser = user.get();
+        appUser.setAvatar(updatedUser.getAvatar());
+        appUser.setFullName(updatedUser.getFullName());
+        appUser.setGender(updatedUser.getGender());
+        appUser.setEmail(updatedUser.getEmail());
+        appUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        appUser.setRole(updatedUser.getRole());
+        appUser.setDateCreate(updatedUser.getDateCreate());
+        appUser.setDateOfBirth(updatedUser.getDateOfBirth());
+
+        // Check if password is present in the request
+        if (updatedUser.getNewPassword() != null && !updatedUser.getNewPassword().isEmpty()) {
+            // Encode the password and update it
+            appUser.setEncryptedPassword(passwordEncoder.encode(updatedUser.getNewPassword()));
+        }
+
+        AppUser appUser1 = userRepository.save(appUser);
+        return AuthenticationResponse.builder()
+                .statusCode(200)
+                .message("Cập nhật người dùng thành công")
+                .userId(appUser1.getUserId())
+                .username(appUser1.getUsername())
+                .userCode(appUser1.getUserCode())
+                .dateCreate(appUser1.getDateCreate())
+                .dateOfBirth(appUser1.getDateOfBirth())
+                .email(appUser1.getEmail())
+                .phoneNumber(appUser1.getPhoneNumber())
+                .role(appUser1.getRole())
+                .fullName(appUser1.getFullName())
+                .gender(appUser1.getGender())
+                .avatar(appUser1.getAvatar())
+                .address(appUser1.getAddress())
+                .build();
+    }
+
+    public AuthenticationResponse updatePassword(AppUserRequest updatedUser, String username) {
+        AppUser user = userRepository.findByUsername(username);
+        if (user == null) {
+            return AuthenticationResponse.builder()
+                    .statusCode(404)
+                    .message("Người dùng không được tìm thấy!")
+                    .build();
+
+        }
+        if (updatedUser.getOldPassword() == null && updatedUser.getOldPassword().isEmpty()) {
+            return AuthenticationResponse.builder()
+                    .statusCode(400)
+                    .message("Vui lòng nhập đúng mật khẩu!").build();
+        }
+        if (updatedUser.getNewPassword() == null && updatedUser.getNewPassword().isEmpty()) {
+            return AuthenticationResponse.builder()
+                    .statusCode(400)
+                    .message("Mật khẩu mới không được để trống")
+                    .build();
+
+        }
+        if (!updatedUser.getConfirmPassword().equals(updatedUser.getNewPassword())) {
+            return AuthenticationResponse.builder()
+                    .statusCode(400)
+                    .message("Mật khẩu không trùng khớp!").build();
+        }
+        user.setEncryptedPassword(passwordEncoder.encode(updatedUser.getNewPassword()));
+        AppUser appUser = userRepository.save(user);
+        UserInforUserDetails userDetails = new UserInforUserDetails(appUser);
+        var jwtToken = jwtService.generateToken(userDetails);
+        return AuthenticationResponse.builder()
+                .statusCode(200)
+                .message("Cập nhật mật khẩu thành công!")
+                .userId(appUser.getUserId())
+                .username(appUser.getUsername())
+                .userCode(appUser.getUserCode())
+                .dateCreate(appUser.getDateCreate())
+                .dateOfBirth(appUser.getDateOfBirth())
+                .email(appUser.getEmail())
+                .phoneNumber(appUser.getPhoneNumber())
+                .role(appUser.getRole())
+                .fullName(appUser.getFullName())
+                .gender(appUser.getGender())
+                .avatar(appUser.getAvatar())
+                .address(appUser.getAddress())
+                .token(jwtToken)
+                .build();
     }
 }
