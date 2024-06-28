@@ -38,4 +38,6 @@ public interface IPricingRepository extends JpaRepository<Pricing,Long> {
                        @Param("pricingImgUrl") String pricingImgUrl);
     Page<Pricing> findAll(Pageable pageable);
     Page<Pricing> findAllByProduct_ProductId(Long productId,Pageable pageable);
+    @Query(value = "UPDATE pricings set quantity = :quantity where pricing_id = : id", nativeQuery = true)
+    int updateQuantity(Long id, int quantity);
 }

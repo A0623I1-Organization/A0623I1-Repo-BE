@@ -15,4 +15,5 @@ public interface IPricingService  {
     Page<Pricing> findAllByProduct_ProductId(Long productId,Pageable pageable);
 
     void createPricing(Pricing pricing);
+    void updatePricingQuantity(Long id, int quantity);
 }
