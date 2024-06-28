@@ -33,6 +33,12 @@ private IPricingRepository pricingRepository;
         pricingRepository.save(pricing);
     }
 
+    @Override
+    public void updatePricingQuantity(Long id, int quantity) {
+        int result = pricingRepository.updateQuantity(id, quantity);
+
+    }
+
 //    @Override
 //    public void createPricing(Pricing pricing) {
 //        pricingRepository.createPricing(pricing.getPricingName(),
