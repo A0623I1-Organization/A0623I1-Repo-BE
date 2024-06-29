@@ -81,6 +81,7 @@ public class AuthenticationService {
             return AuthenticationResponse.builder()
                     .statusCode(200)
                     .token(jwtToken)
+                    .fullName(user.getFullName())
                     .message("Đăng nhập thành công!!!")
                     .build();
         } catch (Exception e) {
