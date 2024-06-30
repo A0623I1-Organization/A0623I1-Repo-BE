@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pricing")
+@RequestMapping("/api/pricing")
 @CrossOrigin("*")
 public class PricingRestController {
 
@@ -47,7 +47,7 @@ public class PricingRestController {
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-    @PostMapping("")
+    @PostMapping("/create")
     public ResponseEntity<Object> createPricing(@Validated @RequestBody Pricing pricing, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -59,5 +59,13 @@ public class PricingRestController {
         }
         pricingService.createPricing(pricing);
         return new ResponseEntity<>(pricing, HttpStatus.CREATED);
+    }
+    @PostMapping("/checkPricingCode")
+    public ResponseEntity<Map<String, Boolean>> checkPricingCode(@RequestBody Map<String, String> request) {
+        String pricingCode = request.get("code");
+        boolean isUnique = pricingService.isPricingCodeUnique(pricingCode);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isUnique", isUnique);
+        return ResponseEntity.ok(response);
     }
 }

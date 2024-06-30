@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,12 +30,13 @@ public class Promotion {
     @Max(value = 1, message = "tỉ lệ không được lớn hơn 1 và phải từ 0 đến 1!")
     private Double discount;
 
-    @Column(name = "gift")
-    private String gift;
+    @Column(name = "start_day")
+    private LocalDate startDay;
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private CustomerType customerType;
 
     @Column(name = "required_bill")
     private Double requiredBill;
 
-    @Column(name = "accumulated_points")
-    private int accumulatedPoints;
 }

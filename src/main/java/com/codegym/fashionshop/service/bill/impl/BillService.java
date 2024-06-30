@@ -32,4 +32,8 @@ private IBillRepository repository;
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public boolean isBillCodeUnique(String billCode) {
+        return !repository.existsByBillCode(billCode);
+    }
 }

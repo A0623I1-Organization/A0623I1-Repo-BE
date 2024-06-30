@@ -17,14 +17,15 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bill_id")
     private Long billId;
+    @Column(name = "bill_code")
+    private String billCode;
 
     @Column(name = "date_create")
     private LocalDate dateCreate;
 
     @Column(name = "customer_name")
     private String customerName;
-    @Column(name = "date_create")
-    private LocalDate dateCreate;
+
 
     @Column(name = "phone_number")
     private String phoneNumber;

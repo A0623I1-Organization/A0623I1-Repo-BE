@@ -45,9 +45,9 @@ public class Pricing {
     @Column(name = "qr_code")
     private String qrCode;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", columnDefinition = "integer default 0")
     @Min(value = 0, message = "Số lượng tồn kho phải lớn hơn hoặc bằng 0!")
-    private Integer quantity;
+    private Integer quantity = 0;
 
     @ManyToOne()
     @JoinColumn(name = "color_id")

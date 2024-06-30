@@ -33,6 +33,11 @@ private IPricingRepository pricingRepository;
         pricingRepository.save(pricing);
     }
 
+    @Override
+    public boolean isPricingCodeUnique(String pricingCode) {
+        return !pricingRepository.existsByPricingCode(pricingCode);
+    }
+
 //    @Override
 //    public void createPricing(Pricing pricing) {
 //        pricingRepository.createPricing(pricing.getPricingName(),

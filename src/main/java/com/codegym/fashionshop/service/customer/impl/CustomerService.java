@@ -1,9 +1,11 @@
-package com.codegym.fashionshop.service.impl;
+package com.codegym.fashionshop.service.customer.impl;
 
 import com.codegym.fashionshop.entities.Customer;
-import com.codegym.fashionshop.repository.ICustomerRepository;
-import com.codegym.fashionshop.service.ICustomerService;
+import com.codegym.fashionshop.repository.customer.ICustomerRepository;
+import com.codegym.fashionshop.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -45,4 +47,12 @@ public class CustomerService implements ICustomerService {
                 customer.getAccumulatedPoints()
         );
     }
+
+    @Override
+    public Page<Customer> findAll(Pageable pageable) {
+        return iCustomerRepository.findAll(pageable);
+    }
+
+
+
 }

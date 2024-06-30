@@ -15,4 +15,6 @@ public interface IPricingService  {
     Page<Pricing> findAllByProduct_ProductId(Long productId,Pageable pageable);
 
     void createPricing(Pricing pricing);
+
+    boolean isPricingCodeUnique(String pricingCode);
 }

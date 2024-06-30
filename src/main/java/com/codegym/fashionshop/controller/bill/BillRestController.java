@@ -34,4 +34,14 @@ public class BillRestController {
         billService.save(bill);
         return new ResponseEntity<>(bill, HttpStatus.CREATED);
     }
+
+    @PostMapping("/checkBillCode")
+    public ResponseEntity<Map<String, Boolean>> checkBillCode(@RequestBody Map<String, String> request) {
+        String billCode = request.get("code");
+        System.out.println("Received pricing code: " + billCode);
+        boolean isUnique = billService.isBillCodeUnique(billCode);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isUnique", isUnique);
+        return ResponseEntity.ok(response);
+    }
 }
