@@ -29,13 +29,13 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
                         .requestMatchers("/admin-user/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
-<<<<<<< HEAD
+
                         .requestMatchers(HttpMethod.GET).permitAll()  // Điều chỉnh mẫu endpoint khi cần
                         .requestMatchers("/users").authenticated()
                         .requestMatchers(HttpMethod.POST).permitAll()
                         .requestMatchers(HttpMethod.PUT).permitAll()
                         .requestMatchers(HttpMethod.DELETE).permitAll()
-=======
+
                         .requestMatchers("/pricing/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/api/bills/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
@@ -48,7 +48,6 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT).authenticated()
                         .requestMatchers(HttpMethod.DELETE).authenticated()
 
->>>>>>> 561cc94c6d22e90764c92d5a5e88f803de01fcd9
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

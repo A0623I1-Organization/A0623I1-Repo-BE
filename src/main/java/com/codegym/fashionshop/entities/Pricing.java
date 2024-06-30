@@ -56,10 +56,7 @@ public class Pricing {
     @Column(name = "pricing_image")
     private String pricingImgUrl;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 561cc94c6d22e90764c92d5a5e88f803de01fcd9
     @ManyToOne
     @JoinColumn(name = "inventory_id")
     private Inventory inventory;
