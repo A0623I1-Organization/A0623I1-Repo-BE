@@ -59,4 +59,5 @@ public class Pricing {
     @ManyToOne
     @JoinColumn(name = "inventory_id")
     private Inventory inventory;
+
 }

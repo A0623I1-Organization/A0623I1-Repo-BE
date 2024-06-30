@@ -28,7 +28,7 @@ public class Customer {
     private LocalDate dateOfBirth;
 
     @Column(name = "gender")
-    private String gender;
+    private Integer gender;
 
     @Column(name = "email")
     private String email;
