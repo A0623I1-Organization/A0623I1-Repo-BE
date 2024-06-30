@@ -1,7 +1,11 @@
 package com.codegym.fashionshop.service.product.impl;
 
+import com.codegym.fashionshop.dto.respone.WarehouseReceipt;
+import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.entities.Pricing;
+import com.codegym.fashionshop.repository.product.IInventoryRepository;
 import com.codegym.fashionshop.repository.product.IPricingRepository;
+import com.codegym.fashionshop.service.IAppUserService;
 import com.codegym.fashionshop.service.product.IPricingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,6 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public class PricingService implements IPricingService {
+    @Autowired
+    private IAppUserService appUserService;
+    @Autowired
+    private IInventoryRepository inventoryRepository;
 @Autowired
 private IPricingRepository pricingRepository;
     @Override
@@ -34,9 +42,15 @@ private IPricingRepository pricingRepository;
     }
 
     @Override
-    public void updatePricingQuantity(Long id, int quantity) {
-        int result = pricingRepository.updateQuantity(id, quantity);
-
+    public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {
+        AppUser user = appUserService.findByUsername(warehouseReceipt.getUsername());
+        inventoryRepository.saveInventory(user.getUserId(), warehouseReceipt.getDate(), warehouseReceipt.getReceiptId());
+        Long inventoryId = inventoryRepository.getLastInsertId();
+        System.out.println(inventoryId);
+        List<Pricing> updatedPricing = warehouseReceipt.getPricingList();
+        for (Pricing p: updatedPricing) {
+            pricingRepository.updateQuantityAndInventory(p.getPricingId(), p.getQuantity(),inventoryId);
+        }
     }
 
 //    @Override

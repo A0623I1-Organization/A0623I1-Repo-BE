@@ -23,8 +23,8 @@ public class Bill {
 
     @Column(name = "customer_name")
     private String customerName;
-    @Column(name = "date_create")
-    private LocalDate dateCreate;
+//    @Column(name = "date_create")
+//    private LocalDate dateCreate;
 
     @Column(name = "phone_number")
     private String phoneNumber;

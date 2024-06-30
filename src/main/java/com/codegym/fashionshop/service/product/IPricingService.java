@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.service.product;
 
+import com.codegym.fashionshop.dto.respone.WarehouseReceipt;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.repository.product.IPricingRepository;
 import org.springframework.data.domain.Page;
@@ -15,5 +16,6 @@ public interface IPricingService  {
     Page<Pricing> findAllByProduct_ProductId(Long productId,Pageable pageable);
 
     void createPricing(Pricing pricing);
-    void updatePricingQuantity(Long id, int quantity);
+
+    void updatePricingQuantity(WarehouseReceipt warehouseReceipt);
 }
