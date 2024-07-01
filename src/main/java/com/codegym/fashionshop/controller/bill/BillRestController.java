@@ -1,7 +1,9 @@
 package com.codegym.fashionshop.controller.bill;
 
 import com.codegym.fashionshop.entities.Bill;
+import com.codegym.fashionshop.entities.BillItem;
 import com.codegym.fashionshop.entities.Pricing;
+import com.codegym.fashionshop.entities.ProductType;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.bill.IBillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,6 +24,15 @@ import java.util.Map;
 public class BillRestController {
     @Autowired
     private IBillService billService;
+
+    @GetMapping
+    public ResponseEntity<List<Bill>> getAllProduct() {
+        List<Bill> bills = billService.findAll();
+        if (bills.isEmpty()) {
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin màu sắc");
+        }
+        return new ResponseEntity<>(bills, HttpStatus.OK);
+    }
     @PostMapping("")
     public ResponseEntity<Object> createBill(@Validated @RequestBody Bill bill, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -30,6 +42,9 @@ public class BillRestController {
             }
             // Trả về phản hồi JSON chứa thông điệp lỗi
             throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
+        }
+        for (BillItem billItem: bill.getBillItemList()) {
+            billItem.setBill(bill);
         }
         billService.save(bill);
         return new ResponseEntity<>(bill, HttpStatus.CREATED);

@@ -25,7 +25,7 @@ public class PricingRestController {
     @Autowired
     private IPricingService pricingService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<Page<Pricing>> getAllPricing(@RequestParam(name = "page", defaultValue = "0") int page) {
         if (page < 0) {
             page = 0;
@@ -36,17 +36,29 @@ public class PricingRestController {
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-    @GetMapping("/{productId}")
-    public ResponseEntity<Page<Pricing>> getAllPricingByProductId(@PathVariable(name = "productId")Long productId, @RequestParam(name = "page", defaultValue = "0") int page) {
+
+    @GetMapping("/byCode")
+    public ResponseEntity<Pricing> getPricingByPricingCode(@RequestParam(name = "pricingCode") String pricingCode) {
+        Pricing pricing = pricingService.findByPricingCode(pricingCode);
+        if (pricing == null) {
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin giá");
+        }
+        return new ResponseEntity<>(pricing, HttpStatus.OK);
+    }
+
+    @GetMapping("/byProductId/{productId}")
+    public ResponseEntity<Page<Pricing>> getAllPricingByProductId(@PathVariable(name = "productId") Long productId,
+                                                                  @RequestParam(name = "page", defaultValue = "0") int page) {
         if (page < 0) {
             page = 0;
         }
-        Page<Pricing> pricings = pricingService.findAllByProduct_ProductId(productId,PageRequest.of(page, 2));
+        Page<Pricing> pricings = pricingService.findAllByProduct_ProductId(productId, PageRequest.of(page, 2));
         if (pricings.isEmpty()) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin giá");
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
+
     @PostMapping("/create")
     public ResponseEntity<Object> createPricing(@Validated @RequestBody Pricing pricing, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -54,12 +66,12 @@ public class PricingRestController {
             for (FieldError error : bindingResult.getFieldErrors()) {
                 errors.put(error.getField(), error.getDefaultMessage());
             }
-            // Trả về phản hồi JSON chứa thông điệp lỗi
             throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
         }
         pricingService.createPricing(pricing);
         return new ResponseEntity<>(pricing, HttpStatus.CREATED);
     }
+
     @PostMapping("/checkPricingCode")
     public ResponseEntity<Map<String, Boolean>> checkPricingCode(@RequestBody Map<String, String> request) {
         String pricingCode = request.get("code");

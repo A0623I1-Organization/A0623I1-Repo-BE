@@ -17,4 +17,5 @@ public interface IPricingService  {
     void createPricing(Pricing pricing);
 
     boolean isPricingCodeUnique(String pricingCode);
+    Pricing findByPricingCode(String pricingCode);
 }

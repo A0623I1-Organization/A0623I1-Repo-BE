@@ -38,6 +38,11 @@ private IPricingRepository pricingRepository;
         return !pricingRepository.existsByPricingCode(pricingCode);
     }
 
+    @Override
+    public Pricing findByPricingCode(String pricingCode) {
+        return pricingRepository.findByPricingCode(pricingCode);
+    }
+
 //    @Override
 //    public void createPricing(Pricing pricing) {
 //        pricingRepository.createPricing(pricing.getPricingName(),

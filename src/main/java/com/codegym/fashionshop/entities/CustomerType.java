@@ -25,6 +25,5 @@ public class CustomerType {
     @Min(value = 0, message = "tỉ lệ không được nhỏ hơn 0 và phải từ 0 đến 1!")
     @Max(value = 1, message = "tỉ lệ không được lớn hơn 1 và phải từ 0 đến 1!")
     private Double discount;
-    @Column(name = "required_bill")
-    private Double requiredBill;
+
 }

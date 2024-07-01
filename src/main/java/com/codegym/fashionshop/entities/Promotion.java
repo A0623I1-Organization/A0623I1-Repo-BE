@@ -32,9 +32,7 @@ public class Promotion {
 
     @Column(name = "start_day")
     private LocalDate startDay;
-    @ManyToOne
-    @JoinColumn(name = "type_id")
-    private CustomerType customerType;
+
 
     @Column(name = "required_bill")
     private Double requiredBill;
