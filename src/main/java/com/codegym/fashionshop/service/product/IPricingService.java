@@ -18,4 +18,9 @@ public interface IPricingService  {
     void createPricing(Pricing pricing);
 
     void updatePricingQuantity(WarehouseReceipt warehouseReceipt);
+    boolean isPricingCodeUnique(String pricingCode);
+    Pricing findByPricingCode(String pricingCode);
+
+    void updatePricingQuantity(Long id, int quantity);
+
 }

@@ -29,6 +29,13 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/auth/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
                         .requestMatchers("/admin-user/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
+
+                        .requestMatchers(HttpMethod.GET).permitAll()  // Điều chỉnh mẫu endpoint khi cần
+                        .requestMatchers("/users").authenticated()
+                        .requestMatchers(HttpMethod.POST).permitAll()
+                        .requestMatchers(HttpMethod.PUT).permitAll()
+                        .requestMatchers(HttpMethod.DELETE).permitAll()
+
                         .requestMatchers("/pricing/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/api/bills/**").permitAll()  // Thêm quy tắc cho endpoint /pricing

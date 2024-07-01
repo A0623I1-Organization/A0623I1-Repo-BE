@@ -13,15 +13,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/auth/productType")
+@RequestMapping("/api/productType")
 @CrossOrigin("*")
 public class ProductTypeRestController {
     @Autowired
     private IProductTypeService productTypeService;
 
+//    @GetMapping
+//    public ResponseEntity<List<ProductType>> getProductTypeByCategoryName(@RequestParam(name = "categoryName") String categoryName) {
+//        List<ProductType> productTypes = productTypeService.findProductTypeByCategory_CategoryName(categoryName);
+//        if (productTypes.isEmpty()) {
+//            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin màu sắc");
+//        }
+//        return new ResponseEntity<>(productTypes, HttpStatus.OK);
+//    }
     @GetMapping
-    public ResponseEntity<List<ProductType>> getProductTypeByCategoryName(@RequestParam(name = "categoryName") String categoryName) {
-        List<ProductType> productTypes = productTypeService.findProductTypeByCategory_CategoryName(categoryName);
+    public ResponseEntity<List<ProductType>> getAllProduct() {
+        List<ProductType> productTypes = productTypeService.findAll();
         if (productTypes.isEmpty()) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin màu sắc");
         }

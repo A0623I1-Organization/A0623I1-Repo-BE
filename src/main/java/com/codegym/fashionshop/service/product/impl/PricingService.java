@@ -50,7 +50,18 @@ private IPricingRepository pricingRepository;
         List<Pricing> updatedPricing = warehouseReceipt.getPricingList();
         for (Pricing p: updatedPricing) {
             pricingRepository.updateQuantityAndInventory(p.getPricingId(), p.getQuantity(),inventoryId);
-        }
+    }
+
+    public boolean isPricingCodeUnique(String pricingCode) {
+        return !pricingRepository.existsByPricingCode(pricingCode);
+    }
+
+    @Override
+    public Pricing findByPricingCode(String pricingCode) {
+        return pricingRepository.findByPricingCode(pricingCode);
+
+    public void updatePricingQuantity(Long id, int quantity) {
+        int result = pricingRepository.updateQuantity(id, quantity);
     }
 
 //    @Override
