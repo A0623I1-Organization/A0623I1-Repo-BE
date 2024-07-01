@@ -21,6 +21,4 @@ public interface IPricingService  {
     boolean isPricingCodeUnique(String pricingCode);
     Pricing findByPricingCode(String pricingCode);
 
-    void updatePricingQuantity(Long id, int quantity);
-
 }

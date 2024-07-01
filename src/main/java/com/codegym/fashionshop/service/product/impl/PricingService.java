@@ -48,9 +48,11 @@ private IPricingRepository pricingRepository;
         Long inventoryId = inventoryRepository.getLastInsertId();
         System.out.println(inventoryId);
         List<Pricing> updatedPricing = warehouseReceipt.getPricingList();
-        for (Pricing p: updatedPricing) {
-            pricingRepository.updateQuantityAndInventory(p.getPricingId(), p.getQuantity(),inventoryId);
+        for (Pricing p : updatedPricing) {
+            pricingRepository.updateQuantityAndInventory(p.getPricingId(), p.getQuantity(), inventoryId);
+        }
     }
+
 
     public boolean isPricingCodeUnique(String pricingCode) {
         return !pricingRepository.existsByPricingCode(pricingCode);
@@ -59,10 +61,8 @@ private IPricingRepository pricingRepository;
     @Override
     public Pricing findByPricingCode(String pricingCode) {
         return pricingRepository.findByPricingCode(pricingCode);
-
-    public void updatePricingQuantity(Long id, int quantity) {
-        int result = pricingRepository.updateQuantity(id, quantity);
     }
+
 
 //    @Override
 //    public void createPricing(Pricing pricing) {

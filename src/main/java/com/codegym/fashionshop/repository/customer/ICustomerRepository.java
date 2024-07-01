@@ -34,11 +34,8 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
     @Modifying
     @Transactional
-
     @Query("UPDATE Customer c SET c.customerName = :customerName, c.dateOfBirth = :dateOfBirth, c.gender = :gender, c.email = :email, c.phoneNumber = :phoneNumber, c.address = :address, c.customerType = :customerType, c.accumulatedPoints = :accumulatedPoints WHERE c.customerId = :id")
-
-    @Query("UPDATE Customer c SET c.customerName = :customerName, c.dateOfBirth = :dateOfBirth, c.gender = :gender, c.email = :email, c.phoneNumber = :phoneNumber, c.address = :address, c.customerType = :customerType, c.accumulatedPoints = :accumulatedPoints WHERE c.id = :id")
-
+//    @Query("UPDATE Customer c SET c.customerName = :customerName, c.dateOfBirth = :dateOfBirth, c.gender = :gender, c.email = :email, c.phoneNumber = :phoneNumber, c.address = :address, c.customerType = :customerType, c.accumulatedPoints = :accumulatedPoints WHERE c.id = :id")
     void updateCustomer(@Param("id") Long id,
                         @Param("customerName") String customerName,
                         @Param("dateOfBirth") LocalDate dateOfBirth,
