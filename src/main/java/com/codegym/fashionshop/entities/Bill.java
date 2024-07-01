@@ -27,6 +27,10 @@ public class Bill {
 
     private LocalDate dateCreate;
 
+    @Column(name = "customer_name")
+    private String customerName;
+//    @Column(name = "date_create")
+//    private LocalDate dateCreate;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
