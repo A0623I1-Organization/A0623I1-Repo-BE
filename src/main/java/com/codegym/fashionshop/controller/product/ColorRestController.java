@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/auth/color")
+@RequestMapping("/api/color")
 @CrossOrigin("*")
 public class ColorRestController {
     @Autowired
