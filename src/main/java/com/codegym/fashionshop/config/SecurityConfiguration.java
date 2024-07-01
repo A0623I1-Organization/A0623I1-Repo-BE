@@ -40,7 +40,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/api/bills/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/api/bill-items/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                   
 
                         .requestMatchers(HttpMethod.GET).permitAll()  // Điều chỉnh mẫu endpoint khi cần
                         .requestMatchers("/users").authenticated()
