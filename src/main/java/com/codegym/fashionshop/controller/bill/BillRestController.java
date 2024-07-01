@@ -14,6 +14,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,5 +60,17 @@ public class BillRestController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("isUnique", isUnique);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/revenue/daily")
+    public ResponseEntity<Long> getDailySalesRevenue(@RequestParam("date") LocalDate date){
+        Long dailyRevenue = billService.getDailySalesRevenue(date);
+        return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
+    }
+
+    @GetMapping("/revenue/monthly")
+    public ResponseEntity<Long> getMonthlySalesRevenue(@RequestParam("month")YearMonth yearMonth){
+        Long monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
+        return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
 }
