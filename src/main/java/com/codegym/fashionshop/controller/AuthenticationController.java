@@ -15,15 +15,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
+@RequestMapping("/auth")
 public class AuthenticationController {
     @Autowired
-    private AuthenticationService service;
+    private AuthenticationService authenticationService;
 
-    @PostMapping("/api/auth/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(
             @RequestBody RegisterRequest request) {
         try {
-            AuthenticationResponse token = service.register(request);
+            AuthenticationResponse token = authenticationService.register(request);
             return ResponseEntity.ok(token);
         } catch (UserIsExistException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
@@ -32,29 +33,29 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/api/auth/authenticate")
+    @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
     ){
-        return ResponseEntity.ok(service.authentication(request));
+        return ResponseEntity.ok(authenticationService.authentication(request));
     }
-
-    @GetMapping("/admin-user/get-profile")
-    public ResponseEntity<?> getMyProfile(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        System.out.println(username);
-        AuthenticationResponse response = service.getMyInfo(username);
-        return  ResponseEntity.status(response.getStatusCode()).body(response);
-    }
-
-    @PutMapping("/admin/update/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody AppUserRequest updateUser){
-//        return ResponseEntity.ok(service.updateUser(userId, updateUser));
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        AuthenticationResponse response = service.updatePassword(updateUser, username);
-        return ResponseEntity.status(response.getStatusCode()).body(response);
-    }
+//
+//    @GetMapping("/admin-user/get-profile")
+//    public ResponseEntity<?> getMyProfile(){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
+//        System.out.println(username);
+//        AuthenticationResponse response = authenticationService.getMyInfo(username);
+//        return  ResponseEntity.status(response.getStatusCode()).body(response);
+//    }
+//
+//    @PutMapping("/admin/update/{userId}")
+//    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody AppUserRequest updateUser){
+////        return ResponseEntity.ok(service.updateUser(userId, updateUser));
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
+//        AuthenticationResponse response = service.updatePassword(updateUser, username);
+//        return ResponseEntity.status(response.getStatusCode()).body(response);
+//    }
 
 }

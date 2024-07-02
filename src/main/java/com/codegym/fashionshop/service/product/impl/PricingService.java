@@ -35,7 +35,7 @@ private IPricingRepository pricingRepository;
 
     @Override
     public void updatePricingQuantity(Long id, int quantity) {
-        int result = pricingRepository.updateQuantity(id, quantity);
+//        int result = pricingRepository.updateQuantity(id, quantity);
 
     }
 
