@@ -19,8 +19,8 @@ public class PricingService implements IPricingService {
     private IAppUserService appUserService;
     @Autowired
     private IInventoryRepository inventoryRepository;
-@Autowired
-private IPricingRepository pricingRepository;
+    @Autowired
+    private IPricingRepository pricingRepository;
     @Override
     public List<Pricing> findAllPricing() {
         return pricingRepository.findAllPricings();
