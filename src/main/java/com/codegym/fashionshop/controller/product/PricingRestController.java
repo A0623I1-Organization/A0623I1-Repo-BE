@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pricing")
+@RequestMapping("/api/pricing")
 @CrossOrigin("*")
 public class PricingRestController {
 

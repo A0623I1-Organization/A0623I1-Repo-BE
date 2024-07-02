@@ -30,15 +30,15 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/auth/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
                         .requestMatchers("/admin-user/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
                         .requestMatchers("/pricing/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
+                        .requestMatchers("/api/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/api/bills/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
                         .requestMatchers("/api/bill-items/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
 
-                        .requestMatchers(HttpMethod.GET).permitAll()  // Điều chỉnh mẫu endpoint khi cần
+                        // Điều chỉnh mẫu endpoint khi cần
                         .requestMatchers("/users").authenticated()
-                        .requestMatchers(HttpMethod.POST).authenticated()
-                        .requestMatchers(HttpMethod.PUT).authenticated()
-                        .requestMatchers(HttpMethod.DELETE).authenticated()
+
+                        .requestMatchers("/auth/**","/public/**").permitAll()
+                        .requestMatchers("/api/auth/**").authenticated()
 
                         .anyRequest().authenticated()
                 )

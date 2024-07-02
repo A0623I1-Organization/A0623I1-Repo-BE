@@ -40,7 +40,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/admin-user/get-profile")
-    public ResponseEntity<?> getMyProfile(){
+    public ResponseEntity<?> getMyProfile() throws RuntimeException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         System.out.println(username);

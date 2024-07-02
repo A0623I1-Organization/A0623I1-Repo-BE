@@ -21,4 +21,9 @@ public class ProductTypeService implements IProductTypeService {
     public List<ProductType> findProductTypeByCategory_CategoryId(Long category_categoryId) {
         return productTypeRepository.findProductTypeByCategory_CategoryId(category_categoryId);
     }
+
+    @Override
+    public List<ProductType> findAllProductTypes() {
+        return productTypeRepository.findAll();
+    }
 }
