@@ -58,4 +58,13 @@ public class ProductRestController {
         productService.createProduct(product);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
+    @PostMapping("/checkProductCode")
+    public ResponseEntity<Map<String, Boolean>> checkProductCode(@RequestBody Map<String, String> request) {
+        String productCode = request.get("code");
+        System.out.println("Received pricing code: " + productCode);
+        boolean isUnique = productService.isProductCodeUnique(productCode);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isUnique", isUnique);
+        return ResponseEntity.ok(response);
+    }
 }

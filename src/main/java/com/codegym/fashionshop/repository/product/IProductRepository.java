@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface IProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findAll(Pageable pageable);
+    boolean existsByProductCode(String productCode);
 //    @Transactional
 //    @Modifying
 //    @Query(value = "INSERT INTO products (product_code, product_name, product_desc, type_id,pricing) " +

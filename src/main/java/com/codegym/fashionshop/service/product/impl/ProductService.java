@@ -32,6 +32,11 @@ public class ProductService implements IProductService{
         return productRepository.findAll(pageable);
     }
 
+    @Override
+    public boolean isProductCodeUnique(String productCode) {
+        return !productRepository.existsByProductCode(productCode);
+    }
+
 //    @Override
 //    public void saveProductWithDetail(Product product, List<Pricing> pricingList, List<ProductImage> productImages) {
 //        for (Pricing pricing:pricingList) {

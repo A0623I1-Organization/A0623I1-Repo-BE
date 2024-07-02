@@ -14,5 +14,7 @@ public interface IProductService {
     List<Product> findAllProduct();
     Page<Product> findAllProduct(Pageable pageable);
 
+    boolean isProductCodeUnique(String productCode);
+
 //    void saveProductWithDetail(Product product, List<Pricing> pricingList, List<ProductImage> productImages);
 }

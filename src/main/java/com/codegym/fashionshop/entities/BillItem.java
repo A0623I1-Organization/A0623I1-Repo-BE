@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,8 +17,9 @@ public class BillItem {
     @Column(name = "item_id")
     private Long itemId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bill_id")
+    @JsonBackReference
     private Bill bill;
 
     @ManyToOne
@@ -26,11 +28,6 @@ public class BillItem {
 
     private int quantity;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
 
-    @ManyToOne
-    @JoinColumn(name="promotion_id")
-    private Promotion promotion;
+
 }
