@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())  // Sử dụng phương pháp mới để vô hiệu hóa CSRF
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**","/public/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
