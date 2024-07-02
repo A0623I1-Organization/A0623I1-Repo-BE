@@ -36,12 +36,18 @@ public interface IPricingRepository extends JpaRepository<Pricing,Long> {
                        @Param("inventory") Integer inventory,
                        @Param("colorId") Long colorId,
                        @Param("pricingImgUrl") String pricingImgUrl);
-  
+
     Page<Pricing> findAll(Pageable pageable);
-  
+
     Page<Pricing> findAllByProduct_ProductId(Long productId,Pageable pageable);
-  
-//    @Query(value = "UPDATE pricings set quantity = :quantity where pricing_id = : id", nativeQuery = true)
-//    int updateQuantity(Long id, int quantity);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE pricings SET quantity = quantity + :quantity, inventory_id = :inventoryId WHERE pricing_id = :id", nativeQuery = true)
+    void updateQuantityAndInventory(@Param("id") Long id, @Param("quantity") int quantity, @Param("inventoryId") Long inventoryId);
+
+    Pricing findByPricingCode(String pricingCode);
+    boolean existsByPricingCode(String pricingCode);
+
 
 }

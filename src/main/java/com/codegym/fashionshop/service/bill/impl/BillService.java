@@ -6,6 +6,8 @@ import com.codegym.fashionshop.service.bill.IBillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -32,4 +34,21 @@ private IBillRepository repository;
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public boolean isBillCodeUnique(String billCode) {
+        return !repository.existsByBillCode(billCode);
+    }
+
+    @Override
+    public Long getDailySalesRevenue(LocalDate date) {
+        return repository.getDailySalesRevenue(date);
+    }
+
+    @Override
+    public Long getMonthlySalesRevenue(YearMonth yearMonth) {
+        int year = yearMonth.getYear();
+        int monthValue = yearMonth.getMonthValue();
+        return repository.getMonthlySalesRevenue(year, monthValue);
+    }
+
 }

@@ -2,7 +2,6 @@ package com.codegym.fashionshop.controller.customer;
 
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.service.customer.ICustomerService;
-import com.codegym.fashionshop.service.customer.impl.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
