@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents an authentication request containing username and password.
+ * <p>
+ * Author: KhangDV
+ */
 @Data
 @Builder
 @AllArgsConstructor

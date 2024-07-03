@@ -2,8 +2,8 @@ package com.codegym.fashionshop.initializer;
 
 import com.codegym.fashionshop.entities.AppRole;
 import com.codegym.fashionshop.entities.AppUser;
-import com.codegym.fashionshop.service.IAppUserService;
-import com.codegym.fashionshop.service.IRoleService;
+import com.codegym.fashionshop.service.authenticate.IAppUserService;
+import com.codegym.fashionshop.service.authenticate.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;

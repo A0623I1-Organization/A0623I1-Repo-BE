@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * Represents a request to update an existing user in the system.
+ * This includes various user details such as username, password, contact information, and role.
+ * <p>
+ * Author: KhangDV
+ */
 @Data
 @Builder
 @AllArgsConstructor
