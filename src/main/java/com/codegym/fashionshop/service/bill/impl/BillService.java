@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class BillService implements IBillService {
@@ -38,17 +41,40 @@ private IBillRepository repository;
     public boolean isBillCodeUnique(String billCode) {
         return !repository.existsByBillCode(billCode);
     }
-
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
-    public Long getDailySalesRevenue(LocalDate date) {
+    public Double getDailySalesRevenue(LocalDate date) {
         return repository.getDailySalesRevenue(date);
     }
-
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
-    public Long getMonthlySalesRevenue(YearMonth yearMonth) {
+    public Double getMonthlySalesRevenue(YearMonth yearMonth) {
         int year = yearMonth.getYear();
         int monthValue = yearMonth.getMonthValue();
         return repository.getMonthlySalesRevenue(year, monthValue);
+    }
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
+    @Override
+    public Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth) {
+        int year = yearMonth.getYear();
+        int monthValue = yearMonth.getMonthValue();
+        Map<Integer, Double> dailyRevenueMap = new HashMap<>();
+        List<Object[]> results = repository.getDailySalesRevenueForMonth(year, monthValue);
+        for(Object[] result: results) {
+            Integer day = (Integer) result[0];
+            Double dailyRevenue = (Double) result[1];
+            dailyRevenueMap.put(day,dailyRevenue);
+        }
+        return dailyRevenueMap;
     }
 
 }

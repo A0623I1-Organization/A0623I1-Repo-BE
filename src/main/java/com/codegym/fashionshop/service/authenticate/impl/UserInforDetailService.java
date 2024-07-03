@@ -1,9 +1,9 @@
-package com.codegym.fashionshop.service.impl;
+package com.codegym.fashionshop.service.authenticate.impl;
 
 
 import com.codegym.fashionshop.dto.UserInforUserDetails;
 import com.codegym.fashionshop.entities.AppUser;
-import com.codegym.fashionshop.repository.IUserRepository;
+import com.codegym.fashionshop.repository.authenticate.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
