@@ -7,9 +7,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Map;
 
 public interface IBillService extends IGeneralService<Bill> {
     boolean isBillCodeUnique(String billCode);
     Long getDailySalesRevenue(LocalDate date);
-    Long getMonthlySalesRevenue(YearMonth month);
+    Long getMonthlySalesRevenue(YearMonth yearMonth);
+    Map<Integer, Long> getDailySalesRevenueForMonth(YearMonth yearMonth);
 }

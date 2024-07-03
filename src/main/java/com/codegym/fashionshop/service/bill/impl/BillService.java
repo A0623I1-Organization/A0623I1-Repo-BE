@@ -8,7 +8,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class BillService implements IBillService {
@@ -49,6 +52,20 @@ private IBillRepository repository;
         int year = yearMonth.getYear();
         int monthValue = yearMonth.getMonthValue();
         return repository.getMonthlySalesRevenue(year, monthValue);
+    }
+
+    @Override
+    public Map<Integer, Long> getDailySalesRevenueForMonth(YearMonth yearMonth) {
+        int year = yearMonth.getYear();
+        int monthValue = yearMonth.getMonthValue();
+        Map<Integer, Long> dailyRevenueMap = new HashMap<>();
+        List<Object[]> results = repository.getDailySalesRevenueForMonth(year, monthValue);
+        for(Object[] result: results) {
+            Integer day = (Integer) result[0];
+            Long dailyRevenue = (Long) result[1];
+            dailyRevenueMap.put(day,dailyRevenue);
+        }
+        return dailyRevenueMap;
     }
 
 }

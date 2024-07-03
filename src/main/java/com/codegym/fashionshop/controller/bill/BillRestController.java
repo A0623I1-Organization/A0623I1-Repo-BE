@@ -73,4 +73,11 @@ public class BillRestController {
         Long monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
         return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
+
+    @GetMapping("/revenue/daily/month")
+    public ResponseEntity<Map<Integer, Long>> getDailySalesRevenueForMonth(@RequestParam("month")YearMonth yearMonth) {
+        Map<Integer, Long> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
+        return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
+    }
+
 }

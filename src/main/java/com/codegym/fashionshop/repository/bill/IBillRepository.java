@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface IBillRepository extends JpaRepository<Bill,Long> {
     boolean existsByBillCode(String billCode);
+
     @Query(value = "select sum(bi.quantity * p.price) as daily_revenue from bill_items as bi inner join bills as b on bi.bill_id = b.bill_id inner join pricings\n" +
             "as p on bi.pricing_id = p.pricing_id where date(b.date_create) = :date", nativeQuery = true)
     Long getDailySalesRevenue(@Param("date") LocalDate date);
@@ -22,5 +23,13 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "where year(b.date_create) = :year and month(b.date_create) = :month",
             nativeQuery = true)
     Long getMonthlySalesRevenue(@Param("year") int year, @Param("month") int month);
+    @Query(value = "select day(b.date_create) as day, sum(bi.quantity * p.price) as daily_revenue " +
+            "from bill_items as bi " +
+            "inner join bills as b on bi.bill_id = b.bill_id " +
+            "inner join pricings as p on bi.pricing_id = p.pricing_id " +
+            "where year(b.date_create) = :year and month(b.date_create) = :month " +
+            "group by day(b.date_create)",
+            nativeQuery = true)
+    List<Object[]> getDailySalesRevenueForMonth(@Param("year") int year, @Param("month") int month);
 
 }
