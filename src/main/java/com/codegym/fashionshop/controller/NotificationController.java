@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.controller.NotificationController;
+package com.codegym.fashionshop.controller;
 
 
 import com.codegym.fashionshop.dto.AddNewNotificationDTO;
