@@ -40,8 +40,9 @@ public class AuthenticationController {
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      * @throws RuntimeException if an error occurs while retrieving user information.
      */
-    @GetMapping("/admin-user/get-profile")
+    @GetMapping("/get-profile")
     public ResponseEntity<?> getMyProfile() throws RuntimeException{
+        System.out.println("call");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         AuthenticationResponse response = authenticationService.getMyInfo(username);
@@ -55,7 +56,7 @@ public class AuthenticationController {
      * @param updatePasswordRequest The updated user information.
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      */
-    @PutMapping("/admin/update/{userId}")
+    @PutMapping("/update-password/{userId}")
     public ResponseEntity<?> updateUser(@Validated @PathVariable Long userId
             , @RequestBody UpdatePasswordRequest updatePasswordRequest
             , BindingResult bindingResult) throws UserIsExistException {

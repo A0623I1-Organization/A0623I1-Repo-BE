@@ -16,7 +16,7 @@ import java.util.List;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/dashboard")
+@RequestMapping("/api/dashboard")
 public class DashboardController {
     @Autowired
     private TotalCustomerService totalCustomerService;

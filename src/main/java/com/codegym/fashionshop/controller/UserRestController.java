@@ -9,8 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -21,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("api/auth/users")
+@RequestMapping("api/users")
 public class UserRestController {
     @Autowired
     private UserService userService;
@@ -53,7 +51,6 @@ public class UserRestController {
      */
     @GetMapping("/roles")
     public ResponseEntity<?> getAllRoles() {
-        System.out.println("call");
         return ResponseEntity.ok(roleService.findAll());
     }
 
