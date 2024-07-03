@@ -33,6 +33,7 @@ public class NotificationController {
 //        if (addNewNotificationDTO == null) {
 //            return new ResponseEntity<AddNewNotificationDTO>(HttpStatus.NO_CONTENT);
 //        } else {
+
 //            notificationService.addNotification(addNewNotificationDTO.getContent(), addNewNotificationDTO.getCreateDate(), addNewNotificationDTO.getTopic(), addNewNotificationDTO.getListRole());
 //            return new ResponseEntity<>(HttpStatus.OK);
 //        }
