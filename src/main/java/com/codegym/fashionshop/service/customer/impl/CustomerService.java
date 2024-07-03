@@ -21,6 +21,13 @@ public class CustomerService implements ICustomerService {
     @Override
     public void createCustomer(Customer customer) {
         System.out.println(customer);
+        if (iCustomerRepository.existsByCustomerCode(customer.getCustomerCode())) {
+            throw new IllegalArgumentException("Ma khach hang da ton tai !");
+        }
+        if (iCustomerRepository.existsByEmail(customer.getEmail())) {
+            throw new IllegalArgumentException("Email da ton tai !");
+        }
+
         customer.setCustomerType(new CustomerType(1L,"",0D));
         customer.setAccumulatedPoints(0);
         customer.setDateRegister(LocalDate.now());
@@ -40,6 +47,9 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void updateCustomer(Long id, Customer customer) {
+        if (iCustomerRepository.existsByEmailAndCustomerCodeNot(customer.getEmail(), customer.getCustomerCode())) {
+            throw new IllegalArgumentException("Email da ton tai !");
+        }
         if (iCustomerRepository.existsById(id)) {
             iCustomerRepository.updateCustomer(
                     id,

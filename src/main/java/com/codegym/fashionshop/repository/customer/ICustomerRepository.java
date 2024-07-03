@@ -45,4 +45,8 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
                         @Param("customerType") CustomerType customerType,
                         @Param("accumulatedPoints") int accumulatedPoints
     );
+
+    boolean existsByCustomerCode(String customerCode);
+    boolean existsByEmail(String email);
+    boolean existsByEmailAndCustomerCodeNot(String email, String customeCode);
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth/customer")
 @CrossOrigin("*")
-public class CustomerController {
+public class CustomerRestController {
     @Autowired
     private ICustomerService iCustomerService;
     @PostMapping("/create")
@@ -20,16 +20,28 @@ public class CustomerController {
         if(bindingResult.hasErrors()){
             return new ResponseEntity<>(bindingResult.getAllErrors(),HttpStatus.BAD_REQUEST);
         }
-        iCustomerService.createCustomer(customer);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        try {
+            iCustomerService.createCustomer(customer);
+            return new ResponseEntity<>("Them moi khach hang thanh cong", HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Lỗi máy chủ nội bộ !", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCustomer( @PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if(bindingResult.hasErrors()){
             return new ResponseEntity<>(bindingResult.getAllErrors(),HttpStatus.BAD_REQUEST);
         }
-        iCustomerService.updateCustomer(id,customer);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            iCustomerService.updateCustomer(id,customer);
+            return new ResponseEntity<>("Cap nhat khach hang thanh cong !",HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            return new ResponseEntity<>("Lỗi máy chủ nội bộ !", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     @GetMapping ("/{id}")
     public ResponseEntity<?> findByIdCustomer(@PathVariable Long id){
