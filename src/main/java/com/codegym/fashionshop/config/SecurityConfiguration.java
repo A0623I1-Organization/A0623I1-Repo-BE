@@ -27,22 +27,8 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())  // Sử dụng phương pháp mới để vô hiệu hóa CSRF
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
-                        .requestMatchers("/admin-user/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
-                        .requestMatchers("/api/pricing/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/api/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/api/productType", "/api/color", "/api/category").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/api/customer/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/api/bills/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/api/bill-items/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/users/roles").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/dashboard/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-
-                        // Điều chỉnh mẫu endpoint khi cần
-                        .requestMatchers("/users", "/users/{id}").authenticated()
-                        .requestMatchers("/auth/**","/public/**").permitAll()
-                        .requestMatchers("/api/auth/**").authenticated()
-
+                        .requestMatchers("/auth/**","api/public/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

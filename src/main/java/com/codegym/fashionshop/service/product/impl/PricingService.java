@@ -19,8 +19,8 @@ public class PricingService implements IPricingService {
     private IAppUserService appUserService;
     @Autowired
     private IInventoryRepository inventoryRepository;
-@Autowired
-private IPricingRepository pricingRepository;
+    @Autowired
+    private IPricingRepository pricingRepository;
     @Override
     public List<Pricing> findAllPricing() {
         return pricingRepository.findAllPricings();
@@ -41,6 +41,10 @@ private IPricingRepository pricingRepository;
         pricingRepository.save(pricing);
     }
 
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
     public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {
         AppUser user = appUserService.findByUsername(warehouseReceipt.getUsername());

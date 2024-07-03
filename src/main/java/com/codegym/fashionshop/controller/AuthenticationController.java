@@ -22,21 +22,16 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @CrossOrigin("*")
+@RequestMapping("/auth")
 public class AuthenticationController {
     @Autowired
-    private AuthenticationService service;
+    private AuthenticationService authenticationService;
 
-    /**
-     * Authenticates a user with the provided login credentials.
-     *
-     * @param request The authentication request containing login credentials.
-     * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
-     */
-    @PostMapping("/api/auth/authenticate")
+    @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request
     ){
-        return ResponseEntity.ok(service.authentication(request));
+        return ResponseEntity.ok(authenticationService.authentication(request));
     }
 
     /**
@@ -49,7 +44,7 @@ public class AuthenticationController {
     public ResponseEntity<?> getMyProfile() throws RuntimeException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        AuthenticationResponse response = service.getMyInfo(username);
+        AuthenticationResponse response = authenticationService.getMyInfo(username);
         return  ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
@@ -69,7 +64,7 @@ public class AuthenticationController {
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        AuthenticationResponse response = service.updatePassword(updatePasswordRequest, username);
+        AuthenticationResponse response = authenticationService.updatePassword(updatePasswordRequest, username);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
