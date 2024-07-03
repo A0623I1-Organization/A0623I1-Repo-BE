@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class CustomerController {
     @Autowired
     private ICustomerService iCustomerService;
+
     @GetMapping
     public ResponseEntity<Page<Customer>> getAllPricing(@RequestParam(name = "page", defaultValue = "0") int page) {
         if (page < 0) {
@@ -27,11 +28,13 @@ public class CustomerController {
         }
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }
+
     @PostMapping("/create")
     public ResponseEntity<?> createCustomer(@RequestBody Customer customer) {
         iCustomerService.createCustomer(customer);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCustomer(@PathVariable Long id, @RequestBody Customer customer) {
         iCustomerService.updateCustomer(id,customer);

@@ -31,7 +31,7 @@ public class ProductTypeRestController {
     public ResponseEntity<List<ProductType>> getAllProduct() {
         List<ProductType> productTypes = productTypeService.findAll();
         if (productTypes.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin màu sắc");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin loại sản phẩm!");
         }
         return new ResponseEntity<>(productTypes, HttpStatus.OK);
     }

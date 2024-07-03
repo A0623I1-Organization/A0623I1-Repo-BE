@@ -8,6 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+/**
+ * DTO class for holding user information.
+ * This class represents detailed information about a user, including personal details and role.
+ * </p>
+ *
+ * Author: KhangDV
+ */
 @Data
 @Builder
 @AllArgsConstructor
