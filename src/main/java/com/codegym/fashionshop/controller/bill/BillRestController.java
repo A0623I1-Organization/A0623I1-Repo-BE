@@ -70,8 +70,11 @@ public class BillRestController {
      * @author ThanhTT
      */
     @GetMapping("/revenue/daily")
-    public ResponseEntity<Double> getDailySalesRevenue(@RequestParam("date") LocalDate date){
+    public ResponseEntity<Double> getDailySalesRevenue(@RequestParam("date") LocalDate date) {
         Double dailyRevenue = billService.getDailySalesRevenue(date);
+        if (dailyRevenue == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
     /**
@@ -82,8 +85,11 @@ public class BillRestController {
      * @author ThanhTT
      */
     @GetMapping("/revenue/monthly")
-    public ResponseEntity<Double> getMonthlySalesRevenue(@RequestParam("month")YearMonth yearMonth){
+    public ResponseEntity<Double> getMonthlySalesRevenue(@RequestParam("month") YearMonth yearMonth) {
         Double monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
+        if (monthlyRevenue == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
     /**
@@ -94,9 +100,11 @@ public class BillRestController {
      * @author ThanhTT
      */
     @GetMapping("/revenue/daily/month")
-    public ResponseEntity<Map<Integer, Double>> getDailySalesRevenueForMonth(@RequestParam("month")YearMonth yearMonth) {
+    public ResponseEntity<Map<Integer, Double>> getDailySalesRevenueForMonth(@RequestParam("month") YearMonth yearMonth) {
         Map<Integer, Double> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
+        if (dailyRevenue.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
-
 }

@@ -91,6 +91,9 @@ public class PricingRestController {
     @GetMapping("/update")
     public ResponseEntity<WarehouseReceipt> getPricingListWithUserAndDate() {
         List<Pricing> pricings = pricingService.findAllPricing();
+        if (pricings.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         LocalDate date = LocalDate.now();
         String id = UUID.randomUUID().toString();
         WarehouseReceipt receipt = WarehouseReceipt.builder().receiptId(id).date(date).pricingList(pricings).build();
@@ -109,6 +112,9 @@ public class PricingRestController {
      */
     @PutMapping("/update")
     public ResponseEntity<?> updatePricingQuantity(@RequestBody WarehouseReceipt warehouseReceipt) {
+        if (warehouseReceipt == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         pricingService.updatePricingQuantity(warehouseReceipt);
         return ResponseEntity.ok().build();
     }
