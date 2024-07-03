@@ -3,8 +3,10 @@ package com.codegym.fashionshop.repository.customer;
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.entities.CustomerType;
 import jakarta.transaction.Transactional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +15,11 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
+
     @Query("SELECT c FROM Customer c")
+
     Page<Customer> findAll(Pageable pageable);
+
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO customers (customer_code, customer_name, date_of_birth, gender, email, phone_number, address, date_register, accumulated_points, type_id) VALUES (:customerCode, :customerName, :dateOfBirth, :gender, :email, :phoneNumber, :address, :dateRegister, :accumulatedPoints, 1)", nativeQuery = true)
@@ -42,6 +47,5 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
                         @Param("customerType") CustomerType customerType,
                         @Param("accumulatedPoints") int accumulatedPoints
     );
-
 
 }

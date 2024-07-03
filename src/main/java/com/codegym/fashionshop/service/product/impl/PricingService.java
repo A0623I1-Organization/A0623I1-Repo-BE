@@ -42,6 +42,10 @@ private IPricingRepository pricingRepository;
     public Pricing findByPricingCode(String pricingCode) {
         return pricingRepository.findByPricingCode(pricingCode);
     }
+    public void updatePricingQuantity(Long id, int quantity) {
+        int result = pricingRepository.updateQuantity(id, quantity);
+
+    }
 
     @Override
     public void createPricing(Pricing pricing) {

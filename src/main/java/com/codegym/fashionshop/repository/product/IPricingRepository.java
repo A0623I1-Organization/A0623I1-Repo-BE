@@ -97,4 +97,7 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Pricing p WHERE p.pricingCode = :pricingCode")
     boolean existsByPricingCode(@Param("pricingCode") String pricingCode);
 
+    @Query(value = "UPDATE pricings set quantity = :quantity where pricing_id = :id", nativeQuery = true)
+    int updateQuantity(Long id, int quantity);
+
 }
