@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.repository.bill;
 
+import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.entities.BillItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,5 @@ public interface IBillItemRepository extends JpaRepository<BillItem,Long> {
 //    BillItem getBillItemByBillId(Long id);
 //    @Query("SELECT SUM(bi.quantity) FROM BillItem bi JOIN Customer c ON  c.customerId = :customerId")
 //    int getTotalQuantityOfBillItemsByCustomerId(Long id);
+
 }

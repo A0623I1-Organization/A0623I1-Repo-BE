@@ -2,8 +2,6 @@ package com.codegym.fashionshop.controller.bill;
 
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.entities.BillItem;
-import com.codegym.fashionshop.entities.Pricing;
-import com.codegym.fashionshop.entities.ProductType;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.bill.IBillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +15,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+/**
+ * REST controller for managing bill-related operations.
+ * Author: HoaNTT
+ */
 @RestController
 @RequestMapping("/api/bills")
 @CrossOrigin("*")
 public class BillRestController {
+
     @Autowired
     private IBillService billService;
 
+    /**
+     * GET endpoint to retrieve all bills.
+     *
+     * @return a ResponseEntity containing a list of bills and HTTP status OK (200) if successful
+     * @throws HttpExceptions.NotFoundException if no bills are found
+     */
     @GetMapping
-    public ResponseEntity<List<Bill>> getAllProduct() {
+    public ResponseEntity<List<Bill>> getAllBills() {
         List<Bill> bills = billService.findAll();
         if (bills.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin màu sắc");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin hóa đơn");
         }
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
+
+    /**
+     * POST endpoint to create a new bill.
+     *
+     * @param bill           the bill object to be created (validated using @Validated)
+     * @param bindingResult  captures and exposes errors from binding/validation process
+     * @return a ResponseEntity containing the created bill and HTTP status CREATED (201) if successful
+     * @throws HttpExceptions.BadRequestException if there are validation errors in the request body
+     */
     @PostMapping("")
     public ResponseEntity<Object> createBill(@Validated @RequestBody Bill bill, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -40,23 +59,57 @@ public class BillRestController {
             for (FieldError error : bindingResult.getFieldErrors()) {
                 errors.put(error.getField(), error.getDefaultMessage());
             }
-            // Trả về phản hồi JSON chứa thông điệp lỗi
             throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
         }
-        for (BillItem billItem: bill.getBillItemList()) {
+        for (BillItem billItem : bill.getBillItemList()) {
             billItem.setBill(bill);
+            System.out.println("billItem = "+billItem.getQuantity());
         }
-        billService.save(bill);
+        // Example points to add (adjust logic as needed)
+        int pointsToAdd = calculatePoints(bill);
+        System.out.println("bill = "+bill.getCustomer().getCustomerName());
+        System.out.println("mâ = "+pointsToAdd);
+        billService.createBillAndUpdatePoints(bill, pointsToAdd);
         return new ResponseEntity<>(bill, HttpStatus.CREATED);
     }
 
-    @PostMapping("/checkBillCode")
-    public ResponseEntity<Map<String, Boolean>> checkBillCode(@RequestBody Map<String, String> request) {
-        String billCode = request.get("code");
-        System.out.println("Received pricing code: " + billCode);
-        boolean isUnique = billService.isBillCodeUnique(billCode);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isUnique", isUnique);
+    /**
+     * POST endpoint to generate and check a unique bill code.
+     *
+     * @return a ResponseEntity containing a map with the generated bill code and HTTP status OK (200) if successful
+     */
+    @PostMapping("/generateAndCheckBillCode")
+    public ResponseEntity<Map<String, String>> generateAndCheckBillCode() {
+        String billCode = generateUniqueBillCode();
+        Map<String, String> response = new HashMap<>();
+        response.put("code", billCode);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Generates a unique bill code.
+     *
+     * @return a unique bill code prefixed with "HD" (e.g., HD000001)
+     */
+    private String generateUniqueBillCode() {
+        String billCode;
+        Random random = new Random();
+        do {
+            billCode = "HD" + String.format("%06d", random.nextInt(1000000));
+        } while (!billService.isBillCodeUnique(billCode));
+        return billCode;
+    }
+    /**
+     * Calculates points to be added based on the bill.
+     *
+     * @param bill the bill object
+     * @return the calculated points
+     */
+    private int calculatePoints(Bill bill) {
+        double sum = 0;
+        for (BillItem billItem : bill.getBillItemList()) {
+            sum += billItem.getPricing().getPrice() * billItem.getQuantity();
+        }
+        return (int) (sum / 100000);
     }
 }

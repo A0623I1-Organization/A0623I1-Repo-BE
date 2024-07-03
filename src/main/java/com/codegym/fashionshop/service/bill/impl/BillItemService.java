@@ -11,23 +11,12 @@ import java.util.List;
 public class BillItemService implements IBillItemService {
     @Autowired
     private IBillItemRepository repository;
-    @Override
-    public List<BillItem> findAll() {
-        return repository.findAll();
-    }
 
-    @Override
-    public BillItem findById(Long id) {
-        return repository.findById(id).get();
-    }
 
     @Override
     public void save(BillItem billItem) {
         repository.save(billItem);
     }
 
-    @Override
-    public void deleteById(Long id) {
-        repository.deleteById(id);
-    }
+
 }

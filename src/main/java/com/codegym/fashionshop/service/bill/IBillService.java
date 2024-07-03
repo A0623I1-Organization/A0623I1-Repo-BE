@@ -4,6 +4,11 @@ import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.repository.bill.IBillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public interface IBillService extends IGeneralService<Bill> {
+import java.util.List;
+
+public interface IBillService  {
     boolean isBillCodeUnique(String billCode);
+    void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
+    List<Bill> findAll();
+
 }

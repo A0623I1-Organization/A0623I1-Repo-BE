@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
+    @Query("SELECT c FROM Customer c")
     Page<Customer> findAll(Pageable pageable);
     @Modifying
     @Transactional

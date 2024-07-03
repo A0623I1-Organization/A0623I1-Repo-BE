@@ -17,13 +17,13 @@ public class CustomerController {
     @Autowired
     private ICustomerService iCustomerService;
     @GetMapping
-    public ResponseEntity<Page<Customer>> getAllPricing(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(name = "page", defaultValue = "0") int page) {
         if (page < 0) {
             page = 0;
         }
         Page<Customer> customers = iCustomerService.findAll(PageRequest.of(page, 2));
         if (customers.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin giá");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin khách hàng");
         }
         return new ResponseEntity<>(customers, HttpStatus.OK);
     }

@@ -1,11 +1,9 @@
 package com.codegym.fashionshop.repository.product;
 
 import com.codegym.fashionshop.entities.Pricing;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,18 +12,42 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Repository interface for managing pricings.
+ * Includes CRUD operations and custom queries for pricings.
+ * Author: HoaNTT
+ */
 @Repository
-public interface IPricingRepository extends JpaRepository<Pricing,Long> {
+public interface IPricingRepository extends JpaRepository<Pricing, Long> {
+
+    /**
+     * Retrieves all pricings with product and color details.
+     *
+     * @return a list of pricings with associated product and color information
+     */
     @Query(value = "SELECT p.*, pr.product_name, c.color_name FROM pricings p " +
             "JOIN products pr ON p.product_id = pr.product_id " +
             "JOIN colories c ON p.color_id = c.color_id", nativeQuery = true)
     List<Pricing> findAllPricings();
 
-
+    /**
+     * Creates a new pricing.
+     *
+     * @param pricingName    the pricing name
+     * @param pricingCode    the pricing code
+     * @param productId      the ID of the associated product
+     * @param price          the pricing price
+     * @param size           the sizing information
+     * @param qrCode         the QR code
+     * @param quantity       the quantity available
+     * @param colorId        the ID of the associated color
+     * @param pricingImgUrl  the URL of the pricing image
+     * @param inventoryId    the ID of the associated inventory
+     */
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO pricings (pricing_name, pricing_code, product_id, price, size, qr_code, inventory, color_id, pricing_image) " +
-            "VALUES (:pricingName, :pricingCode, :productId, :price, :size, :qrCode, :inventory, :colorId, :pricingImgUrl)",
+    @Query(value = "INSERT INTO pricings (pricing_name, pricing_code, product_id, price, size, qr_code, quantity, color_id, pricing_image, inventory_id) " +
+            "VALUES (:pricingName, :pricingCode, :productId, :price, :size, :qrCode, :quantity, :colorId, :pricingImgUrl, :inventoryId)",
             nativeQuery = true)
     void createPricing(@Param("pricingName") String pricingName,
                        @Param("pricingCode") String pricingCode,
@@ -33,11 +55,46 @@ public interface IPricingRepository extends JpaRepository<Pricing,Long> {
                        @Param("price") Double price,
                        @Param("size") String size,
                        @Param("qrCode") String qrCode,
-                       @Param("inventory") Integer inventory,
-                       @Param("colorId") Long colorId,
-                       @Param("pricingImgUrl") String pricingImgUrl);
+                       @Param("quantity") Integer quantity,
+                       @Param("colorId") Integer colorId,
+                       @Param("pricingImgUrl") String pricingImgUrl,
+                       @Param("inventoryId") Long inventoryId);
+
+    /**
+     * Retrieves all pricings with pagination.
+     *
+     * @param pageable pagination information
+     * @return a page of pricings
+     */
+    @Query("SELECT p FROM Pricing p")
     Page<Pricing> findAll(Pageable pageable);
-    Page<Pricing> findAllByProduct_ProductId(Long productId,Pageable pageable);
-    Pricing findByPricingCode(String pricingCode);
-    boolean existsByPricingCode(String pricingCode);
+
+    /**
+     * Retrieves all pricings associated with a specific product ID with pagination.
+     *
+     * @param productId the ID of the product
+     * @param pageable  pagination information
+     * @return a page of pricings associated with the specified product ID
+     */
+    @Query("SELECT p FROM Pricing p JOIN p.product prod WHERE prod.productId = :productId")
+    Page<Pricing> findAllByProduct_ProductId(@Param("productId") Long productId, Pageable pageable);
+
+    /**
+     * Retrieves a pricing by its pricing code.
+     *
+     * @param pricingCode the pricing code
+     * @return the pricing entity
+     */
+    @Query("SELECT p FROM Pricing p WHERE p.pricingCode = :pricingCode")
+    Pricing findByPricingCode(@Param("pricingCode") String pricingCode);
+
+    /**
+     * Checks if a pricing with the given pricing code exists.
+     *
+     * @param pricingCode the pricing code to check
+     * @return true if a pricing with the given code exists, false otherwise
+     */
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Pricing p WHERE p.pricingCode = :pricingCode")
+    boolean existsByPricingCode(@Param("pricingCode") String pricingCode);
+
 }
