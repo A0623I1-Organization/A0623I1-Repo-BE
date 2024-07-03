@@ -41,6 +41,19 @@ public interface IPricingRepository extends JpaRepository<Pricing,Long> {
   
     Page<Pricing> findAllByProduct_ProductId(Long productId,Pageable pageable);
 
+    /**
+     * Updates the quantity and inventory ID of a pricing in the database.
+     *
+     * <p>This method updates the quantity of a specific pricing by adding the provided quantity
+     * to the existing quantity. It also sets the inventory ID for the specified pricing.
+     *
+     * <p>The method is annotated with {@link Modifying} and {@link Transactional} to indicate that it
+     * performs a modifying query and should be executed within a transaction context.
+     *
+     * @param id The ID of the pricing to update.
+     * @param quantity The quantity to add to the existing quantity.
+     * @param inventoryId The inventory ID to set for the pricing.
+     */
     @Modifying
     @Transactional
     @Query(value = "UPDATE pricings SET quantity = quantity + :quantity, inventory_id = :inventoryId WHERE pricing_id = :id", nativeQuery = true)

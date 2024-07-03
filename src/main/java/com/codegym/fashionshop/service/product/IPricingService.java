@@ -17,6 +17,15 @@ public interface IPricingService  {
 
     void createPricing(Pricing pricing);
 
+    /**
+     * Updates the pricing quantities based on the provided warehouse receipt.
+     *
+     * <p>This method updates the inventory with the user ID and date from the warehouse receipt,
+     * retrieves the last inserted inventory ID, and updates the quantity and inventory ID for each
+     * pricing in the warehouse receipt.
+     *
+     * @param warehouseReceipt The warehouse receipt containing the pricing list and other details.
+     */
     void updatePricingQuantity(WarehouseReceipt warehouseReceipt);
     boolean isPricingCodeUnique(String pricingCode);
     Pricing findByPricingCode(String pricingCode);

@@ -41,6 +41,9 @@ private IPricingRepository pricingRepository;
         pricingRepository.save(pricing);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {
         AppUser user = appUserService.findByUsername(warehouseReceipt.getUsername());
