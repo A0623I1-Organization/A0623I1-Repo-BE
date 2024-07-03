@@ -43,26 +43,26 @@ private IBillRepository repository;
     }
 
     @Override
-    public Long getDailySalesRevenue(LocalDate date) {
+    public Double getDailySalesRevenue(LocalDate date) {
         return repository.getDailySalesRevenue(date);
     }
 
     @Override
-    public Long getMonthlySalesRevenue(YearMonth yearMonth) {
+    public Double getMonthlySalesRevenue(YearMonth yearMonth) {
         int year = yearMonth.getYear();
         int monthValue = yearMonth.getMonthValue();
         return repository.getMonthlySalesRevenue(year, monthValue);
     }
 
     @Override
-    public Map<Integer, Long> getDailySalesRevenueForMonth(YearMonth yearMonth) {
+    public Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth) {
         int year = yearMonth.getYear();
         int monthValue = yearMonth.getMonthValue();
-        Map<Integer, Long> dailyRevenueMap = new HashMap<>();
+        Map<Integer, Double> dailyRevenueMap = new HashMap<>();
         List<Object[]> results = repository.getDailySalesRevenueForMonth(year, monthValue);
         for(Object[] result: results) {
             Integer day = (Integer) result[0];
-            Long dailyRevenue = (Long) result[1];
+            Double dailyRevenue = (Double) result[1];
             dailyRevenueMap.put(day,dailyRevenue);
         }
         return dailyRevenueMap;

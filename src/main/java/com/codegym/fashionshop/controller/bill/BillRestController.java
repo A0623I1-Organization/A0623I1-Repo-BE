@@ -63,20 +63,20 @@ public class BillRestController {
     }
 
     @GetMapping("/revenue/daily")
-    public ResponseEntity<Long> getDailySalesRevenue(@RequestParam("date") LocalDate date){
-        Long dailyRevenue = billService.getDailySalesRevenue(date);
+    public ResponseEntity<Double> getDailySalesRevenue(@RequestParam("date") LocalDate date){
+        Double dailyRevenue = billService.getDailySalesRevenue(date);
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
 
     @GetMapping("/revenue/monthly")
-    public ResponseEntity<Long> getMonthlySalesRevenue(@RequestParam("month")YearMonth yearMonth){
-        Long monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
+    public ResponseEntity<Double> getMonthlySalesRevenue(@RequestParam("month")YearMonth yearMonth){
+        Double monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
         return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
 
     @GetMapping("/revenue/daily/month")
-    public ResponseEntity<Map<Integer, Long>> getDailySalesRevenueForMonth(@RequestParam("month")YearMonth yearMonth) {
-        Map<Integer, Long> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
+    public ResponseEntity<Map<Integer, Double>> getDailySalesRevenueForMonth(@RequestParam("month")YearMonth yearMonth) {
+        Map<Integer, Double> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
 
