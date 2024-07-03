@@ -41,6 +41,10 @@ public class PricingService implements IPricingService {
         pricingRepository.save(pricing);
     }
 
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
     public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {
         AppUser user = appUserService.findByUsername(warehouseReceipt.getUsername());

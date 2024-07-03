@@ -79,17 +79,42 @@ public class PricingRestController {
         return new ResponseEntity<>(pricing, HttpStatus.CREATED);
     }
 
+    /**
+     * Generates a warehouse receipt with the current date and a new unique receipt ID.
+     *
+     * <p>This method generates a new warehouse receipt with the current date and a unique ID,
+     * and includes the list of all pricings.
+     *
+     * @return A ResponseEntity containing the generated warehouse receipt.
+     * @author ThanhTT
+     */
     @GetMapping("/update")
     public ResponseEntity<WarehouseReceipt> getPricingListWithUserAndDate() {
         List<Pricing> pricings = pricingService.findAllPricing();
+        if (pricings.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         LocalDate date = LocalDate.now();
         String id = UUID.randomUUID().toString();
         WarehouseReceipt receipt = WarehouseReceipt.builder().receiptId(id).date(date).pricingList(pricings).build();
         return new ResponseEntity<>(receipt, HttpStatus.OK);
     }
 
+    /**
+     * Updates the pricing quantities based on the provided warehouse receipt.
+     *
+     * <p>This method calls the service to update the pricing quantities and inventory ID based on the
+     * provided warehouse receipt.
+     *
+     * @param warehouseReceipt The warehouse receipt containing the pricing list and other details.
+     * @return A ResponseEntity indicating the result of the update operation.
+     * @author ThanhTT
+     */
     @PutMapping("/update")
     public ResponseEntity<?> updatePricingQuantity(@RequestBody WarehouseReceipt warehouseReceipt) {
+        if (warehouseReceipt == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         pricingService.updatePricingQuantity(warehouseReceipt);
         return ResponseEntity.ok().build();
     }
