@@ -21,12 +21,12 @@ public class CustomerService implements ICustomerService {
     @Override
     public void createCustomer(Customer customer) {
         System.out.println(customer);
-        if (iCustomerRepository.existsByCustomerCode(customer.getCustomerCode())) {
-            throw new IllegalArgumentException("Ma khach hang da ton tai !");
-        }
-        if (iCustomerRepository.existsByEmail(customer.getEmail())) {
-            throw new IllegalArgumentException("Email da ton tai !");
-        }
+//        if (iCustomerRepository.existsByCustomerCode(customer.getCustomerCode())) {
+//            throw new IllegalArgumentException("Ma khach hang da ton tai !");
+//        }
+//        if (iCustomerRepository.existsByEmail(customer.getEmail())) {
+//            throw new IllegalArgumentException("Email da ton tai !");
+//        }
 
         customer.setCustomerType(new CustomerType(1L,"",0D));
         customer.setAccumulatedPoints(0);
@@ -78,7 +78,15 @@ public class CustomerService implements ICustomerService {
         return iCustomerRepository.findAll(pageable);
     }
 
+    @Override
+    public boolean existsByCustomerCode(String customerCode) {
+        return iCustomerRepository.existsByCustomerCode(customerCode);
+    }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return iCustomerRepository.existsByEmail(email);
+    }
 
 
 }
