@@ -43,6 +43,7 @@ private IPricingRepository pricingRepository;
 
     /**
      * {@inheritDoc}
+     * @author ThanhTT
      */
     @Override
     public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {

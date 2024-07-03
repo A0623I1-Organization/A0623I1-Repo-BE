@@ -53,6 +53,7 @@ public interface IPricingRepository extends JpaRepository<Pricing,Long> {
      * @param id The ID of the pricing to update.
      * @param quantity The quantity to add to the existing quantity.
      * @param inventoryId The inventory ID to set for the pricing.
+     * @author ThanhTT
      */
     @Modifying
     @Transactional

@@ -86,6 +86,7 @@ public class PricingRestController {
      * and includes the list of all pricings.
      *
      * @return A ResponseEntity containing the generated warehouse receipt.
+     * @author ThanhTT
      */
     @GetMapping("/update")
     public ResponseEntity<WarehouseReceipt> getPricingListWithUserAndDate() {
@@ -104,6 +105,7 @@ public class PricingRestController {
      *
      * @param warehouseReceipt The warehouse receipt containing the pricing list and other details.
      * @return A ResponseEntity indicating the result of the update operation.
+     * @author ThanhTT
      */
     @PutMapping("/update")
     public ResponseEntity<?> updatePricingQuantity(@RequestBody WarehouseReceipt warehouseReceipt) {

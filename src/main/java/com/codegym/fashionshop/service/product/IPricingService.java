@@ -25,6 +25,7 @@ public interface IPricingService  {
      * pricing in the warehouse receipt.
      *
      * @param warehouseReceipt The warehouse receipt containing the pricing list and other details.
+     * @author ThanhTT
      */
     void updatePricingQuantity(WarehouseReceipt warehouseReceipt);
     boolean isPricingCodeUnique(String pricingCode);

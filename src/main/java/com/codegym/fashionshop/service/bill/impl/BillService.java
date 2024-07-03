@@ -41,19 +41,28 @@ private IBillRepository repository;
     public boolean isBillCodeUnique(String billCode) {
         return !repository.existsByBillCode(billCode);
     }
-
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
     public Double getDailySalesRevenue(LocalDate date) {
         return repository.getDailySalesRevenue(date);
     }
-
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
     public Double getMonthlySalesRevenue(YearMonth yearMonth) {
         int year = yearMonth.getYear();
         int monthValue = yearMonth.getMonthValue();
         return repository.getMonthlySalesRevenue(year, monthValue);
     }
-
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
     public Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth) {
         int year = yearMonth.getYear();

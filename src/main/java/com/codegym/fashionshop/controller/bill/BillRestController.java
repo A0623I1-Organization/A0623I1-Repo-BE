@@ -62,18 +62,37 @@ public class BillRestController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Retrieves the daily sales revenue for a specific date.
+     *
+     * @param date The date for which to retrieve the daily sales revenue.
+     * @return A ResponseEntity containing the daily sales revenue.
+     * @author ThanhTT
+     */
     @GetMapping("/revenue/daily")
     public ResponseEntity<Double> getDailySalesRevenue(@RequestParam("date") LocalDate date){
         Double dailyRevenue = billService.getDailySalesRevenue(date);
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
-
+    /**
+     * Retrieves the monthly sales revenue for a specific month.
+     *
+     * @param yearMonth The YearMonth object for which to retrieve the monthly sales revenue.
+     * @return A ResponseEntity containing the monthly sales revenue.
+     * @author ThanhTT
+     */
     @GetMapping("/revenue/monthly")
     public ResponseEntity<Double> getMonthlySalesRevenue(@RequestParam("month")YearMonth yearMonth){
         Double monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
         return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
-
+    /**
+     * Retrieves the daily sales revenue for each day in a specific month.
+     *
+     * @param yearMonth The YearMonth object for which to retrieve the daily sales revenue.
+     * @return A ResponseEntity containing a map of the day and the corresponding daily sales revenue.
+     * @author ThanhTT
+     */
     @GetMapping("/revenue/daily/month")
     public ResponseEntity<Map<Integer, Double>> getDailySalesRevenueForMonth(@RequestParam("month")YearMonth yearMonth) {
         Map<Integer, Double> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
