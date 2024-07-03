@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +21,7 @@ public class Notification {
     private Long notifId;
 
     @Column(name = "create_date")
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @NotNull(message = "Không được để trống")
     @NotBlank(message = "Không được để trống")
@@ -34,3 +34,4 @@ public class Notification {
     private String content;
 
 }
+
