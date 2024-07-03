@@ -29,7 +29,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**","api/public/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
-                        .requestMatchers("/api/users/**", "/api/dashboard/**", "/authen/get-profile", "/authen/update-password/{userId}").authenticated()
+                        .requestMatchers("/api/users/**", "/api/dashboard/**", "/auth/get-profile", "/auth/update-password/{userId}").authenticated()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
