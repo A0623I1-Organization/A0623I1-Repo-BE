@@ -57,15 +57,15 @@ public class AuthenticationController {
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      */
     @PutMapping("/update-password/{userId}")
-    public ResponseEntity<?> updateUser(@Validated @PathVariable Long userId
-            , @RequestBody UpdatePasswordRequest updatePasswordRequest
+    public ResponseEntity<?> updateUser(@PathVariable Long userId
+            ,@Validated @RequestBody UpdatePasswordRequest updatePasswordRequest
             , BindingResult bindingResult) throws UserIsExistException {
+        System.out.println("call update");
         if (bindingResult.hasErrors()) {
+            System.out.println("call binding");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        AuthenticationResponse response = authenticationService.updatePassword(updatePasswordRequest, username);
+        AuthenticationResponse response = authenticationService.updatePassword(updatePasswordRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
