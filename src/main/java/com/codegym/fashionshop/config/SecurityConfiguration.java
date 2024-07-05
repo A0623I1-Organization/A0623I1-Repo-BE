@@ -76,7 +76,13 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**","api/public/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll() /// Tạm thời không xác thực, sau đổi sang .authenticated()
+<<<<<<< HEAD
+=======
+                        .requestMatchers("/api/auth/notification/create").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
+                        .requestMatchers("/api/users/**", "/api/dashboard/**", "/auth/get-profile", "/auth/update-password/{userId}").authenticated()
+>>>>>>> d4e8968b4b0cb61f0104036594b99df1442823d3
                         .anyRequest().authenticated()
+
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -1,11 +1,14 @@
 package com.codegym.fashionshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,20 +21,22 @@ public class Bill {
     @Column(name = "bill_id")
     private Long billId;
 
-    @Column(name = "date_create")
+    @Column(name = "bill_code")
+    private String billCode;
+
+    @Column(name = "date_create", columnDefinition = "DATE")
     private LocalDate dateCreate;
 
-    @Column(name = "customer_name")
-    private String customerName;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser appUser;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    private String address;
-
-    private boolean payment;
-
-    @Column(name = "qr_code")
-    private String qrCode;
+    @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<BillItem> billItemList;
 
 }

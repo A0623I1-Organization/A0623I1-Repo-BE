@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.config;
 
-import com.codegym.fashionshop.service.impl.JwtService;
+import com.codegym.fashionshop.service.authenticate.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +18,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/**
+ * JWT authentication filter to validate JWT tokens from incoming requests.
+ * This filter intercepts requests, extracts and validates JWT tokens,
+ * and sets up Spring Security context if the token is valid.
+ * <p>
+ * Author: KhangDV
+ */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -58,7 +65,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            throw new RuntimeException("JWT Authentication failed", e);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 }
