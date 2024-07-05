@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.dto.respone;//package com.codegym.shopdemo.dto.respone;
+//package com.codegym.fashionshop.dto.respone;//package com.codegym.shopdemo.dto.respone;
 //
 //import lombok.Getter;
 //import lombok.Setter;

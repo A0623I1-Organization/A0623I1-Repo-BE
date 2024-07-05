@@ -1,11 +1,14 @@
 package com.codegym.fashionshop.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,15 +21,19 @@ public class Pricing {
     @Column(name = "pricing_id")
     private Long pricingId;
 
-    @Column(name = "price_name")
+    @Column(name = "pricing_name")
     private String pricingName;
 
     @Column(name = "pricing_code")
     private String pricingCode;
 
-    @ManyToOne
-//    @JsonIgnore
+    //    @JsonIgnore
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "product_id")
+//    @JsonIgnore // Để tránh vòng lặp khi serialize JSON
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
 
     @Column(name = "price")
@@ -38,18 +45,20 @@ public class Pricing {
     @Column(name = "qr_code")
     private String qrCode;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", columnDefinition = "integer default 0")
     @Min(value = 0, message = "Số lượng tồn kho phải lớn hơn hoặc bằng 0!")
-    private Integer quantity;
+    private Integer quantity = 0;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "color_id")
     private Color color;
 
     @Column(name = "pricing_image")
     private String pricingImgUrl;
 
+
     @ManyToOne
     @JoinColumn(name = "inventory_id")
     private Inventory inventory;
+
 }
