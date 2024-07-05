@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.repository;
+package com.codegym.fashionshop.repository.notification;
 
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.entities.Notification;

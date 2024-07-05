@@ -2,8 +2,8 @@ package com.codegym.fashionshop.service.impl;
 
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.entities.Notification;
-import com.codegym.fashionshop.repository.INotificationRepository;
-import com.codegym.fashionshop.service.INotificationService;
+import com.codegym.fashionshop.repository.notification.INotificationRepository;
+import com.codegym.fashionshop.service.notification.INotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

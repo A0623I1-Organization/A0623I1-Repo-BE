@@ -1,10 +1,10 @@
-package com.codegym.fashionshop.controller;
+package com.codegym.fashionshop.controller.notification;
 
 
 import com.codegym.fashionshop.dto.AddNewNotificationDTO;
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.entities.Notification;
-import com.codegym.fashionshop.service.INotificationService;
+import com.codegym.fashionshop.service.notification.INotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.service;
+package com.codegym.fashionshop.service.notification;
 
 
 import com.codegym.fashionshop.dto.INotificationDTO;
