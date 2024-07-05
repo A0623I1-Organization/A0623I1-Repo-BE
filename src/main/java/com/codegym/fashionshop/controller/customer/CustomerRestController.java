@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * <p>This class provides RESTful endpoints for creating, updating, and retrieving customer information.</p>
  *
- * <p>Author: [Your Name]</p>
+ * <p>Author: [QuyLV]</p>
  */
 @RestController
 @RequestMapping("/api/auth/customer")
