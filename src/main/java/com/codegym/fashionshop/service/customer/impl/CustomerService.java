@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class CustomerService implements ICustomerService {
@@ -86,6 +87,20 @@ public class CustomerService implements ICustomerService {
     @Override
     public boolean existsByEmail(String email) {
         return iCustomerRepository.existsByEmail(email);
+    }
+
+    @Override
+    public void deleteCustomer(Long customerId) {
+        iCustomerRepository.deleteCustomerById(customerId);
+    }
+    @Override
+    public List<Customer> getAllCustomers() {
+        return iCustomerRepository.findAllCustomers();
+    }
+
+    @Override
+    public Page<Customer> searchCustomer(Long customerId, String customerCode, String customerName, String phoneNumber, Pageable pageable){
+        return iCustomerRepository.searchCustomer(customerId, customerCode, customerName, phoneNumber, pageable);
     }
 
 

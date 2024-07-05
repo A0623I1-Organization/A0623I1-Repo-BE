@@ -13,10 +13,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
-    Page<Customer> findAll(Pageable pageable);
+    Page< Customer > findAll(Pageable pageable);
 
     @Modifying
     @Transactional
@@ -47,6 +48,21 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
     );
 
     boolean existsByCustomerCode(String customerCode);
+
     boolean existsByEmail(String email);
+
     boolean existsByEmailAndCustomerCodeNot(String email, String customeCode);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Customer c WHERE c.customerId = :customerId")
+    void deleteCustomerById(@Param("customerId") Long customerId);
+
+    @Query("select c from Customer c")
+    List< Customer > findAllCustomers();
+
+    @Query("select c from Customer c where (:customerId is null or c.customerId = :customerId) and (:customerCode is null or c.customerCode like %:customerCode%) and (:customerName is null or c.customerName like %:customerName%) and (:phoneNumber is null or c.phoneNumber like %:phoneNumber%)")
+    Page<Customer> searchCustomer(@Param("customerId") Long customerId, @Param("customerCode") String customerCode, @Param("customerName") String customerName, @Param("phoneNumber") String phoneNumber, Pageable pageable);
+
+
 }

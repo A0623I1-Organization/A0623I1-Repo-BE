@@ -10,8 +10,10 @@
 //import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.*;
 //
+//import java.util.List;
+//
 //@RestController
-//@RequestMapping("/api/customers")
+//@RequestMapping("/api/auth/customers")
 //@CrossOrigin("*")
 //public class CustomerController {
 //    @Autowired
@@ -37,5 +39,21 @@
 //        iCustomerService.updateCustomer(id,customer);
 //        return new ResponseEntity<>(HttpStatus.CREATED);
 //    }
+//
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
+//        iCustomerService.deleteCustomer(customerId);
+//        return ResponseEntity.noContent().build();
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity< List<Customer>> getAllCustomer() {
+//        List<Customer> customerList = iCustomerService.getAllCustomers();
+//        return ResponseEntity.ok(customerList);
+//
+//    }
+//
+//
 //
 //}
