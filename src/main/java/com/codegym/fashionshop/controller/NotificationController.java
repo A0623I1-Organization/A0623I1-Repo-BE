@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.controller;
+package com.codegym.fashionshop.controller.NotificationController;
 
 
 import com.codegym.fashionshop.dto.AddNewNotificationDTO;
@@ -28,17 +28,14 @@ public class NotificationController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNotification() {
-        System.out.println("addNewNotificationDTO");
-//        if (addNewNotificationDTO == null) {
-//            return new ResponseEntity<AddNewNotificationDTO>(HttpStatus.NO_CONTENT);
-//        } else {
-
-//            notificationService.addNotification(addNewNotificationDTO.getContent(), addNewNotificationDTO.getCreateDate(), addNewNotificationDTO.getTopic(), addNewNotificationDTO.getListRole());
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        }
-        return new ResponseEntity<>(HttpStatus.OK);
-
+    public ResponseEntity<?> createNotification(@RequestBody AddNewNotificationDTO addNewNotificationDTO) {
+        System.out.println("Đã vào phương thức tạo thông báo.");
+        if (addNewNotificationDTO == null) {
+            return new ResponseEntity<AddNewNotificationDTO>(HttpStatus.NO_CONTENT);
+        } else {
+            notificationService.addNotification(addNewNotificationDTO.getContent(),addNewNotificationDTO.getCreateDate(), addNewNotificationDTO.getTopic(), addNewNotificationDTO.getListRole());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
     @GetMapping("/detail/{notifId}")
     public ResponseEntity<?> findNotificationById(@PathVariable("notifId") Long notifId){
