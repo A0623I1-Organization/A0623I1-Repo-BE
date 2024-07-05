@@ -76,7 +76,6 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**","api/public/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll() /// Tạm thời không xác thực, sau đổi sang .authenticated()
-                        .requestMatchers("/api/auth/notification/create").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

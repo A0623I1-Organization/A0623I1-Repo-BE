@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.service.impl;
 
+import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.entities.Notification;
 import com.codegym.fashionshop.repository.INotificationRepository;
 import com.codegym.fashionshop.service.INotificationService;
@@ -17,7 +18,7 @@ public class NotificationServiceImpl implements INotificationService {
     INotificationRepository notificationRepository;
 
     @Override
-    public List<Notification> getAllNotification(Long roleId) {
+    public List<INotificationDTO> getAllNotification(Long roleId) {
         return notificationRepository.findAll(roleId);
     }
 
@@ -30,12 +31,16 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     public Notification findNotificationById(Long notifId) {
-
         return notificationRepository.findNotificationByNotifId(notifId);
     }
 
     @Override
-    public List<Notification> findNotificationsByStatusRead(boolean statusRead) {
-        return notificationRepository.findNotificationsByStatusRead(statusRead);
+    public List<Notification> findNotificationsByStatusRead(Long userId, boolean statusRead) {
+        return notificationRepository.findNotificationsByStatusRead(userId,statusRead);
+    }
+
+    @Override
+    public void markAsRead(Long userId) {
+        notificationRepository.markAsRead(userId);
     }
 }

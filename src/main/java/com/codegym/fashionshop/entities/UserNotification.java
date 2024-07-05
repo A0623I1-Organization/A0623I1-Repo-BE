@@ -19,7 +19,7 @@ public class UserNotification {
 
     @ManyToOne
     @JoinColumn(name = "notif_id")
-    private Notification notification;
+    private Notification INotificationDTO;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

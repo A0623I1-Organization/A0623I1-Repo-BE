@@ -4,7 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
-public interface NotificationDTO {
+public interface INotificationDTO {
     Long getNotifId();
     String getTopic();
     String getContent();
