@@ -63,8 +63,9 @@ public class AuthenticationService {
                     .message("Đăng nhập thành công!!!")
                     .build();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return AuthenticationResponse.builder()
-                    .message(e.getMessage())
+                    .message("Đăng nhập thất bại")
                     .statusCode(500).build();
         }
     }
@@ -106,10 +107,10 @@ public class AuthenticationService {
      * Updates the password of the authenticated user.
      *
      * @param updatePasswordRequest The user request containing the updated password details.
-     * @param username    The username of the authenticated user.
      * @return An {@link AuthenticationResponse} indicating the status of the password update operation.
      */
-    public AuthenticationResponse updatePassword(UpdatePasswordRequest updatePasswordRequest, String username) {
+    public AuthenticationResponse updatePassword(UpdatePasswordRequest updatePasswordRequest) {
+        String username = updatePasswordRequest.getUsername();
         AppUser user = userRepository.findByUsername(username);
         if (user == null) {
             return AuthenticationResponse.builder()
@@ -118,7 +119,7 @@ public class AuthenticationService {
                     .build();
 
         }
-        if (!Objects.equals(passwordEncoder.encode(updatePasswordRequest.getOldPassword()), user.getEncryptedPassword())) {
+        if (!passwordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getEncryptedPassword())) {
             return AuthenticationResponse.builder()
                     .statusCode(400)
                     .message("Vui lòng nhập đúng mật khẩu!").build();

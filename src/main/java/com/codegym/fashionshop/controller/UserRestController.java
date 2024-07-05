@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 public class UserRestController {
     @Autowired
     private UserService userService;
@@ -76,6 +76,7 @@ public class UserRestController {
     public ResponseEntity<?> createUser(@Validated @RequestBody AppUserRequest appUserRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            System.out.println("Errors encountered");
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
         AuthenticationResponse response = userService.save(appUserRequest);
@@ -90,7 +91,7 @@ public class UserRestController {
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse} with the status of the update.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@Validated @PathVariable Long id, @RequestBody AppUserRequest appUserRequest,
+    public ResponseEntity<?> updateUser(@PathVariable Long id,@Validated @RequestBody AppUserRequest appUserRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
