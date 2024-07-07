@@ -59,9 +59,6 @@ public class CustomerService implements ICustomerService {
      */
     @Override
     public void updateCustomer(Long id, Customer customer) {
-        if (iCustomerRepository.existsByEmailAndCustomerCodeNot(customer.getEmail(), customer.getCustomerCode())) {
-            throw new IllegalArgumentException("Email already exists!");
-        }
         if (iCustomerRepository.existsById(id)) {
             iCustomerRepository.updateCustomer(
                     id,
@@ -71,11 +68,9 @@ public class CustomerService implements ICustomerService {
                     customer.getEmail(),
                     customer.getPhoneNumber(),
                     customer.getAddress(),
-                    customer.getCustomerType(),
+                    customer.getCustomerType().getTypeId(),
                     customer.getAccumulatedPoints()
             );
-        } else {
-            throw new IllegalArgumentException("Customer with ID " + id + " does not exist.");
         }
     }
 
@@ -121,5 +116,17 @@ public class CustomerService implements ICustomerService {
     @Override
     public boolean existsByEmail(String email) {
         return iCustomerRepository.existsByEmail(email);
+    }
+
+    /**
+     * Checks if a customer exists with the given email but not with the specified customer code.
+     *
+     * @param email        the email address of the customer to check.
+     * @param customerCode the customer code to exclude in the check.
+     * @return {@code true} if a customer exists with the given email but not with the specified customer code, {@code false} otherwise.
+     */
+    @Override
+    public boolean existsByEmailAndCustomerCodeNot(String email, String customerCode) {
+        return iCustomerRepository.existsByEmailAndCustomerCodeNot(email, customerCode);
     }
 }

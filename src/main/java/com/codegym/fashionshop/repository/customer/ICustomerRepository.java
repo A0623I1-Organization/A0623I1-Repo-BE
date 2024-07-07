@@ -1,7 +1,6 @@
 package com.codegym.fashionshop.repository.customer;
 
 import com.codegym.fashionshop.entities.Customer;
-import com.codegym.fashionshop.entities.CustomerType;
 import jakarta.transaction.Transactional;
 
 import org.springframework.data.domain.Page;
@@ -69,12 +68,12 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      * @param email the email
      * @param phoneNumber the phone number
      * @param address the address
-     * @param customerType the customer type
+     * @param customerTypeId the customer type
      * @param accumulatedPoints the accumulated points
      */
     @Modifying
     @Transactional
-    @Query(value = "UPDATE customers SET customer_name = :customerName, date_of_birth = :dateOfBirth, gender = :gender, email = :email, phone_number = :phoneNumber, address = :address, type_id = :customerType, accumulated_points = :accumulatedPoints WHERE customer_id = :id", nativeQuery = true)
+    @Query(value = "UPDATE customers SET customer_name = :customerName, date_of_birth = :dateOfBirth, gender = :gender, email = :email, phone_number = :phoneNumber, address = :address, type_id = :customerTypeId, accumulated_points = :accumulatedPoints WHERE customer_id = :id", nativeQuery = true)
     void updateCustomer(@Param("id") Long id,
                         @Param("customerName") String customerName,
                         @Param("dateOfBirth") LocalDate dateOfBirth,
@@ -82,9 +81,10 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
                         @Param("email") String email,
                         @Param("phoneNumber") String phoneNumber,
                         @Param("address") String address,
-                        @Param("customerType") CustomerType customerType,
+                        @Param("customerTypeId") Long customerTypeId,
                         @Param("accumulatedPoints") int accumulatedPoints
     );
+
 
     /**
      * Checks if a customer with the specified customer code exists.

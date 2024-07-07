@@ -60,4 +60,12 @@ public interface ICustomerService {
      * @return true if a customer with the specified email exists, false otherwise
      */
     boolean existsByEmail(String email);
+    /**
+     * Checks if a customer exists with the given email but not with the specified customer code.
+     *
+     * @param email        the email address of the customer to check.
+     * @param customerCode the customer code to exclude in the check.
+     * @return {@code true} if a customer exists with the given email but not with the specified customer code, {@code false} otherwise.
+     */
+    boolean existsByEmailAndCustomerCodeNot(String email, String customerCode);
 }

@@ -31,7 +31,7 @@ public class Customer {
     private Long customerId;
 
     @NotBlank(message = "Mã khách hàng không được để trống !")
-    @Pattern(regexp = "^KH-\\d{3}$", message = "Mã khách hàng phải có định dạng KH-XXX")
+    @Pattern(regexp = "^KH-\\d{3,}$", message = "Mã khách hàng phải có định dạng KH-XXX")
     @Column(name = "customer_code", unique = true, nullable = false)
     private String customerCode;
 
@@ -39,6 +39,7 @@ public class Customer {
     @Column(name = "customer_name", nullable = false)
     private String customerName;
 
+    @NotNull(message = "Ngày sinh không được để trống")
     @Past(message = "Ngày phải là ngày quá khứ !")
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
@@ -52,7 +53,8 @@ public class Customer {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Pattern(regexp = "\\d{10}", message = "Số điện thoại phải 10 số ")
+    @NotBlank(message = "Số điện thoại không được để trống!")
+    @Pattern(regexp = "^+84|0\\d{9}$", message = "Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!")
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -63,7 +65,7 @@ public class Customer {
     @Column(name = "date_register")
     private LocalDate dateRegister;
 
-    @Min(value = 0, message = "Số tối thiểu phải bằng 0")
+    @Min(value = 0, message = "Điểm phải lớn hơn hoặc bằng 0")
     @Column(name = "accumulated_points")
     private int accumulatedPoints;
 
