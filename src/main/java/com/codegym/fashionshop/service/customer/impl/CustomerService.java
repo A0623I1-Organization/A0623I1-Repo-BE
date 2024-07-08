@@ -4,6 +4,7 @@ import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.entities.CustomerType;
 import com.codegym.fashionshop.repository.customer.ICustomerRepository;
 import com.codegym.fashionshop.service.customer.ICustomerService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * The CustomerService class provides implementations for customer-related operations.
@@ -53,7 +55,7 @@ public class CustomerService implements ICustomerService {
     /**
      * Updates an existing customer with the specified details.
      *
-     * @param id the ID of the customer to be updated
+     * @param id       the ID of the customer to be updated
      * @param customer the updated customer data
      * @throws IllegalArgumentException if the email already exists or the customer with the specified ID does not exist
      */
@@ -92,7 +94,7 @@ public class CustomerService implements ICustomerService {
      * @return a paginated list of customers
      */
     @Override
-    public Page<Customer> findAll(Pageable pageable) {
+    public Page< Customer > findAll(Pageable pageable) {
         return iCustomerRepository.findAll(pageable);
     }
 
@@ -129,4 +131,24 @@ public class CustomerService implements ICustomerService {
     public boolean existsByEmailAndCustomerCodeNot(String email, String customerCode) {
         return iCustomerRepository.existsByEmailAndCustomerCodeNot(email, customerCode);
     }
+
+    @Override
+    @Transactional
+    public void deleteCustomer(Long customerId) {
+        iCustomerRepository.deleteCustomer(customerId);
+//        System.out.println(customerId);
+//        iCustomerRepository.deleteById(customerId);
+    }
+
+    @Override
+    public List< Customer > getAllCustomers() {
+        return iCustomerRepository.getAllCustomer();
+    }
+
+    @Override
+    public Page< Customer > searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
+        return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
+    }
+
+
 }

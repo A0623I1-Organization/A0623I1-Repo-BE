@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * The ICustomerRepository interface provides methods for managing customer data.
@@ -21,7 +22,7 @@ import java.time.LocalDate;
  *
  * <p>Author: [QuyLV]</p>
  */
-public interface ICustomerRepository extends JpaRepository<Customer, Long> {
+public interface ICustomerRepository extends JpaRepository< Customer, Long > {
 
     /**
      * Finds all customers with pagination support.
@@ -29,19 +30,19 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      * @param pageable the pagination information
      * @return a paginated list of customers
      */
-    Page<Customer> findAll(Pageable pageable);
+    Page< Customer > findAll(Pageable pageable);
 
     /**
      * Creates a new customer with the specified details.
      *
-     * @param customerCode the customer code
-     * @param customerName the customer name
-     * @param dateOfBirth the date of birth
-     * @param gender the gender
-     * @param email the email
-     * @param phoneNumber the phone number
-     * @param address the address
-     * @param dateRegister the registration date
+     * @param customerCode      the customer code
+     * @param customerName      the customer name
+     * @param dateOfBirth       the date of birth
+     * @param gender            the gender
+     * @param email             the email
+     * @param phoneNumber       the phone number
+     * @param address           the address
+     * @param dateRegister      the registration date
      * @param accumulatedPoints the accumulated points
      */
     @Modifying
@@ -61,14 +62,14 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
     /**
      * Updates an existing customer with the specified details.
      *
-     * @param id the ID of the customer to be updated
-     * @param customerName the customer name
-     * @param dateOfBirth the date of birth
-     * @param gender the gender
-     * @param email the email
-     * @param phoneNumber the phone number
-     * @param address the address
-     * @param customerTypeId the customer type
+     * @param id                the ID of the customer to be updated
+     * @param customerName      the customer name
+     * @param dateOfBirth       the date of birth
+     * @param gender            the gender
+     * @param email             the email
+     * @param phoneNumber       the phone number
+     * @param address           the address
+     * @param customerTypeId    the customer type
      * @param accumulatedPoints the accumulated points
      */
     @Modifying
@@ -105,11 +106,20 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
     /**
      * Checks if a customer with the specified email exists, excluding a customer with the specified customer code.
      *
-     * @param email the email
+     * @param email        the email
      * @param customerCode the customer code to exclude
      * @return true if a customer with the specified email exists, excluding the specified customer code, false otherwise
      */
     boolean existsByEmailAndCustomerCodeNot(String email, String customerCode);
 
+    @Query("select c from Customer c where c.customerCode like :customerCode and c.customerName like :customerName and c.phoneNumber like :phoneNumber")
+    Page< Customer > searchCustomer(@Param("customerCode") String customerCode, @Param("customerName") String customerName, @Param("phoneNumber") String phoneNumber, Pageable pageable);
 
+    @Modifying
+    @Transactional
+    @Query("delete from Customer c where c.customerId = :customerId")
+    void deleteCustomer(@Param("customerId") Long customerId);
+
+    @Query("select c from Customer c")
+    List< Customer > getAllCustomer();
 }
