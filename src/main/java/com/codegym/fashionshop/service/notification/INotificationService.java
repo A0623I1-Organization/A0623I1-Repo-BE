@@ -7,11 +7,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface INotificationService {
-    List<INotificationDTO> getAllNotification(Long roleId);
+    List<INotificationDTO> getAllNotification(Long roleId,Long userId);
 
     void addNotification(String content, LocalDateTime createDate, String topic, List<Long> listRole);
     Notification findNotificationById(Long notifId);
-    List<Notification> findNotificationsByStatusRead(Long userId, boolean statusRead);
-    void markAsRead(Long userId);
+    List<INotificationDTO> findNotificationsByStatusRead(Long userId, boolean statusRead);
+    boolean markAsRead(Long userId);
+    boolean isMarkAllAsRead();
+    void updateStatusRead(Long notifId);
 
 }

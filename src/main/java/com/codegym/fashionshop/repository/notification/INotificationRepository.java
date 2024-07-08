@@ -2,6 +2,7 @@ package com.codegym.fashionshop.repository.notification;
 
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.entities.Notification;
+import com.codegym.fashionshop.entities.UserNotification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,8 +19,8 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     @Query(value = "SELECT n.notif_id,n.topic,n.create_date,n.content,u.status_read from notification n\n" +
             "join user_notification u on n.notif_id=u.notif_id\n" +
             "join app_user a on a.user_id = u.user_id\n" +
-            "where a.role_id=:roleId order by n.create_date desc", nativeQuery = true)
-    List<INotificationDTO> findAll(@Param("roleId") Long roleId);
+            "where (a.role_id=:roleId and u.user_id=:userId) order by n.create_date desc;", nativeQuery = true)
+    List<INotificationDTO> findAll(@Param("roleId") Long roleId,@Param("userId") Long userId);
 
     @Modifying
     @Transactional
@@ -45,8 +46,14 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
             "join user_notification u on n.notif_id=u.notif_id\n" +
             "join app_user a on a.user_id=u.user_id\n" +
             "where u.status_read=:statusRead and a.user_id=:userId;", nativeQuery = true)
-    List<Notification> findNotificationsByStatusRead(@Param("userId") Long userId, @Param("statusRead") boolean statusRead);
-
+    List<INotificationDTO> findNotificationsByStatusRead(@Param("userId") Long userId, @Param("statusRead") boolean statusRead);
+    @Modifying
+    @Transactional
     @Query(value = "update user_notification u set u.status_read=1 where u.status_read=0 and u.user_id=:userId", nativeQuery = true)
-    void markAsRead(@Param("userId") Long userId);
+    int markAsRead(@Param("userId") Long userId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "update user_notification u set status_read=1 where u.user_id=:userId and u.status_read=0 and u.notif_id=:notifId", nativeQuery = true)
+    void updateStatusRead(@Param("userId") Long userId,@Param("notifId") Long notifId);
 }
