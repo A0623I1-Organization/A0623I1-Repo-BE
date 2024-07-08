@@ -39,13 +39,13 @@ public class AppUserRequest {
     @Size(max = 50, message = "Họ và tên không được quá 50 chữ!")
     private String fullName;
 
-    @NotBlank(message = "Ngày sinh không được để trống!")
+    @NotNull(message = "Ngày sinh không được để trống!")
     private LocalDate dateOfBirth;
 
-    @NotNull(message = "Giới tính không được bỏ trốn!")
+    @NotNull(message = "Giới tính không được bỏ trống!")
     private Integer gender;
 
-    @NotBlank(message = "Số điện thoại không được bỏ trốn!")
+    @NotBlank(message = "Số điện thoại không được bỏ trống!")
     @Pattern(regexp = "^+84|0\\d{9}", message = "Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!")
     private String phoneNumber;
 

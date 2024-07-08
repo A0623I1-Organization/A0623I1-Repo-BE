@@ -26,7 +26,7 @@ public class CategoryRestController {
     public ResponseEntity<List<Category>> getColor() {
         List<Category> categories = categoryService.findAllCategories();
         if (categories.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin màu sắc");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin danh mục sản phẩm!");
         }
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }

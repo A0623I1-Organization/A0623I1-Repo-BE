@@ -77,6 +77,7 @@ public class UserRestController {
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println("Errors encountered");
+            System.out.println(bindingResult.getAllErrors());
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
         AuthenticationResponse response = userService.save(appUserRequest);
