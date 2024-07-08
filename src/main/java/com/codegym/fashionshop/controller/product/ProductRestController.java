@@ -39,6 +39,7 @@ public class ProductRestController {
         }
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
     @PostMapping("")
     public ResponseEntity<Object> createProduct( @RequestBody Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -58,6 +59,7 @@ public class ProductRestController {
         productService.createProduct(product);
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
+
     @PostMapping("/checkProductCode")
     public ResponseEntity<Map<String, Boolean>> checkProductCode(@RequestBody Map<String, String> request) {
         String productCode = request.get("code");

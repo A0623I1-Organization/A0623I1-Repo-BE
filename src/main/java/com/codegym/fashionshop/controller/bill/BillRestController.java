@@ -28,10 +28,10 @@ public class BillRestController {
     private IBillService billService;
 
     @GetMapping
-    public ResponseEntity<List<Bill>> getAllProduct() {
+    public ResponseEntity<List<Bill>> getAllBill() {
         List<Bill> bills = billService.findAll();
         if (bills.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin màu sắc");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin đơn hàng");
         }
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
