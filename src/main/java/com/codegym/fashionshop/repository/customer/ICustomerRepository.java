@@ -22,8 +22,6 @@ import java.util.List;
  *
  * <p>Author: [QuyLV]</p>
  */
-public interface ICustomerRepository extends JpaRepository< Customer, Long > {
-=======
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
     /**
@@ -32,7 +30,6 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      * @param pageable the pagination information
      * @return a paginated list of customers
      */
-    Page< Customer > findAll(Pageable pageable);
     Page<Customer> findAll(Pageable pageable);
 
     /**
