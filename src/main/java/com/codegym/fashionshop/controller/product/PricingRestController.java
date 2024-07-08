@@ -17,10 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/pricing")
@@ -78,7 +75,22 @@ public class PricingRestController {
         pricingService.createPricing(pricing);
         return new ResponseEntity<>(pricing, HttpStatus.CREATED);
     }
-
+    /**
+     * Retrieving a pricings list.
+     *
+     * <p>This method generates a list of all pricings.
+     *
+     * @return A ResponseEntity containing the pricings list.
+     * @author ThanhTT
+     */
+    @GetMapping("/list")
+    public ResponseEntity<List<Pricing>> getAllPricing() {
+        List<Pricing> pricings = pricingService.findAllPricing();
+        if(pricings.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(pricings, HttpStatus.OK);
+    }
     /**
      * Generates a warehouse receipt with the current date and a new unique receipt ID.
      *
@@ -90,10 +102,7 @@ public class PricingRestController {
      */
     @GetMapping("/update")
     public ResponseEntity<WarehouseReceipt> getPricingListWithUserAndDate() {
-        List<Pricing> pricings = pricingService.findAllPricing();
-        if (pricings.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        List<Pricing> pricings = new ArrayList<>();
         LocalDate date = LocalDate.now();
         String id = UUID.randomUUID().toString();
         WarehouseReceipt receipt = WarehouseReceipt.builder().receiptId(id).date(date).pricingList(pricings).build();

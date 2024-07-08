@@ -28,6 +28,7 @@ public interface IPricingService  {
      * @author ThanhTT
      */
     void updatePricingQuantity(WarehouseReceipt warehouseReceipt);
+
     boolean isPricingCodeUnique(String pricingCode);
     Pricing findByPricingCode(String pricingCode);
 
