@@ -5,6 +5,8 @@ import com.codegym.fashionshop.entities.Customer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 /**
  * The ICustomerService interface provides methods for managing customer data.
  *
@@ -68,4 +70,8 @@ public interface ICustomerService {
      * @return {@code true} if a customer exists with the given email but not with the specified customer code, {@code false} otherwise.
      */
     boolean existsByEmailAndCustomerCodeNot(String email, String customerCode);
+
+    void deleteCustomer(Long customerId);
+    List<Customer> getAllCustomers();
+    Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber,Pageable pageable);
 }
