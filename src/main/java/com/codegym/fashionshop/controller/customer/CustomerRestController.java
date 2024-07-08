@@ -82,7 +82,6 @@ public class CustomerRestController {
      * @throws HttpExceptions.BadRequestException if validation errors occur or email already exists
      */
     @PutMapping("/{id}")
-    public ResponseEntity< ? > updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
     public ResponseEntity<?> updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorDetail errors = new ErrorDetail("Validation errors");
@@ -107,7 +106,6 @@ public class CustomerRestController {
      * @return ResponseEntity with the customer data if found, otherwise NOT_FOUND status
      */
     @GetMapping("/{id}")
-    public ResponseEntity< ? > findByIdCustomer(@PathVariable Long id) {
     public ResponseEntity<?> findByIdCustomer(@PathVariable Long id) {
         Customer customer = iCustomerService.findById(id);
         if (customer == null) {
