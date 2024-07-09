@@ -23,6 +23,8 @@ import java.util.List;
  * <p>Author: [QuyLV]</p>
  */
 public interface ICustomerRepository extends JpaRepository< Customer, Long > {
+=======
+public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
     /**
      * Finds all customers with pagination support.
@@ -31,6 +33,7 @@ public interface ICustomerRepository extends JpaRepository< Customer, Long > {
      * @return a paginated list of customers
      */
     Page< Customer > findAll(Pageable pageable);
+    Page<Customer> findAll(Pageable pageable);
 
     /**
      * Creates a new customer with the specified details.
@@ -43,6 +46,14 @@ public interface ICustomerRepository extends JpaRepository< Customer, Long > {
      * @param phoneNumber       the phone number
      * @param address           the address
      * @param dateRegister      the registration date
+     * @param customerCode the customer code
+     * @param customerName the customer name
+     * @param dateOfBirth the date of birth
+     * @param gender the gender
+     * @param email the email
+     * @param phoneNumber the phone number
+     * @param address the address
+     * @param dateRegister the registration date
      * @param accumulatedPoints the accumulated points
      */
     @Modifying
@@ -70,6 +81,14 @@ public interface ICustomerRepository extends JpaRepository< Customer, Long > {
      * @param phoneNumber       the phone number
      * @param address           the address
      * @param customerTypeId    the customer type
+     * @param id the ID of the customer to be updated
+     * @param customerName the customer name
+     * @param dateOfBirth the date of birth
+     * @param gender the gender
+     * @param email the email
+     * @param phoneNumber the phone number
+     * @param address the address
+     * @param customerTypeId the customer type
      * @param accumulatedPoints the accumulated points
      */
     @Modifying
@@ -107,6 +126,7 @@ public interface ICustomerRepository extends JpaRepository< Customer, Long > {
      * Checks if a customer with the specified email exists, excluding a customer with the specified customer code.
      *
      * @param email        the email
+     * @param email the email
      * @param customerCode the customer code to exclude
      * @return true if a customer with the specified email exists, excluding the specified customer code, false otherwise
      */

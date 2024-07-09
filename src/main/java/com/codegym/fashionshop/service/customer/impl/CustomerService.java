@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
+
 /**
  * The CustomerService class provides implementations for customer-related operations.
  *
@@ -57,6 +58,7 @@ public class CustomerService implements ICustomerService {
      * Updates an existing customer with the specified details.
      *
      * @param id       the ID of the customer to be updated
+     * @param id the ID of the customer to be updated
      * @param customer the updated customer data
      * @throws IllegalArgumentException if the email already exists or the customer with the specified ID does not exist
      */
@@ -159,6 +161,5 @@ public class CustomerService implements ICustomerService {
     public Page< Customer > searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
         return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
     }
-
 
 }
