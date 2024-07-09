@@ -120,6 +120,10 @@ public interface ICustomerRepository extends JpaRepository< Customer, Long > {
     @Query("delete from Customer c where c.customerId = :customerId")
     void deleteCustomer(@Param("customerId") Long customerId);
 
+    @Query("select c from Customer c where c.customerId = :customerId")
+    Customer getAllCustomer(@Param("customerId") Long customerId);
+
     @Query("select c from Customer c")
-    List< Customer > getAllCustomer();
+    List<Customer> getAllCustomers();
+
 }

@@ -2,7 +2,9 @@ package com.codegym.fashionshop.controller.customer;
 
 import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.Customer;
+import com.codegym.fashionshop.exceptions.ApiResponse;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
+import com.codegym.fashionshop.exceptions.ResourceNotFoundException;
 import com.codegym.fashionshop.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -109,13 +111,31 @@ public class CustomerRestController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-
     @DeleteMapping("/{customerId}")
-    public ResponseEntity< Void > deleteCustomer(@PathVariable Long customerId) {
-
-        iCustomerService.deleteCustomer(customerId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse> deleteCustomer(@PathVariable String customerId) {
+        String[] number = customerId.split(",");
+        List<String> result = new ArrayList<>();
+        String mes = null;
+        for (String idStr : number) {
+            Long id;
+            try {
+                id = Long.parseLong(idStr);
+            } catch (NumberFormatException e) {
+                return new ResponseEntity<>(new ApiResponse("Invalid id format", false), HttpStatus.BAD_REQUEST);
+            }
+            if (id <= 0) {
+                return new ResponseEntity<>(new ApiResponse("Invalid id", false), HttpStatus.BAD_REQUEST);
+            } else {
+                iCustomerService.deleteCustomer(id);
+                result.add(idStr);
+            }
+        }
+        if (!result.isEmpty()) {
+            mes = "Customer with customerID " + String.join(", ", result) + " has been deleted successfully!";
+        }
+        return new ResponseEntity<>(new ApiResponse(mes, true), HttpStatus.OK);
     }
+
 
     @GetMapping("/list")
     public ResponseEntity< List< Customer > > getAllCustomer() {
@@ -123,16 +143,26 @@ public class CustomerRestController {
         return ResponseEntity.ok(customerList);
     }
 
+    @GetMapping("/list/{customerId}")
+    public ResponseEntity<Customer> getAllCustomer(@PathVariable("customerId") Long customerId) {
+        if (customerId == null) {
+            throw new ResourceNotFoundException("Customer", "CustomerId", customerId);
+        }
+        Customer customer = iCustomerService.getAllCustomer(customerId);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
+    }
+
     @GetMapping("/search")
-    public ResponseEntity< Page< Customer > > searchCustomer(@PageableDefault(page = 0, size = 5) org.springframework.data.domain.Pageable pageable,
-                                                             @RequestParam(required = false, defaultValue = "") String customerName,
-                                                             @RequestParam(required = false, defaultValue = "") String customerCode,
-                                                             @RequestParam(required = false, defaultValue = "") String phoneNumber,
-                                                             @RequestParam(required = false, defaultValue = "customerId") String sort) {
+    public ResponseEntity<Page<Customer>> searchCustomer(
+            @PageableDefault(page = 0, size = 5) Pageable pageable,
+            @RequestParam(required = false, defaultValue = "") String customerName,
+            @RequestParam(required = false, defaultValue = "") String customerCode,
+            @RequestParam(required = false, defaultValue = "") String phoneNumber,
+            @RequestParam(required = false, defaultValue = "customerId") String sort) {
         Sort sort1 = Sort.by(Sort.Direction.ASC, sort);
         Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort1);
-        Pageable p = PageRequest.of(0, 5, Sort.Direction.ASC, "customerId");
-        Page<Customer> list = iCustomerService.searchCustomer("%" + customerCode + "%", "%" + customerName + "%", "%" + phoneNumber + "%", p);
+        Page<Customer> list = iCustomerService.searchCustomer("%" + customerCode + "%", "%" + customerName + "%", "%" + phoneNumber + "%", pageableWithSort);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
 }

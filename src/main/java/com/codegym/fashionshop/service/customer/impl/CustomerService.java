@@ -2,6 +2,7 @@ package com.codegym.fashionshop.service.customer.impl;
 
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.entities.CustomerType;
+import com.codegym.fashionshop.exceptions.ResourceNotFoundException;
 import com.codegym.fashionshop.repository.customer.ICustomerRepository;
 import com.codegym.fashionshop.service.customer.ICustomerService;
 import jakarta.transaction.Transactional;
@@ -135,15 +136,24 @@ public class CustomerService implements ICustomerService {
     @Override
     @Transactional
     public void deleteCustomer(Long customerId) {
-        iCustomerRepository.deleteCustomer(customerId);
-//        System.out.println(customerId);
-//        iCustomerRepository.deleteById(customerId);
+        Customer customer = (Customer) iCustomerRepository.getAllCustomer(customerId);
+        if (customer == null){
+            throw new ResourceNotFoundException("Customer", "Id", customerId);
+        }  else {
+            iCustomerRepository.deleteCustomer(customerId);
+        }
+    }
+
+    @Override
+    public Customer getAllCustomer(Long customerId) {
+        return iCustomerRepository.getAllCustomer(customerId);
     }
 
     @Override
     public List< Customer > getAllCustomers() {
-        return iCustomerRepository.getAllCustomer();
+        return iCustomerRepository.getAllCustomers();
     }
+
 
     @Override
     public Page< Customer > searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {

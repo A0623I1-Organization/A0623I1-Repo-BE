@@ -72,6 +72,8 @@ public interface ICustomerService {
     boolean existsByEmailAndCustomerCodeNot(String email, String customerCode);
 
     void deleteCustomer(Long customerId);
+    Customer getAllCustomer(Long customerId);
     List<Customer> getAllCustomers();
+
     Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber,Pageable pageable);
 }
