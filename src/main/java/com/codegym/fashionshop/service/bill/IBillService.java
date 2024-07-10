@@ -9,7 +9,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Map;
 
-public interface IBillService extends IGeneralService<Bill> {
+import java.util.List;
+
+public interface IBillService  {
     boolean isBillCodeUnique(String billCode);
     /**
      * Retrieves the daily sales revenue for a specific date.
@@ -35,4 +37,6 @@ public interface IBillService extends IGeneralService<Bill> {
      * @author ThanhTT
      */
     Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth);
+    void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
+    List<Bill> findAll();
 }

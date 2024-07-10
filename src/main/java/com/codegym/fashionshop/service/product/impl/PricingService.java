@@ -36,10 +36,10 @@ public class PricingService implements IPricingService {
         return pricingRepository.findAllByProduct_ProductId(productId,pageable);
     }
 
-    @Override
-    public void createPricing(Pricing pricing) {
-        pricingRepository.save(pricing);
-    }
+//    @Override
+//    public void createPricing(Pricing pricing) {
+//        pricingRepository.save(pricing);
+//    }
 
     /**
      * {@inheritDoc}
@@ -80,6 +80,21 @@ public class PricingService implements IPricingService {
 //                Long.valueOf(pricing.getColor().getColorId()),
 //                pricing.getPricingImgUrl());
 //    }
+    @Override
+    public void createPricing(Pricing pricing) {
+        pricingRepository.createPricing(
+                pricing.getPricingName(),
+                pricing.getPricingCode(),
+                pricing.getProduct().getProductId(),
+                pricing.getPrice(),
+                pricing.getSize(),
+                pricing.getQrCode(),
+                Long.valueOf(pricing.getQuantity()),
+                pricing.getInventory().getInventoryId(),
+                pricing.getColor().getColorId(),
+                pricing.getPricingImgUrl()
+        );
+    }
 
 
 }

@@ -19,8 +19,14 @@ public class ProductService implements IProductService{
 
     @Override
     public void createProduct(Product product) {
-        productRepository.save(product);
+        productRepository.createProduct(
+                product.getProductCode(),
+                product.getProductName(),
+                product.getDescription(),
+                product.getProductType().getTypeId()
+        );
     }
+
 
     @Override
     public List<Product> findAllProduct() {
@@ -35,6 +41,11 @@ public class ProductService implements IProductService{
     @Override
     public boolean isProductCodeUnique(String productCode) {
         return !productRepository.existsByProductCode(productCode);
+    }
+
+    @Override
+    public Page<Product> searchAndSortProducts(String keyword, Pageable pageable) {
+      return productRepository.findByProductCodeContainingIgnoreCaseOrProductNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrProductType_TypeNameContainingIgnoreCase(keyword,keyword,keyword,keyword,pageable);
     }
 
 //    @Override
