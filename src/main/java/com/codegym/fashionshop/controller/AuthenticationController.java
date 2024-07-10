@@ -2,6 +2,7 @@ package com.codegym.fashionshop.controller;
 
 import com.codegym.fashionshop.dto.request.AuthenticationRequest;
 import com.codegym.fashionshop.dto.request.UpdatePasswordRequest;
+import com.codegym.fashionshop.dto.request.UpdateUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
 import com.codegym.fashionshop.exceptions.UserIsExistException;
 import com.codegym.fashionshop.service.authenticate.impl.AuthenticationService;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
@@ -52,20 +53,29 @@ public class AuthenticationController {
     /**
      * Updates the information of a user.
      *
-     * @param userId     The ID of the user to be updated.
      * @param updatePasswordRequest The updated user information.
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      */
-    @PutMapping("/update-password/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId
-            ,@Validated @RequestBody UpdatePasswordRequest updatePasswordRequest
-            , BindingResult bindingResult) throws UserIsExistException {
+    @PutMapping("/update-password")
+    public ResponseEntity<?> updateUser(@Validated @RequestBody UpdatePasswordRequest updatePasswordRequest
+            , BindingResult bindingResult){
         System.out.println("call update");
         if (bindingResult.hasErrors()) {
-            System.out.println("call binding");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bindingResult.getAllErrors());
         }
         AuthenticationResponse response = authenticationService.updatePassword(updatePasswordRequest);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    /**
+     * Updates avatar and background image of a user.
+     *
+     * @param updateUserRequest The updated user information.
+     * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
+     */
+    @PatchMapping("/update-image")
+    public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
+        AuthenticationResponse response = authenticationService.updateAvatarAndBackgroundImage(updateUserRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

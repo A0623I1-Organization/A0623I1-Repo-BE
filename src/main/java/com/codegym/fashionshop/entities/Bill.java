@@ -39,4 +39,6 @@ public class Bill {
     @JsonManagedReference
     private List<BillItem> billItemList;
 
+    @Column(name = "promotion_code")
+    private String promotionCode;
 }

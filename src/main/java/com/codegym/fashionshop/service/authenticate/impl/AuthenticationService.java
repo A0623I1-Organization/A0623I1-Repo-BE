@@ -3,6 +3,7 @@ package com.codegym.fashionshop.service.authenticate.impl;
 import com.codegym.fashionshop.dto.UserInforUserDetails;
 import com.codegym.fashionshop.dto.request.AuthenticationRequest;
 import com.codegym.fashionshop.dto.request.UpdatePasswordRequest;
+import com.codegym.fashionshop.dto.request.UpdateUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
 import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.repository.authenticate.IRoleRepository;
@@ -60,6 +61,7 @@ public class AuthenticationService {
                     .statusCode(200)
                     .token(jwtToken)
                     .fullName(user.getFullName())
+                    .avatar(user.getAvatar())
                     .message("Đăng nhập thành công!!!")
                     .build();
         } catch (Exception e) {
@@ -92,6 +94,7 @@ public class AuthenticationService {
                     .role(user.getRole())
                     .fullName(user.getFullName())
                     .gender(user.getGender())
+                    .backgroundImage(user.getBackgroundImage())
                     .avatar(user.getAvatar())
                     .address(user.getAddress())
                     .build();
@@ -141,6 +144,7 @@ public class AuthenticationService {
         String encryptedPassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
         String userCode = user.getUserCode();
         LocalDate dateCreate = LocalDate.now();
+        String backgroundImage = user.getBackgroundImage();
         String avatar = user.getAvatar();
         String fullName = user.getFullName();
         Integer gender = user.getGender();
@@ -153,7 +157,7 @@ public class AuthenticationService {
         Boolean credentialsNonExpired = user.getCredentialsNonExpired();
         Boolean accountNonLocked = user.getAccountNonLocked();
         Boolean enabled = user.getEnabled();
-        userRepository.updateUser(username, encryptedPassword, userCode, dateCreate, avatar, fullName, gender,
+        userRepository.updateUser(username, encryptedPassword, userCode, dateCreate, backgroundImage, avatar, fullName, gender,
                 dateOfBirth, phoneNumber, email, address, roleId, accountNonExpired, credentialsNonExpired, accountNonLocked,
                 enabled, userId);
         UserInforUserDetails userDetails = new UserInforUserDetails(user);
@@ -171,9 +175,65 @@ public class AuthenticationService {
                 .role(user.getRole())
                 .fullName(user.getFullName())
                 .gender(user.getGender())
+                .backgroundImage(user.getBackgroundImage())
                 .avatar(user.getAvatar())
                 .address(user.getAddress())
                 .token(jwtToken)
+                .build();
+    }
+
+    /**
+     * Updates avatar and background image of the authenticated user.
+     *
+     * @param updateUserRequest The user request containing the updated password details.
+     * @return An {@link AuthenticationResponse} indicating the status of the password update operation.
+     */
+    public AuthenticationResponse updateAvatarAndBackgroundImage(UpdateUserRequest updateUserRequest) {
+        String username = updateUserRequest.getUsername();
+        AppUser user = userRepository.findByUsername(username);
+        if (user == null) {
+            return AuthenticationResponse.builder()
+                    .statusCode(404)
+                    .message("Người dùng không được tìm thấy!")
+                    .build();
+        }
+        if (updateUserRequest.getBackgroundImage() == null && updateUserRequest.getAvatar() == null ) {
+             return AuthenticationResponse.builder()
+                    .statusCode(400)
+                    .message("Cập nhật hình ảnh không thành công!").build();
+        }
+        if (updateUserRequest.getAvatar() == null) {
+            updateUserRequest.setAvatar(user.getAvatar());
+        }
+        if (updateUserRequest.getBackgroundImage() == null) {
+            updateUserRequest.setBackgroundImage(user.getBackgroundImage());
+        }
+        Long userId = user.getUserId();
+        String avatar = updateUserRequest.getAvatar();
+        String backgroundImage = updateUserRequest.getBackgroundImage();
+        try {
+            userRepository.updateAvatarAndBackGroundImage(backgroundImage, avatar, userId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        user.setAvatar(updateUserRequest.getAvatar());
+        user.setBackgroundImage(updateUserRequest.getBackgroundImage());
+        return AuthenticationResponse.builder()
+                .statusCode(200)
+                .message("Cập nhật hình ảnh thành công!")
+                .userId(user.getUserId())
+                .username(user.getUsername())
+                .userCode(user.getUserCode())
+                .dateCreate(user.getDateCreate())
+                .dateOfBirth(user.getDateOfBirth())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .fullName(user.getFullName())
+                .gender(user.getGender())
+                .backgroundImage(user.getBackgroundImage())
+                .avatar(user.getAvatar())
+                .address(user.getAddress())
                 .build();
     }
 }

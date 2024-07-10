@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.service.bill;
 
+import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.repository.bill.IBillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Map;
 
-public interface IBillService extends IGeneralService<Bill> {
+import java.util.List;
+
+public interface IBillService  {
     boolean isBillCodeUnique(String billCode);
     /**
      * Retrieves the daily sales revenue for a specific date.
@@ -35,4 +38,23 @@ public interface IBillService extends IGeneralService<Bill> {
      * @author ThanhTT
      */
     Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth);
+    void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
+    List<Bill> findAll();
+    /**
+     * Fetches daily sold pricings as SoldPricings objects for a given date.
+     *
+     * @param date the date for which to fetch sold pricings
+     * @return a list of SoldPricings objects
+     * @author ThanhTT
+     */
+    List<SoldPricings> getDailySoldPricings(@Param("date") LocalDate date);
+    /**
+     * Fetches monthly sold pricings as SoldPricings objects for a given year and month.
+     *
+     * @param year the year for which to fetch sold pricings
+     * @param month the month for which to fetch sold pricings
+     * @return a list of SoldPricings objects
+     * @author ThanhTT
+     */
+    List<SoldPricings> getDailySoldPricings(@Param("year") int year, @Param("month") int month);
 }
