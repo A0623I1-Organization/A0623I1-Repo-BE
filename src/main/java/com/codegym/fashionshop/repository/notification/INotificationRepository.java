@@ -46,7 +46,7 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     @Query(value = "select n.notif_id,n.content,n.create_date,n.topic,u.status_read from notification n\n" +
             "join user_notification u on n.notif_id=u.notif_id\n" +
             "join app_user a on a.user_id=u.user_id\n" +
-            "where u.status_read=:statusRead and a.user_id=:userId;", nativeQuery = true)
+            "where (u.status_read=:statusRead and a.user_id=:userId) order by n.create_date desc;", nativeQuery = true)
     List<INotificationDTO> findNotificationsByStatusRead(@Param("userId") Long userId, @Param("statusRead") boolean statusRead);
 
     @Modifying
