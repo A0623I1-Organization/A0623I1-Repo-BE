@@ -29,6 +29,8 @@ public class UpdateUserRequest {
 
     private String avatar;
 
+    private String backgroundImage;
+
     private String fullName;
 
     private LocalDate dateOfBirth;

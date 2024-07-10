@@ -31,7 +31,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/auth/**", "/api/users/roles").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
                         .requestMatchers("/api/auth/notification/create").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
-                        .requestMatchers("/api/users/**", "/api/dashboard/**", "/auth/get-profile", "/auth/update-password/{userId}").authenticated()
+                        .requestMatchers("/api/users/**", "/api/auth/dashboard/**", "/auth/get-profile",
+                                "/auth/update-password", "/auth/update-image").authenticated()
                         .anyRequest().authenticated()
 
                 )

@@ -49,6 +49,9 @@ public class AppUser {
     @Column(name = "date_create")
     private LocalDate dateCreate;
 
+    @Column(name = "background_image")
+    private String backgroundImage;
+
     @Column(name = "avatar")
     private String avatar;
 

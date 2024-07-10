@@ -101,6 +101,7 @@ public class UserService implements IAppUserService {
         String encryptedPassword = passwordEncoder.encode(appUserRequest.getPassword());
         String userCode = appUserRequest.getUserCode();
         LocalDate dateCreate = LocalDate.now();
+        String backgroundImage = appUserRequest.getBackgroundImage();
         String avatar = appUserRequest.getAvatar();
         String fullName = appUserRequest.getFullName();
         Integer gender = appUserRequest.getGender();
@@ -113,7 +114,7 @@ public class UserService implements IAppUserService {
         Boolean credentialsNonExpired = true;
         Boolean accountNonLocked = true;
         Boolean enabled = true;
-        userRepository.saveUser(username, encryptedPassword, userCode, dateCreate, avatar, fullName,
+        userRepository.saveUser(username, encryptedPassword, userCode, dateCreate, backgroundImage, avatar, fullName,
                 gender, dateOfBirth, phoneNumber, email, address, roleId, accountNonExpired, credentialsNonExpired,
                 accountNonLocked, enabled);
         return AuthenticationResponse.builder()
@@ -142,6 +143,7 @@ public class UserService implements IAppUserService {
         String encryptedPassword = passwordEncoder.encode(appUserRequest.getPassword());
         String userCode = appUserRequest.getUserCode();
         LocalDate dateCreate = LocalDate.now();
+        String backgroundImage = appUserRequest.getBackgroundImage();
         String avatar = appUserRequest.getAvatar();
         String fullName = appUserRequest.getFullName();
         Integer gender = appUserRequest.getGender();
@@ -154,7 +156,7 @@ public class UserService implements IAppUserService {
         Boolean credentialsNonExpired = appUserRequest.getCredentialsNonExpired();
         Boolean accountNonLocked = appUserRequest.getAccountNonLocked();
         Boolean enabled = appUserRequest.getEnabled();
-        userRepository.updateUser(username, encryptedPassword, userCode, dateCreate, avatar, fullName,
+        userRepository.updateUser(username, encryptedPassword, userCode, dateCreate, backgroundImage, avatar, fullName,
                 gender, dateOfBirth, phoneNumber, email, address, roleId, accountNonExpired, credentialsNonExpired,
                 accountNonLocked, enabled, userId);
         return AuthenticationResponse.builder()
@@ -206,6 +208,8 @@ public class UserService implements IAppUserService {
                 .userId(id)
                 .username(updatedAppUser.getUsername())
                 .userCode(updatedAppUser.getUserCode())
+                .avatar(updatedAppUser.getAvatar())
+                .backgroundImage(updatedAppUser.getBackgroundImage())
                 .fullName(updatedAppUser.getFullName())
                 .gender(updatedAppUser.getGender())
                 .dateOfBirth(updatedAppUser.getDateOfBirth())
