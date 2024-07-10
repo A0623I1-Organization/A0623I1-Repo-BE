@@ -27,11 +27,15 @@ public class AppUserRequest {
     private String username;
 
     @NotBlank(message = "Mật khẩu không được để trống!")
+    @Size(min = 8, max = 50, message = "Mật khẩu phải từ 8 đến 50 chữ!")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,50}$", message = "Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường, và một chữ số, và phải dài từ 8 đến 50 ký tự!")
     private String password;
 
     @NotBlank(message = "Mã nhân viên không được để trống!")
     @Pattern(regexp = "^NV\\d{4}$", message="Mã nhân viên phải được bắt đầu bằng NV và kết thúc với 4 chữ số!")
     private String userCode;
+
+    private String backgroundImage;
 
     private String avatar;
 
