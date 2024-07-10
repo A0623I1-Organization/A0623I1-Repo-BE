@@ -100,8 +100,6 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
 
     @Query(value = "UPDATE pricings set quantity = :quantity where pricing_id = :id", nativeQuery = true)
     int updateQuantity(Long id, int quantity);
-
-
     /**
      * Updates the quantity and inventory ID of a pricing in the database.
      *
@@ -120,7 +118,7 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     @Transactional
     @Query(value = "UPDATE pricings SET quantity = quantity + :quantity, inventory_id = :inventoryId WHERE pricing_id = :id", nativeQuery = true)
     void updateQuantityAndInventory(@Param("id") Long id, @Param("quantity") int quantity, @Param("inventoryId") Long inventoryId);
-
+  
     Page<Pricing> findAllByProduct_ProductIdAndPricingCodeContainingIgnoreCaseOrPricingNameContainingIgnoreCaseOrSizeContainingIgnoreCaseOrColor_ColorNameContainingIgnoreCase(
             Long ProductId,
             String pricingCode,
@@ -129,4 +127,5 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
             String color,
             Pageable pageable
     );
+
 }

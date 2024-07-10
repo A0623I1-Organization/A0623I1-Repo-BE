@@ -95,7 +95,6 @@ public class ProductRestController {
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
-
     /**
      * POST endpoint to generate and check a unique product code.
      *
@@ -106,7 +105,9 @@ public class ProductRestController {
         String productCode = generateUniqueProductCode();
         Map<String, String> response = new HashMap<>();
         response.put("code", productCode);
-        return ResponseEntity.ok(response);    }
+        return ResponseEntity.ok(response);    
+    }
+
     @PostMapping("/checkProductCode")
     public ResponseEntity<Map<String, Boolean>> checkProductCode(@RequestBody Map<String, String> request) {
         String productCode = request.get("code");

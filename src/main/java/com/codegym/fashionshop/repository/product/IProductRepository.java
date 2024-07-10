@@ -75,5 +75,4 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             String productTypeName,
             Pageable pageable
     );
-
 }

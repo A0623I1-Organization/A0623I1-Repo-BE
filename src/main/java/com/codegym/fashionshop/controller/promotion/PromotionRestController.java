@@ -31,6 +31,7 @@ public class PromotionRestController {
         Promotion promotion = promotionService.usePromotion(promotionCode);
         if (promotion == null) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin khuyến mãi hoặc khuyến mãi không khả dụng");
+
         }
         return new ResponseEntity<>(promotion, HttpStatus.OK);
     }

@@ -23,5 +23,4 @@ public class BillItemService implements IBillItemService {
         return repository.findAllByBill_Customer_CustomerId(customerId);
     }
 
-
 }
