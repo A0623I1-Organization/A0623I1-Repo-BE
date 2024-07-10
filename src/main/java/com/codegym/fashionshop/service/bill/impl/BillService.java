@@ -71,13 +71,19 @@ public class BillService implements IBillService {
         }
         return dailyRevenueMap;
     }
-
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
     public List<SoldPricings> getDailySoldPricings(LocalDate date) {
         List<Object[]> results = repository.getDailySoldPricings(date);
         return results.stream().map(this::mapToSoldPricings).collect(Collectors.toList());
     }
-
+    /**
+     * {@inheritDoc}
+     * @author ThanhTT
+     */
     @Override
     public List<SoldPricings> getDailySoldPricings(int year, int month) {
         List<Object[]> results = repository.getMonthlySoldPricings(year, month);

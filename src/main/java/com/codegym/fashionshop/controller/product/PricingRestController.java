@@ -121,10 +121,10 @@ public class PricingRestController {
      * @author ThanhTT
      */
     @GetMapping("/list")
-    public ResponseEntity<List<Pricing>> getAllPricing() {
+    public ResponseEntity<?> getAllPricing() {
         List<Pricing> pricings = pricingService.findAllPricing();
         if(pricings.isEmpty()) {
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("No pricings list found", HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
@@ -145,7 +145,6 @@ public class PricingRestController {
         WarehouseReceipt receipt = WarehouseReceipt.builder().receiptId(id).date(date).pricingList(pricings).build();
         return new ResponseEntity<>(receipt, HttpStatus.OK);
     }
-
     /**
      * Updates the pricing quantities based on the provided warehouse receipt.
      *

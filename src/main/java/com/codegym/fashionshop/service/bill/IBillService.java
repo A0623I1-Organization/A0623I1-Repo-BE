@@ -40,6 +40,21 @@ public interface IBillService  {
     Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth);
     void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
     List<Bill> findAll();
+    /**
+     * Fetches daily sold pricings as SoldPricings objects for a given date.
+     *
+     * @param date the date for which to fetch sold pricings
+     * @return a list of SoldPricings objects
+     * @author ThanhTT
+     */
     List<SoldPricings> getDailySoldPricings(@Param("date") LocalDate date);
+    /**
+     * Fetches monthly sold pricings as SoldPricings objects for a given year and month.
+     *
+     * @param year the year for which to fetch sold pricings
+     * @param month the month for which to fetch sold pricings
+     * @return a list of SoldPricings objects
+     * @author ThanhTT
+     */
     List<SoldPricings> getDailySoldPricings(@Param("year") int year, @Param("month") int month);
 }

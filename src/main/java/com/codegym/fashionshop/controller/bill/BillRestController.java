@@ -101,7 +101,7 @@ public class BillRestController {
     public ResponseEntity<Double> getDailySalesRevenue(@RequestParam("date") LocalDate date) {
         Double dailyRevenue = billService.getDailySalesRevenue(date);
         if (dailyRevenue == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
@@ -116,7 +116,7 @@ public class BillRestController {
     public ResponseEntity<Double> getMonthlySalesRevenue(@RequestParam("month") YearMonth yearMonth) {
         Double monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
         if (monthlyRevenue == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
@@ -161,19 +161,32 @@ public class BillRestController {
         }
         return (int) (sum / 100000);
     }
-
+    /**
+     * Retrieves daily sold pricings for a given date.
+     *
+     * @param date the date for which to retrieve sold pricings
+     * @return a ResponseEntity containing a list of SoldPricings or a status indicating no content or bad request
+     * @author ThanhTT
+     */
     @GetMapping("/sold-pricings/daily")
     public ResponseEntity<?> getDailySoldPricings(@RequestParam("date") LocalDate date) {
         try {
             List<SoldPricings> soldPricings = billService.getDailySoldPricings(date);
             if (soldPricings.isEmpty()) {
-                return new ResponseEntity<>("No data found for the given date.", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(soldPricings, HttpStatus.OK);
         } catch (DateTimeParseException e) {
             return new ResponseEntity<>("Invalid date format. Please use yyyy-MM-dd.", HttpStatus.BAD_REQUEST);
         }
     }
+    /**
+     * Retrieves monthly sold pricings for a given year and month.
+     *
+     * @param yearMonth the YearMonth for which to retrieve sold pricings
+     * @return a ResponseEntity containing a list of SoldPricings or a status indicating no content or bad request
+     * @author ThanhTT
+     */
     @GetMapping("/sold-pricings/monthly")
     public ResponseEntity<?> getMonthlySoldPricings(@RequestParam("month") YearMonth yearMonth) {
         int year = yearMonth.getYear();
@@ -183,7 +196,7 @@ public class BillRestController {
         }
         List<SoldPricings> soldPricings = billService.getDailySoldPricings(year, month);
         if (soldPricings.isEmpty()) {
-            return new ResponseEntity<>("No data found for the given year and month.", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(soldPricings, HttpStatus.OK);
     }

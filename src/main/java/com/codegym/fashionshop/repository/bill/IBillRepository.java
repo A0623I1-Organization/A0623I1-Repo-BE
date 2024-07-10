@@ -85,7 +85,13 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "group by day(b.date_create)",
             nativeQuery = true)
     List<Object[]> getDailySalesRevenueForMonth(@Param("year") int year, @Param("month") int month);
-
+    /**
+     * Fetches daily sold pricings for a given date.
+     *
+     * @param date the date for which to fetch sold pricings
+     * @return a list of objects containing pricing code, pricing name, total quantity, and price
+     * @author ThanhTT
+     */
     @Query(value = "select p.pricing_code, p.pricing_name, sum(bi.quantity) as totalQuantity, p.price " +
             "from bills as b inner join bill_items as bi on b.bill_id = bi.bill_id\n" +
             "inner join pricings as p on bi.pricing_id = p.pricing_id " +
@@ -93,6 +99,14 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "group by p.pricing_code, p.pricing_name,\n" + " p.price;",
             nativeQuery = true)
     List<Object[]> getDailySoldPricings(@Param("date") LocalDate date);
+    /**
+     * Fetches monthly sold pricings for a given year and month.
+     *
+     * @param year the year for which to fetch sold pricings
+     * @param month the month for which to fetch sold pricings
+     * @return a list of objects containing pricing code, pricing name, total quantity, and price
+     * @author ThanhTT
+     */
     @Query(value = "select p.pricing_code, p.pricing_name, sum(bi.quantity) as totalQuantity, p.price " +
             "from bills as b inner join bill_items as bi on b.bill_id = bi.bill_id\n" +
             "inner join pricings as p on bi.pricing_id = p.pricing_id " +
