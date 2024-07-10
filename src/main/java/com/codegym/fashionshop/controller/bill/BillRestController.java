@@ -1,9 +1,8 @@
 package com.codegym.fashionshop.controller.bill;
 
+import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.entities.BillItem;
-import com.codegym.fashionshop.entities.Pricing;
-import com.codegym.fashionshop.entities.ProductType;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.bill.IBillService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +15,30 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+/**
+ * REST controller for managing bill-related operations.
+ * Author: HoaNTT
+ */
 @RestController
 @RequestMapping("/api/bills")
 @CrossOrigin("*")
 public class BillRestController {
+
     @Autowired
     private IBillService billService;
 
+    /**
+     * GET endpoint to retrieve all bills.
+     *
+     * @return a ResponseEntity containing a list of bills and HTTP status OK (200) if successful
+     * @throws HttpExceptions.NotFoundException if no bills are found
+     */
     @GetMapping
     public ResponseEntity<List<Bill>> getAllBill() {
         List<Bill> bills = billService.findAll();
@@ -35,6 +47,15 @@ public class BillRestController {
         }
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
+
+    /**
+     * POST endpoint to create a new bill.
+     *
+     * @param bill           the bill object to be created (validated using @Validated)
+     * @param bindingResult  captures and exposes errors from binding/validation process
+     * @return a ResponseEntity containing the created bill and HTTP status CREATED (201) if successful
+     * @throws HttpExceptions.BadRequestException if there are validation errors in the request body
+     */
     @PostMapping("")
     public ResponseEntity<Object> createBill(@Validated @RequestBody Bill bill, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -42,23 +63,30 @@ public class BillRestController {
             for (FieldError error : bindingResult.getFieldErrors()) {
                 errors.put(error.getField(), error.getDefaultMessage());
             }
-            // Trả về phản hồi JSON chứa thông điệp lỗi
             throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
         }
-        for (BillItem billItem: bill.getBillItemList()) {
+        for (BillItem billItem : bill.getBillItemList()) {
             billItem.setBill(bill);
+            System.out.println("billItem = "+billItem.getQuantity());
         }
-        billService.save(bill);
+        // Example points to add (adjust logic as needed)
+        int pointsToAdd = calculatePoints(bill);
+        System.out.println("bill = "+bill.getCustomer().getCustomerName());
+        System.out.println("mâ = "+pointsToAdd);
+        billService.createBillAndUpdatePoints(bill, pointsToAdd);
         return new ResponseEntity<>(bill, HttpStatus.CREATED);
     }
 
-    @PostMapping("/checkBillCode")
-    public ResponseEntity<Map<String, Boolean>> checkBillCode(@RequestBody Map<String, String> request) {
-        String billCode = request.get("code");
-        System.out.println("Received pricing code: " + billCode);
-        boolean isUnique = billService.isBillCodeUnique(billCode);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isUnique", isUnique);
+    /**
+     * POST endpoint to generate and check a unique bill code.
+     *
+     * @return a ResponseEntity containing a map with the generated bill code and HTTP status OK (200) if successful
+     */
+    @PostMapping("/generateAndCheckBillCode")
+    public ResponseEntity<Map<String, String>> generateAndCheckBillCode() {
+        String billCode = generateUniqueBillCode();
+        Map<String, String> response = new HashMap<>();
+        response.put("code", billCode);
         return ResponseEntity.ok(response);
     }
 
@@ -73,7 +101,7 @@ public class BillRestController {
     public ResponseEntity<Double> getDailySalesRevenue(@RequestParam("date") LocalDate date) {
         Double dailyRevenue = billService.getDailySalesRevenue(date);
         if (dailyRevenue == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
@@ -88,7 +116,7 @@ public class BillRestController {
     public ResponseEntity<Double> getMonthlySalesRevenue(@RequestParam("month") YearMonth yearMonth) {
         Double monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
         if (monthlyRevenue == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
@@ -106,5 +134,70 @@ public class BillRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
+    }
+    /**
+     * Generates a unique bill code.
+     *
+     * @return a unique bill code prefixed with "HD" (e.g., HD000001)
+     */
+    private String generateUniqueBillCode() {
+        String billCode;
+        Random random = new Random();
+        do {
+            billCode = "HD" + String.format("%06d", random.nextInt(1000000));
+        } while (!billService.isBillCodeUnique(billCode));
+        return billCode;
+    }
+    /**
+     * Calculates points to be added based on the bill.
+     *
+     * @param bill the bill object
+     * @return the calculated points
+     */
+    private int calculatePoints(Bill bill) {
+        double sum = 0;
+        for (BillItem billItem : bill.getBillItemList()) {
+            sum += billItem.getPricing().getPrice() * billItem.getQuantity();
+        }
+        return (int) (sum / 100000);
+    }
+    /**
+     * Retrieves daily sold pricings for a given date.
+     *
+     * @param date the date for which to retrieve sold pricings
+     * @return a ResponseEntity containing a list of SoldPricings or a status indicating no content or bad request
+     * @author ThanhTT
+     */
+    @GetMapping("/sold-pricings/daily")
+    public ResponseEntity<?> getDailySoldPricings(@RequestParam("date") LocalDate date) {
+        try {
+            List<SoldPricings> soldPricings = billService.getDailySoldPricings(date);
+            if (soldPricings.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(soldPricings, HttpStatus.OK);
+        } catch (DateTimeParseException e) {
+            return new ResponseEntity<>("Invalid date format. Please use yyyy-MM-dd.", HttpStatus.BAD_REQUEST);
+        }
+    }
+    /**
+     * Retrieves monthly sold pricings for a given year and month.
+     *
+     * @param yearMonth the YearMonth for which to retrieve sold pricings
+     * @return a ResponseEntity containing a list of SoldPricings or a status indicating no content or bad request
+     * @author ThanhTT
+     */
+    @GetMapping("/sold-pricings/monthly")
+    public ResponseEntity<?> getMonthlySoldPricings(@RequestParam("month") YearMonth yearMonth) {
+        int year = yearMonth.getYear();
+        int month = yearMonth.getMonthValue();
+        if (month < 1 || month > 12) {
+            return new ResponseEntity<>("Invalid month value. Please provide a month between 1 and 12.", HttpStatus.BAD_REQUEST);
+        }
+        List<SoldPricings> soldPricings = billService.getDailySoldPricings(year, month);
+        if (soldPricings.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(soldPricings, HttpStatus.OK);
     }
 }

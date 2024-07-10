@@ -24,6 +24,8 @@ import java.util.List;
  */
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
+
+    @Query("SELECT c FROM Customer c")
     /**
      * Finds all customers with pagination support.
      *

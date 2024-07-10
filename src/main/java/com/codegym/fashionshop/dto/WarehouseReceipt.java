@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.dto.respone;
+package com.codegym.fashionshop.dto;
 
 import com.codegym.fashionshop.entities.Pricing;
 import lombok.AllArgsConstructor;
