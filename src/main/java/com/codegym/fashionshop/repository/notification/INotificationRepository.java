@@ -1,8 +1,9 @@
 package com.codegym.fashionshop.repository.notification;
 
+import com.codegym.fashionshop.dto.AddNewNotificationDTO;
+import com.codegym.fashionshop.dto.CheckNotificationExistsDTO;
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.entities.Notification;
-import com.codegym.fashionshop.entities.UserNotification;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,12 +21,12 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
             "join user_notification u on n.notif_id=u.notif_id\n" +
             "join app_user a on a.user_id = u.user_id\n" +
             "where (a.role_id=:roleId and u.user_id=:userId) order by n.create_date desc;", nativeQuery = true)
-    List<INotificationDTO> findAll(@Param("roleId") Long roleId,@Param("userId") Long userId);
+    List<INotificationDTO> findAll(@Param("roleId") Long roleId, @Param("userId") Long userId);
 
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO notification(content,create_date,topic) values(:content,:createDate,:topic)", nativeQuery = true)
-    void createNotification(@Param("content") String content, @Param("createDate") LocalDateTime createDate, @Param("topic") String topic);
+    int createNotification(@Param("content") String content, @Param("createDate") LocalDateTime createDate, @Param("topic") String topic);
 
     @Modifying
     @Transactional
@@ -34,7 +35,7 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
             "    FROM app_user a\n" +
             "    JOIN app_role r ON a.role_id = r.role_id\n" +
             "    WHERE r.role_id in :listRole;", nativeQuery = true)
-    void addNewNotification(@Param("notifId") Long notifId, @Param("listRole") List<Long> listRole);
+    int addNewNotification(@Param("notifId") Long notifId, @Param("listRole") List<Long> listRole);
 
     @Query(value = "SELECT LAST_INSERT_ID()", nativeQuery = true)
     Long getLastInsertNotificationId();
@@ -47,6 +48,7 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
             "join app_user a on a.user_id=u.user_id\n" +
             "where u.status_read=:statusRead and a.user_id=:userId;", nativeQuery = true)
     List<INotificationDTO> findNotificationsByStatusRead(@Param("userId") Long userId, @Param("statusRead") boolean statusRead);
+
     @Modifying
     @Transactional
     @Query(value = "update user_notification u set u.status_read=1 where u.status_read=0 and u.user_id=:userId", nativeQuery = true)
@@ -55,5 +57,14 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     @Modifying
     @Transactional
     @Query(value = "update user_notification u set status_read=1 where u.user_id=:userId and u.status_read=0 and u.notif_id=:notifId", nativeQuery = true)
-    void updateStatusRead(@Param("userId") Long userId,@Param("notifId") Long notifId);
+    void updateStatusRead(@Param("userId") Long userId, @Param("notifId") Long notifId);
+
+    @Query(value = "SELECT count(u.id) \n" +
+            "FROM notification n\n" +
+            "JOIN user_notification u ON u.notif_id = n.notif_id\n" +
+            "JOIN app_user a ON a.user_id = u.user_id\n" +
+            "WHERE n.topic =:topic\n" +
+            "AND n.content =:content\n" +
+            "AND a.role_id IN :listRole\n", nativeQuery = true)
+    int checkDataExists(@Param("topic") String topic, @Param("content") String content, @Param("listRole") List<Long> listRole);
 }

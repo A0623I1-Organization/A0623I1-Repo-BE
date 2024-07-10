@@ -1,5 +1,7 @@
 package com.codegym.fashionshop.service.notification.impl;
 
+import com.codegym.fashionshop.dto.AddNewNotificationDTO;
+import com.codegym.fashionshop.dto.CheckNotificationExistsDTO;
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
 import com.codegym.fashionshop.entities.Notification;
@@ -29,10 +31,13 @@ public class NotificationServiceImpl implements INotificationService {
     }
 
     @Override
-    public void addNotification(String content, LocalDateTime createDate, String topic, List<Long> listRole) {
-        notificationRepository.createNotification(content, createDate, topic);
-        Long last_insert = notificationRepository.getLastInsertNotificationId();
-        notificationRepository.addNewNotification(last_insert, listRole);
+    public int addNotification(String content, LocalDateTime createDate, String topic, List<Long> listRole) {
+        int create_insert = notificationRepository.createNotification(content, createDate, topic);
+        if (create_insert > 0) {
+            Long last_insert = notificationRepository.getLastInsertNotificationId();
+            return notificationRepository.addNewNotification(last_insert, listRole);
+        }
+        return 0;
     }
 
     @Override
@@ -47,9 +52,9 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     public boolean markAsRead(Long userId) {
-        if(!isMarkAllAsRead()){
-            int updateRows=notificationRepository.markAsRead(userId);
-            return updateRows>0;
+        if (!isMarkAllAsRead()) {
+            int updateRows = notificationRepository.markAsRead(userId);
+            return updateRows > 0;
         }
         return false;
     }
@@ -72,6 +77,18 @@ public class NotificationServiceImpl implements INotificationService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         AuthenticationResponse response = authenticationService.getMyInfo(username);
-        notificationRepository.updateStatusRead(response.getUserId(),notifId);
+        notificationRepository.updateStatusRead(response.getUserId(), notifId);
+    }
+
+    @Override
+    public boolean checkDataExists(CheckNotificationExistsDTO checkNotificationExistsDTO) {
+        int listSize = notificationRepository.checkDataExists(
+                checkNotificationExistsDTO.getTopic(),
+                checkNotificationExistsDTO.getContent(),
+                checkNotificationExistsDTO.getListRole());
+        if (listSize>0){
+            return true;
+        }
+        return false;
     }
 }

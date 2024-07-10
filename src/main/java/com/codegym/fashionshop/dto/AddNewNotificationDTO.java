@@ -15,12 +15,7 @@ public class AddNewNotificationDTO {
     public AddNewNotificationDTO() {
     }
 
-    public AddNewNotificationDTO(String content, String topic, LocalDateTime createDate, List<Long> listRole) {
-        this.content = content;
-        this.topic = topic;
-        this.createDate = createDate;
-        this.listRole = listRole;
-    }
+
 
     public String getContent() {
         return content;
@@ -51,6 +46,17 @@ public class AddNewNotificationDTO {
     }
 
     public void setListRole(List<Long> listRole) {
+        this.listRole = listRole;
+    }
+    public AddNewNotificationDTO(String content, String topic, LocalDateTime createDate, List<Long> listRole) {
+        this.content = content;
+        this.topic = topic;
+        this.createDate = createDate;
+        this.listRole = listRole;
+    }
+    public AddNewNotificationDTO(String content, String topic, List<Long> listRole) {
+        this.content = content;
+        this.topic = topic;
         this.listRole = listRole;
     }
 }

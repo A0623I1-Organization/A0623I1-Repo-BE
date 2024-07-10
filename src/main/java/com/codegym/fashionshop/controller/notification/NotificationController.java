@@ -2,6 +2,7 @@ package com.codegym.fashionshop.controller.notification;
 
 
 import com.codegym.fashionshop.dto.AddNewNotificationDTO;
+import com.codegym.fashionshop.dto.CheckNotificationExistsDTO;
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
 import com.codegym.fashionshop.entities.Notification;
@@ -55,11 +56,18 @@ public class NotificationController {
     @PostMapping("/create")
     public ResponseEntity<?> createNotification(@RequestBody AddNewNotificationDTO addNewNotificationDTO) {
         System.out.println("Đã vào phương thức tạo thông báo.");
+        System.out.println("Gia tri role vao : " + addNewNotificationDTO.getListRole());
+
         if (addNewNotificationDTO == null) {
             return new ResponseEntity<AddNewNotificationDTO>(HttpStatus.NO_CONTENT);
         } else {
-            notificationService.addNotification(addNewNotificationDTO.getContent(), addNewNotificationDTO.getCreateDate(), addNewNotificationDTO.getTopic(), addNewNotificationDTO.getListRole());
-            return new ResponseEntity<>(HttpStatus.OK);
+            int resultInsert = notificationService.addNotification(
+                    addNewNotificationDTO.getContent(),
+                    addNewNotificationDTO.getCreateDate(),
+                    addNewNotificationDTO.getTopic(),
+                    addNewNotificationDTO.getListRole());
+
+            return ResponseEntity.ok(resultInsert);
         }
     }
 
@@ -76,12 +84,20 @@ public class NotificationController {
 
     @GetMapping("/markAllRead")
     public boolean markAllRead() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            AuthenticationResponse response = authenticationService.getMyInfo(username);
-            return notificationService.markAsRead(response.getUserId());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        AuthenticationResponse response = authenticationService.getMyInfo(username);
+        return notificationService.markAsRead(response.getUserId());
     }
 
-
-
+    @PostMapping("/checkData")
+    public boolean checkExists(@RequestBody CheckNotificationExistsDTO checkNotificationExistsDTO) {
+        String topic=checkNotificationExistsDTO.getTopic();
+        String content=checkNotificationExistsDTO.getContent();
+        List<Long> list=checkNotificationExistsDTO.getListRole();
+        if (notificationService.checkDataExists(checkNotificationExistsDTO)) {
+            return true;
+        }
+        return false;
+    }
 }
