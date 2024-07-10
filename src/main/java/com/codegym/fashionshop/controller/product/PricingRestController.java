@@ -3,7 +3,7 @@ package com.codegym.fashionshop.controller.product;
 import com.codegym.fashionshop.dto.WarehouseReceipt;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
-import com.codegym.fashionshop.service.IAppUserService;
+import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.product.IPricingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

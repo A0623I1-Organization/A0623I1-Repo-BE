@@ -20,17 +20,16 @@ public class Bill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bill_id")
     private Long billId;
+
     @Column(name = "bill_code")
     private String billCode;
 
     @Column(name = "date_create", columnDefinition = "DATE")
-
     private LocalDate dateCreate;
 
-    @Column(name = "customer_name")
-    private String customerName;
-//    @Column(name = "date_create")
-//    private LocalDate dateCreate;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser appUser;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

@@ -11,6 +11,13 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Response DTO for authentication-related operations.
+ * Contains various fields to represent authentication status, user details,
+ * and related information in a structured format.
+ * <p>
+ * Author: KhangDV
+ */
 @Data
 @Builder
 @AllArgsConstructor
@@ -29,6 +36,8 @@ public class AuthenticationResponse {
     private String username;
 
     private LocalDate dateCreate;
+
+    private String backgroundImage;
 
     private String avatar;
 

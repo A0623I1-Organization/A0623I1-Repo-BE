@@ -30,7 +30,14 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**","/public/**").permitAll()
                         .requestMatchers(HttpMethod.GET).permitAll()
                         .requestMatchers("/api/auth/**").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
+                        .requestMatchers("/auth/**","api/public/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/users/roles").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
+                        .requestMatchers("/api/auth/notification/create").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
+                        .requestMatchers("/api/users/**", "/api/auth/dashboard/**", "/auth/get-profile",
+                                "/auth/update-password", "/auth/update-image").authenticated()
                         .anyRequest().authenticated()
+
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

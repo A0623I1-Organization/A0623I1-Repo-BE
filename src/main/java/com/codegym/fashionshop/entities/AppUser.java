@@ -8,7 +8,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-
+/**
+ * Entity class representing a user in the application.
+ * Each user has a unique user ID and contains various personal and authentication details.
+ * <p>
+ * Author: KhangDV
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,14 +23,23 @@ import java.time.LocalDate;
         uniqueConstraints = { //
                 @UniqueConstraint(name = "APP_USER_UK", columnNames = "user_name") })
 public class AppUser {
+    /**
+     * The unique identifier for the user.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
 
+    /**
+     * The username used for authentication.
+     */
     @Column(name = "user_name", length = 36)
     private String username;
 
+    /**
+     * The encrypted password for authentication.
+     */
     @Column(name = "encrypted_password", length = 128)
     private String encryptedPassword;
 
@@ -34,6 +48,9 @@ public class AppUser {
 
     @Column(name = "date_create")
     private LocalDate dateCreate;
+
+    @Column(name = "background_image")
+    private String backgroundImage;
 
     @Column(name = "avatar")
     private String avatar;
@@ -60,15 +77,27 @@ public class AppUser {
     @JoinColumn(name = "role_id")
     private AppRole role;
 
+    /**
+     * Indicates if the user account is non-expired.
+     */
     @Column(name = "account_non_expired")
     private Boolean accountNonExpired;
 
+    /**
+     * Indicates if the user account is non-locked.
+     */
     @Column(name = "account_non_locked")
     private Boolean accountNonLocked;
 
+    /**
+     * Indicates if the user credentials are non-expired.
+     */
     @Column(name = "credentials_non_expired")
     private Boolean credentialsNonExpired;
 
+    /**
+     * Indicates if the user account is enabled.
+     */
     @Column(name = "enabled")
     private Boolean enabled;
 

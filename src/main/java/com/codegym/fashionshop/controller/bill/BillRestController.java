@@ -40,10 +40,10 @@ public class BillRestController {
      * @throws HttpExceptions.NotFoundException if no bills are found
      */
     @GetMapping
-    public ResponseEntity<List<Bill>> getAllBills() {
+    public ResponseEntity<List<Bill>> getAllBill() {
         List<Bill> bills = billService.findAll();
         if (bills.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin hóa đơn");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin đơn hàng");
         }
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
