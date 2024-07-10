@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.repository.bill;
 
+import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -85,4 +86,18 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             nativeQuery = true)
     List<Object[]> getDailySalesRevenueForMonth(@Param("year") int year, @Param("month") int month);
 
+    @Query(value = "select p.pricing_code, p.pricing_name, sum(bi.quantity) as totalQuantity, p.price " +
+            "from bills as b inner join bill_items as bi on b.bill_id = bi.bill_id\n" +
+            "inner join pricings as p on bi.pricing_id = p.pricing_id " +
+            "where date(b.date_create) = :date " +
+            "group by p.pricing_code, p.pricing_name,\n" + " p.price;",
+            nativeQuery = true)
+    List<Object[]> getDailySoldPricings(@Param("date") LocalDate date);
+    @Query(value = "select p.pricing_code, p.pricing_name, sum(bi.quantity) as totalQuantity, p.price " +
+            "from bills as b inner join bill_items as bi on b.bill_id = bi.bill_id\n" +
+            "inner join pricings as p on bi.pricing_id = p.pricing_id " +
+            "where year(b.date_create) = :year and month(b.date_create) = :month " +
+            "group by p.pricing_code, p.pricing_name,\n" + " p.price;",
+            nativeQuery = true)
+    List<Object[]> getMonthlySoldPricings(@Param("year") int year, @Param("month") int month);
 }

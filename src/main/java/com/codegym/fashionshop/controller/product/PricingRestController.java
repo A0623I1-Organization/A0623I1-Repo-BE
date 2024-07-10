@@ -1,7 +1,6 @@
 package com.codegym.fashionshop.controller.product;
 
-import com.codegym.fashionshop.dto.respone.WarehouseReceipt;
-import com.codegym.fashionshop.entities.AppUser;
+import com.codegym.fashionshop.dto.WarehouseReceipt;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.IAppUserService;

@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.service.product.impl;
 
-import com.codegym.fashionshop.dto.respone.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceipt;
 import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.repository.product.IInventoryRepository;

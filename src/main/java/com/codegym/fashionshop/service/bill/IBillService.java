@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.service.bill;
 
+import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.repository.bill.IBillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +40,6 @@ public interface IBillService  {
     Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth);
     void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
     List<Bill> findAll();
+    List<SoldPricings> getDailySoldPricings(@Param("date") LocalDate date);
+    List<SoldPricings> getDailySoldPricings(@Param("year") int year, @Param("month") int month);
 }

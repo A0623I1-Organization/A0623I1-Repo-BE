@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.controller.bill;
 
+import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.entities.BillItem;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +91,6 @@ public class BillRestController {
     }
 
     /**
-<<<<<<< HEAD
      * Retrieves the daily sales revenue for a specific date.
      *
      * @param date The date for which to retrieve the daily sales revenue.
@@ -159,5 +160,31 @@ public class BillRestController {
             sum += billItem.getPricing().getPrice() * billItem.getQuantity();
         }
         return (int) (sum / 100000);
+    }
+
+    @GetMapping("/sold-pricings/daily")
+    public ResponseEntity<?> getDailySoldPricings(@RequestParam("date") LocalDate date) {
+        try {
+            List<SoldPricings> soldPricings = billService.getDailySoldPricings(date);
+            if (soldPricings.isEmpty()) {
+                return new ResponseEntity<>("No data found for the given date.", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(soldPricings, HttpStatus.OK);
+        } catch (DateTimeParseException e) {
+            return new ResponseEntity<>("Invalid date format. Please use yyyy-MM-dd.", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/sold-pricings/monthly")
+    public ResponseEntity<?> getMonthlySoldPricings(@RequestParam("month") YearMonth yearMonth) {
+        int year = yearMonth.getYear();
+        int month = yearMonth.getMonthValue();
+        if (month < 1 || month > 12) {
+            return new ResponseEntity<>("Invalid month value. Please provide a month between 1 and 12.", HttpStatus.BAD_REQUEST);
+        }
+        List<SoldPricings> soldPricings = billService.getDailySoldPricings(year, month);
+        if (soldPricings.isEmpty()) {
+            return new ResponseEntity<>("No data found for the given year and month.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(soldPricings, HttpStatus.OK);
     }
 }
