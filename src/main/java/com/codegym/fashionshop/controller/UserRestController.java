@@ -77,6 +77,7 @@ public class UserRestController {
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             System.out.println("Errors encountered");
+            System.out.println(bindingResult.getAllErrors());
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
         AuthenticationResponse response = userService.save(appUserRequest);
@@ -91,7 +92,7 @@ public class UserRestController {
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse} with the status of the update.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id,@Validated @RequestBody AppUserRequest appUserRequest,
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @Validated @RequestBody AppUserRequest appUserRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());

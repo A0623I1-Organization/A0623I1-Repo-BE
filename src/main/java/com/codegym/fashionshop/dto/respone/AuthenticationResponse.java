@@ -37,6 +37,8 @@ public class AuthenticationResponse {
 
     private LocalDate dateCreate;
 
+    private String backgroundImage;
+
     private String avatar;
 
     private String fullName;

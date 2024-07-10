@@ -86,6 +86,7 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
      * @param encryptedPassword    the encrypted password of the new AppUser
      * @param userCode             the user code of the new AppUser
      * @param dateCreate           the creation date of the new AppUser
+     * @param backgroundImage      the background URL of the new AppUser
      * @param avatar               the avatar URL of the new AppUser
      * @param fullName             the full name of the new AppUser
      * @param gender               the gender of the new AppUser
@@ -102,19 +103,19 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO app_user (user_name, encrypted_password, user_code, date_create," +
-            " avatar, full_name, gender, date_of_birth, phone_number, email, address, role_id," +
+            " background_image, avatar, full_name, gender, date_of_birth, phone_number, email, address, role_id," +
             " account_non_expired, account_non_locked, credentials_non_expired, enabled) " +
-            "VALUES (:username, :encryptedPassword, :userCode, :dateCreate, :avatar, :fullName," +
+            "VALUES (:username, :encryptedPassword, :userCode, :dateCreate, :backgroundImage, :avatar, :fullName," +
             ":gender, :dateOfBirth, :phoneNumber, :email, :address, :roleId," +
             ":accountNonExpired, :accountNonLocked, :credentialsNonExpired, :enabled)", nativeQuery = true)
     void saveUser(@Param("username") String username, @Param("encryptedPassword") String encryptedPassword,
-                    @Param("userCode") String userCode, @Param("dateCreate") LocalDate dateCreate,
-                    @Param("avatar") String avatar, @Param("fullName") String fullName,
-                    @Param("gender") Integer gender, @Param("dateOfBirth")LocalDate dateOfBirth,
-                    @Param("phoneNumber") String phoneNumber, @Param("email") String email,
-                    @Param("address") String address, @Param("roleId") Long roleId,
-                    @Param("accountNonExpired") Boolean accountNonExpired, @Param("accountNonLocked")Boolean accountNonLocked,
-                    @Param("credentialsNonExpired")Boolean credentialsNonExpired, @Param("enabled") Boolean enabled);
+                  @Param("userCode") String userCode, @Param("dateCreate") LocalDate dateCreate,
+                  @Param("backgroundImage") String backgroundImage, @Param("avatar") String avatar,
+                  @Param("fullName") String fullName, @Param("gender") Integer gender,
+                  @Param("dateOfBirth")LocalDate dateOfBirth, @Param("phoneNumber") String phoneNumber,
+                  @Param("email") String email, @Param("address") String address, @Param("roleId") Long roleId,
+                  @Param("accountNonExpired") Boolean accountNonExpired, @Param("accountNonLocked")Boolean accountNonLocked,
+                  @Param("credentialsNonExpired")Boolean credentialsNonExpired, @Param("enabled") Boolean enabled);
 
     /**
      * Updates an existing AppUser entity in the database.
@@ -123,6 +124,7 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
      * @param encryptedPassword    the updated encrypted password of the AppUser
      * @param userCode             the updated user code of the AppUser
      * @param dateCreate           the updated creation date of the AppUser
+     * @param backgroundImage      the updated background URL of the AppUser
      * @param avatar               the updated avatar URL of the AppUser
      * @param fullName             the updated full name of the AppUser
      * @param gender               the updated gender of the AppUser
@@ -140,18 +142,32 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE app_user set user_name = :username, encrypted_password = :encryptedPassword," +
-            "user_code = :userCode, date_create = :dateCreate, avatar = :avatar, full_name = :fullName," +
-            "gender = :gender, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, email = :email," +
-            "address = :address, role_id = :roleId, account_non_expired = :accountNonExpired," +
+            "user_code = :userCode, date_create = :dateCreate, background_image = :backgroundImage, avatar = :avatar, " +
+            "full_name = :fullName, gender = :gender, date_of_birth = :dateOfBirth, phone_number = :phoneNumber, " +
+            "email = :email, address = :address, role_id = :roleId, account_non_expired = :accountNonExpired," +
             "account_non_locked = :accountNonLocked, credentials_non_expired = :credentialsNonExpired," +
             "enabled = :enabled WHERE user_id = :userId", nativeQuery = true)
     void updateUser(@Param("username") String username, @Param("encryptedPassword") String encryptedPassword,
-                     @Param("userCode") String userCode, @Param("dateCreate") LocalDate dateCreate,
-                     @Param("avatar") String avatar, @Param("fullName") String fullName,
-                     @Param("gender") Integer gender, @Param("dateOfBirth")LocalDate dateOfBirth,
-                     @Param("phoneNumber") String phoneNumber, @Param("email") String email,
-                     @Param("address") String address, @Param("roleId") Long roleId,
-                     @Param("accountNonExpired") Boolean accountNonExpired, @Param("accountNonLocked")Boolean accountNonLocked,
-                     @Param("credentialsNonExpired")Boolean credentialsNonExpired, @Param("enabled") Boolean enabled,
-                       @Param("userId") Long userId);
+                    @Param("userCode") String userCode, @Param("dateCreate") LocalDate dateCreate,
+                    @Param("backgroundImage") String backgroundImage, @Param("avatar") String avatar,
+                    @Param("fullName") String fullName, @Param("gender") Integer gender,
+                    @Param("dateOfBirth")LocalDate dateOfBirth, @Param("phoneNumber") String phoneNumber,
+                    @Param("email") String email, @Param("address") String address, @Param("roleId") Long roleId,
+                    @Param("accountNonExpired") Boolean accountNonExpired, @Param("accountNonLocked")Boolean accountNonLocked,
+                    @Param("credentialsNonExpired")Boolean credentialsNonExpired, @Param("enabled") Boolean enabled,
+                    @Param("userId") Long userId);
+
+    /**
+     * Updates background image and avatar for AppUser entity in the database.
+     * <p>
+     * @param backgroundImage      the updated background URL of the AppUser
+     * @param avatar               the updated avatar URL of the AppUser
+     * @param userId               the user ID of the AppUser to update
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE app_user set background_image = :backgroundImage, avatar = :avatar " +
+            "WHERE user_id = :userId", nativeQuery = true)
+    void updateAvatarAndBackGroundImage(@Param("backgroundImage") String backgroundImage, @Param("avatar") String avatar,
+                                        @Param("userId") Long userId);
 }
