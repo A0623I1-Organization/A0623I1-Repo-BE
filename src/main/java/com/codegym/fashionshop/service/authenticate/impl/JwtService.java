@@ -1,4 +1,4 @@
-package com.codegym.fashionshop.service.impl;
+package com.codegym.fashionshop.service.authenticate.impl;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,16 +13,26 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Service for managing JSON Web Tokens (JWT).
+ * This class provides methods for generating and validating JWT tokens.
+ * <p>
+ * Author: KhangDV
+ */
 @Service
 public class JwtService {
 
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
-//    Phương thức này trích xuất tên người dùng (username) từ token JWT. Nó gọi phương thức extractClaims để lấy các claims từ token và lấy subject (username) từ các claims này.
+    /**
+     * Extracts the username from the JWT token.
+     *
+     * @param token The JWT token.
+     * @return The username extracted from the token.
+     */
     public String extractUsername(String token) {
         try {
             return extractClaims(token, Claims::getSubject);
@@ -31,7 +41,14 @@ public class JwtService {
         }
     }
 
-//Phương thức này trích xuất các claims từ token bằng cách sử dụng một Function để xử lý các claims. Nó gọi phương thức extarctAllClaims để lấy tất cả các claims từ token và sau đó áp dụng claimsResolver để trích xuất thông tin cụ thể.
+    /**
+     * Extracts claims from the JWT token using a claims resolver function.
+     *
+     * @param token          The JWT token.
+     * @param claimsResolver The function to resolve claims.
+     * @param <T>            The type of the resolved claim.
+     * @return The resolved claim.
+     */
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver){
         try {
             final Claims claims = extarctAllClaims(token);
@@ -41,7 +58,12 @@ public class JwtService {
         }
     }
 
-//    Phương thức này tạo một token JWT mới cho người dùng dựa trên thông tin của họ. Nó gọi phương thức generateToken với một bản đồ rỗng các claims bổ sung và chi tiết người dùng.
+    /**
+     * Generates a JWT token for the user.
+     *
+     * @param userDetails The user details.
+     * @return The generated JWT token.
+     */
     public String generateToken(UserDetails userDetails){
         Map<String, String> claims = new HashMap<>();
         claims.put("username", userDetails.getUsername());
@@ -53,7 +75,13 @@ public class JwtService {
         return generateToken(claims, userDetails);
     }
 
-//    Phương thức này tạo một token JWT mới với các claims bổ sung và chi tiết người dùng. Nó xây dựng token bằng cách thiết lập các claims, subject (username), thời gian phát hành, thời gian hết hạn, và sử dụng khóa bí mật để ký token.
+    /**
+     * Generates a JWT token with extra claims and user details.
+     *
+     * @param extraClaims The extra claims to include in the token.
+     * @param userDetails The user details.
+     * @return The generated JWT token.
+     */
     public String generateToken(
             Map<String, String> extraClaims,
             UserDetails userDetails
@@ -64,7 +92,7 @@ public class JwtService {
                     .setClaims(extraClaims)
                     .setSubject(userDetails.getUsername())
                     .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                    .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                     .signWith(getSignKey(), SignatureAlgorithm.HS256)
                     .compact();
         } catch (Exception e) {
@@ -72,13 +100,25 @@ public class JwtService {
         }
     }
 
-//    Phương thức này kiểm tra xem token có hợp lệ hay không bằng cách so sánh username trích xuất từ token với username của người dùng và kiểm tra xem token có hết hạn hay không.
+
+    /**
+     * Validates the JWT token against user details.
+     *
+     * @param token       The JWT token.
+     * @param userDetails The user details.
+     * @return True if the token is valid, false otherwise.
+     */
     public boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
-//Phương thức này kiểm tra xem token đã hết hạn hay chưa bằng cách trích xuất ngày hết hạn từ token và so sánh với ngày hiện tại.
+    /**
+     * Checks if the JWT token is expired.
+     *
+     * @param token The JWT token.
+     * @return True if the token is expired, false otherwise.
+     */
     private boolean isTokenExpired(String token) {
         try {
             return extractExpiration(token).before(new Date());
@@ -87,12 +127,22 @@ public class JwtService {
         }
     }
 
-//Phương thức này trích xuất ngày hết hạn từ token bằng cách sử dụng extractClaims và Claims::getExpiration.
+    /**
+     * Extracts the expiration date from the JWT token.
+     *
+     * @param token The JWT token.
+     * @return The expiration date.
+     */
     private Date extractExpiration(String token) {
         return extractClaims(token, Claims::getExpiration);
     }
 
-//     Phương thức này trích xuất tất cả các claims từ token bằng cách sử dụng khóa bí mật để giải mã token.
+    /**
+     * Extracts all claims from the JWT token.
+     *
+     * @param token The JWT token.
+     * @return The claims.
+     */
     private Claims extarctAllClaims(String token){
         try {
             return Jwts
@@ -106,7 +156,11 @@ public class JwtService {
         }
     }
 
-//     Phương thức này tạo ra một đối tượng Key sử dụng khóa bí mật đã được mã hóa Base64. Nó giải mã khóa bí mật và sử dụng Keys.hmacShaKeyFor để tạo khóa mã hóa HMAC.
+    /**
+     * Gets the signing key used to sign the JWT token.
+     *
+     * @return The signing key.
+     */
     private Key getSignKey() {
         byte[] keyByte = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyByte);

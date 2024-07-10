@@ -18,5 +18,10 @@ public class BillItemService implements IBillItemService {
         repository.save(billItem);
     }
 
+    @Override
+    public List<BillItem> findAllByBill_Customer_CustomerId(Long customerId) {
+        return repository.findAllByBill_Customer_CustomerId(customerId);
+    }
+
 
 }

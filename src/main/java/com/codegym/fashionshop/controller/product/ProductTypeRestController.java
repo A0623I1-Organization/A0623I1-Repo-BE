@@ -16,7 +16,7 @@ import java.util.List;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/productType")
+@RequestMapping("/api/auth/productType")
 @CrossOrigin("*")
 public class ProductTypeRestController {
 

@@ -18,7 +18,7 @@ import java.util.List;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/auth/category")
 @CrossOrigin("*")
 public class CategoryRestController {
 

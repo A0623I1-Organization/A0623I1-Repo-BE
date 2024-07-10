@@ -14,7 +14,7 @@ import java.util.List;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/color")
+@RequestMapping("/api/auth/color")
 @CrossOrigin("*")
 public class ColorRestController {
 

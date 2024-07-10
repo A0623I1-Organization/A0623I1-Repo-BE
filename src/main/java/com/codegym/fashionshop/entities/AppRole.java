@@ -6,6 +6,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Entity class representing a role in the application.
+ * Each role has a unique role ID and a name.
+ * <p>
+ * Author: KhangDV
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,16 +21,18 @@ import lombok.NoArgsConstructor;
         uniqueConstraints = { //
                 @UniqueConstraint(name = "APP_ROLE_UK", columnNames = "role_name") })
 public class AppRole{
-
-//    ROLE_ADMIN
-//    ROLE_STORE_MANAGER
-//    ROLE_WAREHOUSE_MANAGER
-//    ROLE_SALES
+    /**
+     * The unique identifier for the role.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id", nullable = false)
     private Long roleId;
 
+    /**
+     * The name of the role.
+     * Examples: ROLE_ADMIN, ROLE_STORE_MANAGER, ROLE_WAREHOUSE_MANAGER, ROLE_SALES
+     */
     @Column(name = "role_name", length = 30, nullable = false)
     private String roleName;
 

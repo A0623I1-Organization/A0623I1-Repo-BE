@@ -27,27 +27,12 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())  // Sử dụng phương pháp mới để vô hiệu hóa CSRF
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
-                        .requestMatchers("/admin-user/**").permitAll()  // Điều chỉnh mẫu endpoint khi cần
-
-                        .requestMatchers(HttpMethod.GET).permitAll()  // Điều chỉnh mẫu endpoint khi cần
-                        .requestMatchers("/users").authenticated()
-                        .requestMatchers(HttpMethod.POST).permitAll()
-                        .requestMatchers(HttpMethod.PUT).permitAll()
-                        .requestMatchers(HttpMethod.DELETE).permitAll()
-
-                        .requestMatchers("/pricing/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/products/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/api/bills/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-                        .requestMatchers("/api/bill-items/**").permitAll()  // Thêm quy tắc cho endpoint /pricing
-
-                        .requestMatchers(HttpMethod.GET).permitAll()  // Điều chỉnh mẫu endpoint khi cần
-                        .requestMatchers("/users").authenticated()
-                        .requestMatchers(HttpMethod.POST).authenticated()
-                        .requestMatchers(HttpMethod.PUT).authenticated()
-                        .requestMatchers(HttpMethod.DELETE).authenticated()
-
+                        .requestMatchers("/auth/**","api/public/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll() /// Tạm thời không xác thực, sau đổi sang .authenticated()
+                        .requestMatchers("/api/auth/notification/create").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
+                        .requestMatchers("/api/users/**", "/api/dashboard/**", "/auth/get-profile", "/auth/update-password/{userId}").authenticated()
                         .anyRequest().authenticated()
+
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
