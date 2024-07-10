@@ -21,31 +21,6 @@ import java.util.List;
 @Repository
 public interface IBillRepository extends JpaRepository<Bill,Long> {
     /**
-     * Checks if a bill with the given bill code exists.
-     *
-     * @param billCode the bill code to check
-     * @return true if a bill with the given code exists, false otherwise
-     */
-    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Bill b WHERE b.billCode = :billCode")
-    boolean existsByBillCode(@Param("billCode") String billCode);
-    /**
-     * Creates a new bill.
-     *
-     * @param billCode   the bill code
-     * @param dateCreate the date of creation
-     * @param customerId the ID of the customer associated with the bill
-     */
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO bills (bill_code, date_create, customer_id) VALUES (:billCode, :dateCreate, :customerId)", nativeQuery = true)
-    void createBill(@Param("billCode") String billCode, @Param("dateCreate") LocalDate dateCreate, @Param("customerId") Long customerId);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE Customer c SET c.accumulatedPoints = c.accumulatedPoints + :pointsToAdd WHERE c.customerId = :customerId")
-    void updateAccumulatedPoints(@Param("customerId") Long customerId, @Param("pointsToAdd") int pointsToAdd);
-
-    /**
      * Retrieves the daily sales revenue for a specific date.
      *
      * @param date The date for which to retrieve the daily sales revenue.
@@ -85,6 +60,36 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "group by day(b.date_create)",
             nativeQuery = true)
     List<Object[]> getDailySalesRevenueForMonth(@Param("year") int year, @Param("month") int month);
+
+
+    /**
+     * Checks if a bill with the given bill code exists.
+     *
+     * @param billCode the bill code to check
+     * @return true if a bill with the given code exists, false otherwise
+     */
+    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Bill b WHERE b.billCode = :billCode")
+    boolean existsByBillCode(@Param("billCode") String billCode);
+
+    /**
+     * Creates a new bill.
+     *
+     * @param billCode   the bill code
+     * @param dateCreate the date of creation
+     * @param customerId the ID of the customer associated with the bill
+     */
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO bills (bill_code, date_create, customer_id) VALUES (:billCode, :dateCreate, :customerId)", nativeQuery = true)
+    void createBill(@Param("billCode") String billCode, @Param("dateCreate") LocalDate dateCreate, @Param("customerId") Long customerId);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Customer c SET c.accumulatedPoints = c.accumulatedPoints + :pointsToAdd WHERE c.customerId = :customerId")
+    void updateAccumulatedPoints(@Param("customerId") Long customerId, @Param("pointsToAdd") int pointsToAdd);
+
+    List<Bill>findBillsByCustomer_CustomerId(Long customerId);
+  
     /**
      * Fetches daily sold pricings for a given date.
      *
@@ -99,6 +104,7 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "group by p.pricing_code, p.pricing_name,\n" + " p.price;",
             nativeQuery = true)
     List<Object[]> getDailySoldPricings(@Param("date") LocalDate date);
+  
     /**
      * Fetches monthly sold pricings for a given year and month.
      *
@@ -114,4 +120,5 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "group by p.pricing_code, p.pricing_name,\n" + " p.price;",
             nativeQuery = true)
     List<Object[]> getMonthlySoldPricings(@Param("year") int year, @Param("month") int month);
+
 }

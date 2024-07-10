@@ -143,7 +143,7 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public List< Customer > getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return iCustomerRepository.getAllCustomer();
     }
 

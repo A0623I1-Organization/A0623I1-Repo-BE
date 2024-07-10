@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface IPromotionService {
     Promotion findByPromotionCode(String promotionCode);
+    Promotion usePromotion(String promotionCode);
 }

@@ -27,7 +27,7 @@ import java.util.Random;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/auth/products")
 @CrossOrigin("*")
 public class ProductRestController {
 
@@ -58,10 +58,10 @@ public class ProductRestController {
         if (sortBy != null && !sortBy.isEmpty()) {
             sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         }
-        products = productService.searchAndSortProducts(keyword, PageRequest.of(page, 2, sort));
+        products = productService.searchAndSortProducts(keyword, PageRequest.of(page, 10, sort));
 
         if (products.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin giá");
+            products = Page.empty();
         }
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
@@ -74,6 +74,7 @@ public class ProductRestController {
      * @return a ResponseEntity containing the created product and HTTP status CREATED (201) if successful
      * @throws HttpExceptions.BadRequestException if there are validation errors
      */
+
     @PostMapping("")
     public ResponseEntity<Object> createProduct(@RequestBody @Validated Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -104,8 +105,9 @@ public class ProductRestController {
         String productCode = generateUniqueProductCode();
         Map<String, String> response = new HashMap<>();
         response.put("code", productCode);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);    
     }
+
     @PostMapping("/checkProductCode")
     public ResponseEntity<Map<String, Boolean>> checkProductCode(@RequestBody Map<String, String> request) {
         String productCode = request.get("code");

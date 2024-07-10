@@ -1,8 +1,10 @@
 package com.codegym.fashionshop.controller.customer;
 
+import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
+import com.codegym.fashionshop.service.bill.IBillService;
 import com.codegym.fashionshop.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,8 @@ public class CustomerRestController {
 
     @Autowired
     private ICustomerService iCustomerService;
+    @Autowired
+    private IBillService billService;
 
     /**
      * Creates a new customer.
@@ -113,6 +117,21 @@ public class CustomerRestController {
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
+    @GetMapping
+    public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(name = "page", defaultValue = "0") int page) {
+        if (page < 0) {
+            page = 0;
+        }
+        Page<Customer> customers = iCustomerService.findAll(PageRequest.of(page, 2));
+        for (Customer customer: customers) {
+            System.out.println("ID : " +customer.getCustomerName()+" TotalBill = "+ billService.calculateTotalBillForCustomer(customer.getCustomerId()) );
+        }
+        if (customers.isEmpty()) {
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin khách hàng");
+        }
+        return new ResponseEntity<>(customers, HttpStatus.OK);
+    }
+
 
 
     @DeleteMapping("/{customerId}")
