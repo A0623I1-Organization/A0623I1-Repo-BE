@@ -99,6 +99,7 @@ public class BillRestController {
         Map<String, String> response = new HashMap<>();
         response.put("code", billCode);
         return ResponseEntity.ok(response);
+    }
 
     /**
      * <<<<<<< HEAD
@@ -113,7 +114,7 @@ public class BillRestController {
             billCode = "HD" + String.format("%06d", random.nextInt(1000000));
         } while (!billService.isBillCodeUnique(billCode));
         return billCode;
-
+    }
     /**
      * Calculates points to be added based on the bill.
      *
@@ -174,7 +175,7 @@ public class BillRestController {
             return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
 
         }
-  
+
     /**
      * Retrieves daily sold pricings for a given date.
      *

@@ -24,6 +24,6 @@ public interface IPromotionRepository extends JpaRepository<Promotion,Long> {
 
     @Modifying
     @Query("UPDATE Promotion p SET p.quantity = :quantity, p.enabled = :enabled WHERE p.promotionId = :promotionId")
-    void updatePromotionQuantityAndEnabled(@Param("promotionId") Long promotionId, @Param("quantity") Integer quantity, @Param("enabled") Boolean enabled)
+    void updatePromotionQuantityAndEnabled(@Param("promotionId") Long promotionId, @Param("quantity") Integer quantity, @Param("enabled") Boolean enabled);
 
 }
