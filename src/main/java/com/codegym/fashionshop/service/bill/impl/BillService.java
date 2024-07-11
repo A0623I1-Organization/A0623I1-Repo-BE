@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.service.bill.impl;
 
-import com.codegym.fashionshop.dto.SoldPricings;
+import com.codegym.fashionshop.dto.SoldPricingsDTO;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.repository.bill.IBillRepository;
 import com.codegym.fashionshop.service.bill.IBillService;
@@ -14,7 +14,6 @@ import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,7 +75,7 @@ public class BillService implements IBillService {
      * @author ThanhTT
      */
     @Override
-    public List<SoldPricings> getDailySoldPricings(LocalDate date) {
+    public List<SoldPricingsDTO> getDailySoldPricings(LocalDate date) {
         List<Object[]> results = repository.getDailySoldPricings(date);
         return results.stream().map(this::mapToSoldPricings).collect(Collectors.toList());
     }
@@ -85,12 +84,12 @@ public class BillService implements IBillService {
      * @author ThanhTT
      */
     @Override
-    public List<SoldPricings> getDailySoldPricings(int year, int month) {
+    public List<SoldPricingsDTO> getDailySoldPricings(int year, int month) {
         List<Object[]> results = repository.getMonthlySoldPricings(year, month);
         return results.stream().map(this::mapToSoldPricings).collect(Collectors.toList());
     }
-    private SoldPricings mapToSoldPricings(Object[] object) {
-        return SoldPricings.builder()
+    private SoldPricingsDTO mapToSoldPricings(Object[] object) {
+        return SoldPricingsDTO.builder()
                 .pricingCode((String) object[0])
                 .pricingName((String) object[1])
                 .totalQuantity( ( (BigDecimal) object[2] ).intValue() )

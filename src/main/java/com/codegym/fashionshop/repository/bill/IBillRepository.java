@@ -1,6 +1,5 @@
 package com.codegym.fashionshop.repository.bill;
 
-import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.List;
 
 /**
@@ -19,7 +17,7 @@ import java.util.List;
  * Author: HoaNTT
  */
 @Repository
-public interface IBillRepository extends JpaRepository<Bill,Long> {
+public interface IBillRepository extends JpaRepository<Bill, Long> {
     /**
      * Checks if a bill with the given bill code exists.
      *
@@ -28,6 +26,7 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
      */
     @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END FROM Bill b WHERE b.billCode = :billCode")
     boolean existsByBillCode(@Param("billCode") String billCode);
+
     /**
      * Creates a new bill.
      *
@@ -55,10 +54,11 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
     @Query(value = "select sum(bi.quantity * p.price) as daily_revenue from bill_items as bi inner join bills as b on bi.bill_id = b.bill_id inner join pricings\n" +
             "as p on bi.pricing_id = p.pricing_id where date(b.date_create) = :date", nativeQuery = true)
     Double getDailySalesRevenue(@Param("date") LocalDate date);
+
     /**
      * Retrieves the monthly sales revenue for a specific year and month.
      *
-     * @param year The year for which to retrieve the monthly sales revenue.
+     * @param year  The year for which to retrieve the monthly sales revenue.
      * @param month The month for which to retrieve the monthly sales revenue.
      * @return The monthly sales revenue.
      * @author ThanhTT
@@ -69,10 +69,11 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "where year(b.date_create) = :year and month(b.date_create) = :month",
             nativeQuery = true)
     Double getMonthlySalesRevenue(@Param("year") int year, @Param("month") int month);
+
     /**
      * Retrieves the daily sales revenue for each day in a specific month.
      *
-     * @param year The year for which to retrieve the daily sales revenue.
+     * @param year  The year for which to retrieve the daily sales revenue.
      * @param month The month for which to retrieve the daily sales revenue.
      * @return A list of objects containing the day and the corresponding daily sales revenue.
      * @author ThanhTT
@@ -85,6 +86,7 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "group by day(b.date_create)",
             nativeQuery = true)
     List<Object[]> getDailySalesRevenueForMonth(@Param("year") int year, @Param("month") int month);
+
     /**
      * Fetches daily sold pricings for a given date.
      *
@@ -99,10 +101,11 @@ public interface IBillRepository extends JpaRepository<Bill,Long> {
             "group by p.pricing_code, p.pricing_name,\n" + " p.price;",
             nativeQuery = true)
     List<Object[]> getDailySoldPricings(@Param("date") LocalDate date);
+
     /**
      * Fetches monthly sold pricings for a given year and month.
      *
-     * @param year the year for which to fetch sold pricings
+     * @param year  the year for which to fetch sold pricings
      * @param month the month for which to fetch sold pricings
      * @return a list of objects containing pricing code, pricing name, total quantity, and price
      * @author ThanhTT

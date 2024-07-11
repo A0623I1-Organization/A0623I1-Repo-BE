@@ -79,7 +79,6 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     @Query(value = "UPDATE pricings SET quantity = quantity + :quantity, inventory_id = :inventoryId WHERE pricing_id = :id", nativeQuery = true)
     void updateQuantityAndInventory(@Param("id") Long id, @Param("quantity") int quantity, @Param("inventoryId") Long inventoryId);
 
-
     /**
      * Retrieves all pricings with pagination.
      *

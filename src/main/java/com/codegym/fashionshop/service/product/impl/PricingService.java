@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.service.product.impl;
 
-import com.codegym.fashionshop.dto.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.repository.product.IInventoryRepository;
@@ -46,7 +46,7 @@ public class PricingService implements IPricingService {
      * @author ThanhTT
      */
     @Override
-    public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {
+    public void updatePricingQuantity(WarehouseReceiptDTO warehouseReceipt) {
         AppUser user = appUserService.findByUsername(warehouseReceipt.getUsername());
         inventoryRepository.saveInventory(user.getUserId(), warehouseReceipt.getDate(), warehouseReceipt.getReceiptId());
         Long inventoryId = inventoryRepository.getLastInsertId();

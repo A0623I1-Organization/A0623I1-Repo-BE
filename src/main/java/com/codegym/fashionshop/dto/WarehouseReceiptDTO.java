@@ -41,7 +41,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WarehouseReceipt {
+public class WarehouseReceiptDTO {
     private String receiptId;
     private String username;
     private LocalDate date;

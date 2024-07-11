@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.controller.bill;
 
-import com.codegym.fashionshop.dto.SoldPricings;
+import com.codegym.fashionshop.dto.SoldPricingsDTO;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.entities.BillItem;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
@@ -171,7 +171,7 @@ public class BillRestController {
     @GetMapping("/sold-pricings/daily")
     public ResponseEntity<?> getDailySoldPricings(@RequestParam("date") LocalDate date) {
         try {
-            List<SoldPricings> soldPricings = billService.getDailySoldPricings(date);
+            List<SoldPricingsDTO> soldPricings = billService.getDailySoldPricings(date);
             if (soldPricings.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -194,7 +194,7 @@ public class BillRestController {
         if (month < 1 || month > 12) {
             return new ResponseEntity<>("Invalid month value. Please provide a month between 1 and 12.", HttpStatus.BAD_REQUEST);
         }
-        List<SoldPricings> soldPricings = billService.getDailySoldPricings(year, month);
+        List<SoldPricingsDTO> soldPricings = billService.getDailySoldPricings(year, month);
         if (soldPricings.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
