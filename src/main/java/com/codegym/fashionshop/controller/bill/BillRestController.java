@@ -2,7 +2,6 @@ package com.codegym.fashionshop.controller.bill;
 
 
 import com.codegym.fashionshop.entities.*;
-import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
 import com.codegym.fashionshop.entities.AppUser;
@@ -11,9 +10,6 @@ import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.bill.IBillService;
-import com.codegym.fashionshop.service.bill.IRequiredBillService;
-import com.codegym.fashionshop.service.customer.ICustomerService;
-import com.codegym.fashionshop.service.customer.ICustomerTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

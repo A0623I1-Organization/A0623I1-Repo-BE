@@ -1,11 +1,9 @@
 package com.codegym.fashionshop.repository.bill;
 
-import com.codegym.fashionshop.entities.Bill;
+
 import com.codegym.fashionshop.entities.BillItem;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
