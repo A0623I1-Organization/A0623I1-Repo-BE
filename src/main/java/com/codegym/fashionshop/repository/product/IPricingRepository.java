@@ -56,10 +56,29 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
                        @Param("price") Double price,
                        @Param("size") String size,
                        @Param("qrCode") String qrCode,
-                       @Param("quantity") Integer quantity,
+                       @Param("quantity") Long quantity,
+                       @Param("inventoryId") Long inventoryId,
                        @Param("colorId") Integer colorId,
-                       @Param("pricingImgUrl") String pricingImgUrl,
-                       @Param("inventoryId") Long inventoryId);
+                       @Param("pricingImgUrl") String pricingImgUrl);
+
+    /**
+     * Updates the quantity and inventory ID of a pricing in the database.
+     *
+     * <p>This method updates the quantity of a specific pricing by adding the provided quantity
+     * to the existing quantity. It also sets the inventory ID for the specified pricing.
+     *
+     * <p>The method is annotated with {@link Modifying} and {@link Transactional} to indicate that it
+     * performs a modifying query and should be executed within a transaction context.
+     *
+     * @param id The ID of the pricing to update.
+     * @param quantity The quantity to add to the existing quantity.
+     * @param inventoryId The inventory ID to set for the pricing.
+     * @author ThanhTT
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE pricings SET quantity = quantity + :quantity, inventory_id = :inventoryId WHERE pricing_id = :id", nativeQuery = true)
+    void updateQuantityAndInventory(@Param("id") Long id, @Param("quantity") int quantity, @Param("inventoryId") Long inventoryId);
 
     /**
      * Retrieves all pricings with pagination.
@@ -98,27 +117,6 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Pricing p WHERE p.pricingCode = :pricingCode")
     boolean existsByPricingCode(@Param("pricingCode") String pricingCode);
 
-    @Query(value = "UPDATE pricings set quantity = :quantity where pricing_id = :id", nativeQuery = true)
-    int updateQuantity(Long id, int quantity);
-    /**
-     * Updates the quantity and inventory ID of a pricing in the database.
-     *
-     * <p>This method updates the quantity of a specific pricing by adding the provided quantity
-     * to the existing quantity. It also sets the inventory ID for the specified pricing.
-     *
-     * <p>The method is annotated with {@link Modifying} and {@link Transactional} to indicate that it
-     * performs a modifying query and should be executed within a transaction context.
-     *
-     * @param id The ID of the pricing to update.
-     * @param quantity The quantity to add to the existing quantity.
-     * @param inventoryId The inventory ID to set for the pricing.
-     * @author ThanhTT
-     */
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE pricings SET quantity = quantity + :quantity, inventory_id = :inventoryId WHERE pricing_id = :id", nativeQuery = true)
-    void updateQuantityAndInventory(@Param("id") Long id, @Param("quantity") int quantity, @Param("inventoryId") Long inventoryId);
-  
     Page<Pricing> findAllByProduct_ProductIdAndPricingCodeContainingIgnoreCaseOrPricingNameContainingIgnoreCaseOrSizeContainingIgnoreCaseOrColor_ColorNameContainingIgnoreCase(
             Long ProductId,
             String pricingCode,

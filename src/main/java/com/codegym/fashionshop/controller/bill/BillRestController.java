@@ -1,9 +1,14 @@
 package com.codegym.fashionshop.controller.bill;
 
+
 import com.codegym.fashionshop.entities.*;
 import com.codegym.fashionshop.dto.SoldPricings;
+import com.codegym.fashionshop.dto.DailyRevenueDTO;
+import com.codegym.fashionshop.dto.SoldPricingsDTO;
+import com.codegym.fashionshop.entities.AppUser;
+import com.codegym.fashionshop.entities.Bill;
+
 import com.codegym.fashionshop.exceptions.HttpExceptions;
-import com.codegym.fashionshop.repository.authenticate.IUserRepository;
 import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.bill.IBillService;
 import com.codegym.fashionshop.service.bill.IRequiredBillService;
@@ -104,7 +109,52 @@ public class BillRestController {
     }
 
     /**
-     * <<<<<<< HEAD
+
+     * Retrieves the daily sales revenue for a specific date.
+     *
+     * @param date The date for which to retrieve the daily sales revenue.
+     * @return A ResponseEntity containing the daily sales revenue.
+     * @author ThanhTT
+     */
+    @GetMapping("/revenue/daily")
+    public ResponseEntity<Double> getDailySalesRevenue(@RequestParam("date") LocalDate date) {
+        Double dailyRevenue = billService.getDailySalesRevenue(date);
+        if (dailyRevenue == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
+    }
+    /**
+     * Retrieves the monthly sales revenue for a specific month.
+     *
+     * @param yearMonth The YearMonth object for which to retrieve the monthly sales revenue.
+     * @return A ResponseEntity containing the monthly sales revenue.
+     * @author ThanhTT
+     */
+    @GetMapping("/revenue/monthly")
+    public ResponseEntity<Double> getMonthlySalesRevenue(@RequestParam("month") YearMonth yearMonth) {
+        Double monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
+        if (monthlyRevenue == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
+    }
+    /**
+     * Retrieves the daily sales revenue for each day in a specific month.
+     *
+     * @param yearMonth The YearMonth object for which to retrieve the daily sales revenue.
+     * @return A ResponseEntity containing a map of the day and the corresponding daily sales revenue.
+     * @author ThanhTT
+     */
+    @GetMapping("/revenue/daily/month")
+    public ResponseEntity<List<DailyRevenueDTO>> getDailySalesRevenueForMonth(@RequestParam("month") YearMonth yearMonth) {
+        List<DailyRevenueDTO> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
+        if (dailyRevenue.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
+    }
+    /**
      * Generates a unique bill code.
      *
      * @return a unique bill code prefixed with "HD" (e.g., HD000001)
@@ -129,54 +179,7 @@ public class BillRestController {
             sum += billItem.getPricing().getPrice() * billItem.getQuantity();
         }
         return (int) (sum / 100000);
-        /* Retrieves the daily sales revenue for a specific date.
-         *
-         * @param date The date for which to retrieve the daily sales revenue.
-         * @return A ResponseEntity containing the daily sales revenue.
-         * @author ThanhTT
-         */
     }
-
-        @GetMapping("/revenue/daily")
-        public ResponseEntity<Double> getDailySalesRevenue (@RequestParam("date") LocalDate date){
-            Double dailyRevenue = billService.getDailySalesRevenue(date);
-            if (dailyRevenue == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
-        }
-        /**
-         * Retrieves the monthly sales revenue for a specific month.
-         *
-         * @param yearMonth The YearMonth object for which to retrieve the monthly sales revenue.
-         * @return A ResponseEntity containing the monthly sales revenue.
-         * @author ThanhTT
-         */
-        @GetMapping("/revenue/monthly")
-        public ResponseEntity<Double> getMonthlySalesRevenue (@RequestParam("month") YearMonth yearMonth){
-            Double monthlyRevenue = billService.getMonthlySalesRevenue(yearMonth);
-            if (monthlyRevenue == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-            return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
-        }
-        /**
-         * Retrieves the daily sales revenue for each day in a specific month.
-         *
-         * @param yearMonth The YearMonth object for which to retrieve the daily sales revenue.
-         * @return A ResponseEntity containing a map of the day and the corresponding daily sales revenue.
-         * @author ThanhTT
-         */
-        @GetMapping("/revenue/daily/month")
-        public ResponseEntity<Map<Integer, Double>> getDailySalesRevenueForMonth (@RequestParam("month") YearMonth
-        yearMonth){
-            Map<Integer, Double> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
-            if (dailyRevenue.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-            return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
-
-        }
 
     /**
      * Retrieves daily sold pricings for a given date.
@@ -188,7 +191,7 @@ public class BillRestController {
     @GetMapping("/sold-pricings/daily")
     public ResponseEntity<?> getDailySoldPricings(@RequestParam("date") LocalDate date) {
         try {
-            List<SoldPricings> soldPricings = billService.getDailySoldPricings(date);
+            List<SoldPricingsDTO> soldPricings = billService.getDailySoldPricings(date);
             if (soldPricings.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -211,7 +214,7 @@ public class BillRestController {
         if (month < 1 || month > 12) {
             return new ResponseEntity<>("Invalid month value. Please provide a month between 1 and 12.", HttpStatus.BAD_REQUEST);
         }
-        List<SoldPricings> soldPricings = billService.getDailySoldPricings(year, month);
+        List<SoldPricingsDTO> soldPricings = billService.getDailySoldPricings(year, month);
         if (soldPricings.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
