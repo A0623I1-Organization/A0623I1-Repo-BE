@@ -11,6 +11,7 @@ import com.codegym.fashionshop.service.notification.INotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +55,7 @@ public class NotificationController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ResponseEntity<?> createNotification(@RequestBody AddNewNotificationDTO addNewNotificationDTO) {
         System.out.println("Đã vào phương thức tạo thông báo.");
         System.out.println("Gia tri role vao : " + addNewNotificationDTO.getListRole());
