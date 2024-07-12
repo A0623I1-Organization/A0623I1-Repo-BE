@@ -72,12 +72,6 @@ public class PricingService implements IPricingService {
         return pricingRepository.findAllByProduct_ProductIdAndPricingCodeContainingIgnoreCaseOrPricingNameContainingIgnoreCaseOrSizeContainingIgnoreCaseOrColor_ColorNameContainingIgnoreCase(ProductId,keyword,keyword,keyword,keyword,pageable);
     }
 
-
-    public void updatePricingQuantity(Long id, int quantity) {
-        int result = pricingRepository.updateQuantity(id, quantity);
-
-    }
-
     @Override
     public void createPricing(Pricing pricing) {
         pricingRepository.createPricing(
@@ -87,10 +81,11 @@ public class PricingService implements IPricingService {
                 pricing.getPrice(),
                 pricing.getSize(),
                 pricing.getQrCode(),
-                pricing.getQuantity(),  // assuming this is the quantity field in Pricing entity
+                Long.valueOf(pricing.getQuantity()),
+                pricing.getInventory().getInventoryId(),
                 pricing.getColor().getColorId(),
-                pricing.getPricingImgUrl(),
-                pricing.getInventory().getInventoryId()  // assuming this is the inventory_id field in Pricing entity
+                pricing.getPricingImgUrl()
+                 // assuming this is the inventory_id field in Pricing entity
         );
     }
 
