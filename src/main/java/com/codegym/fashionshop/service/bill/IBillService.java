@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.service.bill;
 
+import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
 import com.codegym.fashionshop.entities.Bill;
 import org.springframework.data.repository.query.Param;
@@ -32,10 +33,10 @@ public interface IBillService  {
      * Retrieves the daily sales revenue for each day in a specific month.
      *
      * @param yearMonth The YearMonth object for which to retrieve the daily sales revenue.
-     * @return A map containing the day as the key and the corresponding daily sales revenue as the value.
+     * @return A list of DailyRevenue objects
      * @author ThanhTT
      */
-    Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth);
+    List<DailyRevenueDTO> getDailySalesRevenueForMonth(YearMonth yearMonth);
     void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
     List<Bill> findAll();
     /**

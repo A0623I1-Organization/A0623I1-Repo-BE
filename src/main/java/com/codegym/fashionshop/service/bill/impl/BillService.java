@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.service.bill.impl;
 
+import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.repository.bill.IBillRepository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,17 +60,18 @@ public class BillService implements IBillService {
      * @author ThanhTT
      */
     @Override
-    public Map<Integer, Double> getDailySalesRevenueForMonth(YearMonth yearMonth) {
+    public List<DailyRevenueDTO> getDailySalesRevenueForMonth(YearMonth yearMonth) {
         int year = yearMonth.getYear();
         int monthValue = yearMonth.getMonthValue();
-        Map<Integer, Double> dailyRevenueMap = new HashMap<>();
+        List<DailyRevenueDTO> revenueDTOList = new ArrayList<>();
         List<Object[]> results = repository.getDailySalesRevenueForMonth(year, monthValue);
         for(Object[] result: results) {
-            Integer day = (Integer) result[0];
-            Double dailyRevenue = (Double) result[1];
-            dailyRevenueMap.put(day,dailyRevenue);
+            int day = (Integer) result[0];
+            double revenue = (Double) result[1];
+            DailyRevenueDTO dailyRevenue = new DailyRevenueDTO(day, revenue);
+            revenueDTOList.add(dailyRevenue);
         }
-        return dailyRevenueMap;
+        return revenueDTOList;
     }
     /**
      * {@inheritDoc}

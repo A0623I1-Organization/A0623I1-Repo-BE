@@ -5,6 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * SoldPricingsDTO represents the pricing details of sold items.
+ * It contains the pricing code, pricing name, total quantity sold, and the price.
+ *
+ * @author ThanhTT
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

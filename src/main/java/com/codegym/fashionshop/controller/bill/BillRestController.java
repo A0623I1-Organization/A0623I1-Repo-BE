@@ -1,5 +1,6 @@
 package com.codegym.fashionshop.controller.bill;
 
+import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
 import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.entities.BillItem;
@@ -128,8 +129,8 @@ public class BillRestController {
      * @author ThanhTT
      */
     @GetMapping("/revenue/daily/month")
-    public ResponseEntity<Map<Integer, Double>> getDailySalesRevenueForMonth(@RequestParam("month") YearMonth yearMonth) {
-        Map<Integer, Double> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
+    public ResponseEntity<List<DailyRevenueDTO>> getDailySalesRevenueForMonth(@RequestParam("month") YearMonth yearMonth) {
+        List<DailyRevenueDTO> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
         if (dailyRevenue.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
