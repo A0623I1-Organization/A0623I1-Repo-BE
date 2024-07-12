@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.controller.product;
 
-import com.codegym.fashionshop.dto.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
@@ -166,11 +166,11 @@ public class PricingRestController {
      * @author ThanhTT
      */
     @GetMapping("/update")
-    public ResponseEntity<WarehouseReceipt> getPricingListWithUserAndDate() {
+    public ResponseEntity<WarehouseReceiptDTO> getPricingListWithUserAndDate() {
         List<Pricing> pricings = new ArrayList<>();
         LocalDate date = LocalDate.now();
         String id = UUID.randomUUID().toString();
-        WarehouseReceipt receipt = WarehouseReceipt.builder().receiptId(id).date(date).pricingList(pricings).build();
+        WarehouseReceiptDTO receipt = WarehouseReceiptDTO.builder().receiptId(id).date(date).pricingList(pricings).build();
         return new ResponseEntity<>(receipt, HttpStatus.OK);
     }
     /**
@@ -184,7 +184,7 @@ public class PricingRestController {
      * @author ThanhTT
      */
     @PutMapping("/update")
-    public ResponseEntity<?> updatePricingQuantity(@RequestBody WarehouseReceipt warehouseReceipt) {
+    public ResponseEntity<?> updatePricingQuantity(@RequestBody WarehouseReceiptDTO warehouseReceipt) {
         if (warehouseReceipt == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.service.product;
 
-import com.codegym.fashionshop.dto.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.repository.product.IPricingRepository;
@@ -28,7 +28,7 @@ public interface IPricingService  {
      * @param warehouseReceipt The warehouse receipt containing the pricing list and other details.
      * @author ThanhTT
      */
-    void updatePricingQuantity(WarehouseReceipt warehouseReceipt);
+    void updatePricingQuantity(WarehouseReceiptDTO warehouseReceipt);
 
     boolean isPricingCodeUnique(String pricingCode);
     Pricing findByPricingCode(String pricingCode);
