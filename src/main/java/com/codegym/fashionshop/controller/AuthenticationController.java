@@ -9,6 +9,7 @@ import com.codegym.fashionshop.service.authenticate.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,7 @@ public class AuthenticationController {
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      * @throws RuntimeException if an error occurs while retrieving user information.
      */
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
     @GetMapping("/get-profile")
     public ResponseEntity<?> getMyProfile() throws RuntimeException{
         System.out.println("call");
@@ -56,6 +58,7 @@ public class AuthenticationController {
      * @param updatePasswordRequest The updated user information.
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      */
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
     @PutMapping("/update-password")
     public ResponseEntity<?> updateUser(@Validated @RequestBody UpdatePasswordRequest updatePasswordRequest
             , BindingResult bindingResult){
@@ -73,6 +76,7 @@ public class AuthenticationController {
      * @param updateUserRequest The updated user information.
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      */
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
     @PatchMapping("/update-image")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
         AuthenticationResponse response = authenticationService.updateAvatarAndBackgroundImage(updateUserRequest);

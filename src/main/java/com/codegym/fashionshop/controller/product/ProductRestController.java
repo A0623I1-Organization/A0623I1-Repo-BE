@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -45,6 +46,7 @@ public class ProductRestController {
      * @throws HttpExceptions.NotFoundException if no products are found
      */
     @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
     public ResponseEntity<Page<Product>> getAllProduct(
             @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
             @RequestParam(value = "sortBy", required = false) String sortBy,
@@ -74,7 +76,7 @@ public class ProductRestController {
      * @return a ResponseEntity containing the created product and HTTP status CREATED (201) if successful
      * @throws HttpExceptions.BadRequestException if there are validation errors
      */
-
+    @PreAuthorize("hasRole('ROLE_SALESMAN')")
     @PostMapping("")
     public ResponseEntity<Object> createProduct(@RequestBody @Validated Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
