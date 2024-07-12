@@ -90,7 +90,6 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
     @Modifying
     @Transactional
     @Query(value = "UPDATE customers SET customer_name = :customerName, date_of_birth = :dateOfBirth, gender = :gender, email = :email, phone_number = :phoneNumber, address = :address, type_id = :customerType, accumulated_points = :accumulatedPoints WHERE customer_id =:id", nativeQuery = true)
-
     void updateCustomer(@Param("id") Long id,
                         @Param("customerName") String customerName,
                         @Param("dateOfBirth") LocalDate dateOfBirth,
