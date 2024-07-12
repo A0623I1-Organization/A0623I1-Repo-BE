@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.controller.product;
 
-import com.codegym.fashionshop.dto.respone.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceipt;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 import java.util.*;
 
@@ -32,15 +31,16 @@ public class PricingRestController {
 
     @Autowired
     private IPricingService pricingService;
-    @Autowired
-    private IAppUserService appUserService;
 
     /**
      * GET endpoint to retrieve a page of pricings.
      *
-     * @param page the page number (default 0)
+     * @param productId the product ID to search pricings for
+     * @param keyword   the keyword to search for
+     * @param sortBy    the field to sort by
+     * @param ascending whether to sort in ascending order
+     * @param page      the page number (default 0)
      * @return a ResponseEntity containing a page of pricings and HTTP status OK (200) if successful
-     * @throws HttpExceptions.NotFoundException if no pricings are found
      */
     @GetMapping("/all/{productId}")
     public ResponseEntity<Page<Pricing>> getAllPricing(
@@ -49,7 +49,6 @@ public class PricingRestController {
             @RequestParam(value = "sortBy", required = false) String sortBy,
             @RequestParam(value = "ascending", defaultValue = "true") boolean ascending,
             @RequestParam(value = "page", defaultValue = "0") int page) {
-
         if (page < 0) {
             page = 0;
         }
@@ -70,7 +69,6 @@ public class PricingRestController {
 
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-
 
     /**
      * GET endpoint to retrieve pricing by pricing code.
@@ -131,7 +129,23 @@ public class PricingRestController {
     }
 
     /**
-<<<<<<< HEAD
+     * Retrieving a pricings list.
+     *
+     * <p>This method generates a list of all pricings.
+     *
+     * @return A ResponseEntity containing the pricings list.
+     * @author ThanhTT
+     */
+    @GetMapping("/list")
+    public ResponseEntity<?> getAllPricing() {
+        List<Pricing> pricings = pricingService.findAllPricing();
+        if(pricings.isEmpty()) {
+            return new ResponseEntity<>("No pricings list found", HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(pricings, HttpStatus.OK);
+    }
+
+    /**
      * POST endpoint to generate and check a unique pricing code.
      *
      * @return a ResponseEntity containing a map with the generated pricing code and HTTP status OK (200) if successful
@@ -153,16 +167,12 @@ public class PricingRestController {
      */
     @GetMapping("/update")
     public ResponseEntity<WarehouseReceipt> getPricingListWithUserAndDate() {
-        List<Pricing> pricings = pricingService.findAllPricing();
-        if (pricings.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        List<Pricing> pricings = new ArrayList<>();
         LocalDate date = LocalDate.now();
         String id = UUID.randomUUID().toString();
         WarehouseReceipt receipt = WarehouseReceipt.builder().receiptId(id).date(date).pricingList(pricings).build();
         return new ResponseEntity<>(receipt, HttpStatus.OK);
     }
-
     /**
      * Updates the pricing quantities based on the provided warehouse receipt.
      *

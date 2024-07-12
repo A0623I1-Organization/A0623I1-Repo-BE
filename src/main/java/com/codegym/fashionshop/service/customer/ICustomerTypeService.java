@@ -19,4 +19,5 @@ public interface ICustomerTypeService {
      * @return a list of {@link CustomerType} entities.
      */
     List<CustomerType> getAllCustomerTypes();
+    CustomerType findById(Long id);
 }

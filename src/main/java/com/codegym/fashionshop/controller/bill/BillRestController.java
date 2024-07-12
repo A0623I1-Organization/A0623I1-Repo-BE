@@ -1,12 +1,14 @@
 package com.codegym.fashionshop.controller.bill;
 
-import com.codegym.fashionshop.entities.AppUser;
-import com.codegym.fashionshop.entities.Bill;
-import com.codegym.fashionshop.entities.BillItem;
+import com.codegym.fashionshop.entities.*;
+import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.repository.authenticate.IUserRepository;
 import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.bill.IBillService;
+import com.codegym.fashionshop.service.bill.IRequiredBillService;
+import com.codegym.fashionshop.service.customer.ICustomerService;
+import com.codegym.fashionshop.service.customer.ICustomerTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,7 @@ public class BillRestController {
     private IBillService billService;
     @Autowired
     private IAppUserService userService;
+
 
     /**
      * GET endpoint to retrieve all bills.
@@ -79,10 +83,10 @@ public class BillRestController {
             System.out.println("billItem = " + billItem.getQuantity());
         }
         int pointsToAdd = calculatePoints(bill);
-        System.out.println("bill = " + bill.getCustomer().getCustomerName());
-        System.out.println("mâ = " + pointsToAdd);
         bill.setAppUser(user);
         billService.createBillAndUpdatePoints(bill, pointsToAdd);
+        billService.updateCustomerTypeOfCustomer(bill);
+
         return new ResponseEntity<>(bill, HttpStatus.CREATED);
     }
 
@@ -113,7 +117,6 @@ public class BillRestController {
         } while (!billService.isBillCodeUnique(billCode));
         return billCode;
     }
-
     /**
      * Calculates points to be added based on the bill.
      *
@@ -133,6 +136,7 @@ public class BillRestController {
          * @author ThanhTT
          */
     }
+
         @GetMapping("/revenue/daily")
         public ResponseEntity<Double> getDailySalesRevenue (@RequestParam("date") LocalDate date){
             Double dailyRevenue = billService.getDailySalesRevenue(date);
@@ -173,4 +177,44 @@ public class BillRestController {
             return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
 
         }
+
+    /**
+     * Retrieves daily sold pricings for a given date.
+     *
+     * @param date the date for which to retrieve sold pricings
+     * @return a ResponseEntity containing a list of SoldPricings or a status indicating no content or bad request
+     * @author ThanhTT
+     */
+    @GetMapping("/sold-pricings/daily")
+    public ResponseEntity<?> getDailySoldPricings(@RequestParam("date") LocalDate date) {
+        try {
+            List<SoldPricings> soldPricings = billService.getDailySoldPricings(date);
+            if (soldPricings.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(soldPricings, HttpStatus.OK);
+        } catch (DateTimeParseException e) {
+            return new ResponseEntity<>("Invalid date format. Please use yyyy-MM-dd.", HttpStatus.BAD_REQUEST);
+        }
+    }
+    /**
+     * Retrieves monthly sold pricings for a given year and month.
+     *
+     * @param yearMonth the YearMonth for which to retrieve sold pricings
+     * @return a ResponseEntity containing a list of SoldPricings or a status indicating no content or bad request
+     * @author ThanhTT
+     */
+    @GetMapping("/sold-pricings/monthly")
+    public ResponseEntity<?> getMonthlySoldPricings(@RequestParam("month") YearMonth yearMonth) {
+        int year = yearMonth.getYear();
+        int month = yearMonth.getMonthValue();
+        if (month < 1 || month > 12) {
+            return new ResponseEntity<>("Invalid month value. Please provide a month between 1 and 12.", HttpStatus.BAD_REQUEST);
+        }
+        List<SoldPricings> soldPricings = billService.getDailySoldPricings(year, month);
+        if (soldPricings.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(soldPricings, HttpStatus.OK);
+    }
 }

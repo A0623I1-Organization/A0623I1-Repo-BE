@@ -10,6 +10,5 @@ import java.util.List;
 
 @Repository
 public interface IBillItemRepository extends JpaRepository<BillItem,Long> {
-
 List<BillItem>findAllByBill_Customer_CustomerId(Long customerId);
 }
