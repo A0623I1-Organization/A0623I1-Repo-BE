@@ -74,4 +74,5 @@ public interface ICustomerService {
     void deleteCustomer(Long customerId);
     List<Customer> getAllCustomers();
     Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber,Pageable pageable);
+    void save(Customer customer);
 }

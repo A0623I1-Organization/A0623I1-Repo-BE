@@ -43,6 +43,7 @@ public interface IBillService  {
      */
     List<DailyRevenueDTO> getDailySalesRevenueForMonth(YearMonth yearMonth);
     void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
+    void updateCustomerTypeOfCustomer(Bill bill);
     List<Bill> findAll();
     /**
      * Fetches daily sold pricings as SoldPricings objects for a given date.

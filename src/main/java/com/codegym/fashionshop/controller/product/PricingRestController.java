@@ -31,15 +31,16 @@ public class PricingRestController {
 
     @Autowired
     private IPricingService pricingService;
-    @Autowired
-    private IAppUserService appUserService;
 
     /**
      * GET endpoint to retrieve a page of pricings.
      *
-     * @param page the page number (default 0)
+     * @param productId the product ID to search pricings for
+     * @param keyword   the keyword to search for
+     * @param sortBy    the field to sort by
+     * @param ascending whether to sort in ascending order
+     * @param page      the page number (default 0)
      * @return a ResponseEntity containing a page of pricings and HTTP status OK (200) if successful
-     * @throws HttpExceptions.NotFoundException if no pricings are found
      */
     @GetMapping("/all/{productId}")
     public ResponseEntity<Page<Pricing>> getAllPricing(
@@ -68,7 +69,7 @@ public class PricingRestController {
 
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-  
+
     /**
      * GET endpoint to retrieve pricing by pricing code.
      *
@@ -126,7 +127,7 @@ public class PricingRestController {
         pricingService.createPricing(pricing);
         return new ResponseEntity<>(pricing, HttpStatus.CREATED);
     }
-  
+
     /**
      * Retrieving a pricings list.
      *
@@ -143,7 +144,7 @@ public class PricingRestController {
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-  
+
     /**
      * POST endpoint to generate and check a unique pricing code.
      *

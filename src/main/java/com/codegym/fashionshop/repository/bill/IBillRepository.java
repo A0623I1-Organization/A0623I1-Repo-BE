@@ -44,6 +44,10 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
     @Modifying
     @Query("UPDATE Customer c SET c.accumulatedPoints = c.accumulatedPoints + :pointsToAdd WHERE c.customerId = :customerId")
     void updateAccumulatedPoints(@Param("customerId") Long customerId, @Param("pointsToAdd") int pointsToAdd);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Customer c SET c.customerType.typeId = :typeId WHERE c.customerId = :customerId")
+    void updateCustomerTypeOfCustomer(@Param("customerId") Long customerId, @Param("typeId") int typeId);
 
     /**
 

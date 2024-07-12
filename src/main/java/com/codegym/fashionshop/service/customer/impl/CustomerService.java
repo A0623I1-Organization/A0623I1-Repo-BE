@@ -152,4 +152,9 @@ public class CustomerService implements ICustomerService {
         return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
     }
 
+    @Override
+    public void save(Customer customer) {
+        iCustomerRepository.save(customer);
+    }
+
 }
