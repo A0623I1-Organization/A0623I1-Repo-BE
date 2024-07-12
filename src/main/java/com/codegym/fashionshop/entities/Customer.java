@@ -72,4 +72,5 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "type_id")
     private CustomerType customerType;
+
 }

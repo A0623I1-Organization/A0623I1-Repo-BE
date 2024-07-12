@@ -40,4 +40,22 @@ public class Promotion {
     @Column(name = "required_bill")
     private Double requiredBill;
 
+    @Column(name = "quantity")
+    private Integer quantity;
+    /**
+     * Indicates if the user account is enabled.
+     */
+    @Column(name = "enabled")
+    private Boolean enabled;
+    /**
+     * Reduces the quantity by 1 and disables the promotion if quantity is 0.
+     */
+    public void usePromotion() {
+        if (this.quantity > 0) {
+            this.quantity--;
+        }
+        if (this.quantity == 0) {
+            this.enabled = false;
+        }
+    }
 }

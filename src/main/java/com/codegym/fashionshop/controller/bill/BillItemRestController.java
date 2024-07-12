@@ -19,7 +19,7 @@ import java.util.Map;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/bill-items")
+@RequestMapping("/api/auth/bill-items")
 @CrossOrigin("*")
 public class BillItemRestController {
 

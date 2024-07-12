@@ -13,6 +13,11 @@ import java.util.List;
 
 public interface IBillService  {
     boolean isBillCodeUnique(String billCode);
+//    void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
+//    List<Bill> findAll();
+    List<Bill>findBillsByCustomer_CustomerId(Long customerId);
+    public Double calculateTotalBillForCustomer(Long customerId);
+
     /**
      * Retrieves the daily sales revenue for a specific date.
      *

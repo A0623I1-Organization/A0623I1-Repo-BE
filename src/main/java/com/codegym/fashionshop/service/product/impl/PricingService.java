@@ -67,19 +67,17 @@ public class PricingService implements IPricingService {
         return pricingRepository.findByPricingCode(pricingCode);
     }
 
+    @Override
+    public Page<Pricing> searchAndSortPricing( Long ProductId,String keyword, Pageable pageable) {
+        return pricingRepository.findAllByProduct_ProductIdAndPricingCodeContainingIgnoreCaseOrPricingNameContainingIgnoreCaseOrSizeContainingIgnoreCaseOrColor_ColorNameContainingIgnoreCase(ProductId,keyword,keyword,keyword,keyword,pageable);
+    }
 
-//    @Override
-//    public void createPricing(Pricing pricing) {
-//        pricingRepository.createPricing(pricing.getPricingName(),
-//                pricing.getPricingCode(),
-//                pricing.getProduct().getProductId(),
-//                pricing.getPrice(),
-//                pricing.getSize(),
-//                pricing.getQrCode(),
-//                pricing.getInventory(),
-//                Long.valueOf(pricing.getColor().getColorId()),
-//                pricing.getPricingImgUrl());
-//    }
+
+    public void updatePricingQuantity(Long id, int quantity) {
+        int result = pricingRepository.updateQuantity(id, quantity);
+
+    }
+
     @Override
     public void createPricing(Pricing pricing) {
         pricingRepository.createPricing(
@@ -89,12 +87,14 @@ public class PricingService implements IPricingService {
                 pricing.getPrice(),
                 pricing.getSize(),
                 pricing.getQrCode(),
-                Long.valueOf(pricing.getQuantity()),
-                pricing.getInventory().getInventoryId(),
+                pricing.getQuantity(),  // assuming this is the quantity field in Pricing entity
                 pricing.getColor().getColorId(),
-                pricing.getPricingImgUrl()
+                pricing.getPricingImgUrl(),
+                pricing.getInventory().getInventoryId()  // assuming this is the inventory_id field in Pricing entity
         );
     }
 
+  }
 
-}
+
+

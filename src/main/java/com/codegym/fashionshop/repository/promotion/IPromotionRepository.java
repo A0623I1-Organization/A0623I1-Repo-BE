@@ -2,6 +2,7 @@ package com.codegym.fashionshop.repository.promotion;
 
 import com.codegym.fashionshop.entities.Promotion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,9 @@ public interface IPromotionRepository extends JpaRepository<Promotion,Long> {
      */
     @Query("SELECT p FROM Promotion p WHERE p.promotionCode = :promotionCode")
     Promotion findByPromotionCode(@Param("promotionCode") String promotionCode);
+
+    @Modifying
+    @Query("UPDATE Promotion p SET p.quantity = :quantity, p.enabled = :enabled WHERE p.promotionId = :promotionId")
+    void updatePromotionQuantityAndEnabled(@Param("promotionId") Long promotionId, @Param("quantity") Integer quantity, @Param("enabled") Boolean enabled);
 
 }

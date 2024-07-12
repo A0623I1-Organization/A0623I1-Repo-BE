@@ -2,12 +2,14 @@ package com.codegym.fashionshop.controller.product;
 
 import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.Pricing;
+import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.product.IPricingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -16,10 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 
 /**
  * REST controller for managing pricings.
@@ -27,7 +25,7 @@ import java.util.Random;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/pricing")
+@RequestMapping("/api/auth/pricing")
 @CrossOrigin("*")
 public class PricingRestController {
 
@@ -43,18 +41,34 @@ public class PricingRestController {
      * @return a ResponseEntity containing a page of pricings and HTTP status OK (200) if successful
      * @throws HttpExceptions.NotFoundException if no pricings are found
      */
-    @GetMapping("/all")
-    public ResponseEntity<Page<Pricing>> getAllPricing(@RequestParam(name = "page", defaultValue = "0") int page) {
+    @GetMapping("/all/{productId}")
+    public ResponseEntity<Page<Pricing>> getAllPricing(
+            @PathVariable(name = "productId") Long productId,
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "ascending", defaultValue = "true") boolean ascending,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
         if (page < 0) {
             page = 0;
         }
-        Page<Pricing> pricings = pricingService.findAllPricing(PageRequest.of(page, 2));
-        if (pricings.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin giá");
+
+        Page<Pricing> pricings;
+        Sort sort = Sort.unsorted();
+
+        if (sortBy != null && !sortBy.isEmpty()) {
+            sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         }
+
+        pricings = pricingService.searchAndSortPricing(productId, keyword, PageRequest.of(page, 10, sort));
+
+        if (pricings.isEmpty()) {
+            // Nếu không tìm thấy kết quả, trả về một trang rỗng thay vì ném NotFoundException
+            pricings = Page.empty();
+        }
+
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-
+  
     /**
      * GET endpoint to retrieve pricing by pricing code.
      *
@@ -112,6 +126,7 @@ public class PricingRestController {
         pricingService.createPricing(pricing);
         return new ResponseEntity<>(pricing, HttpStatus.CREATED);
     }
+  
     /**
      * Retrieving a pricings list.
      *
@@ -128,8 +143,20 @@ public class PricingRestController {
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
+  
     /**
-     * Generates a warehouse receipt with the current date and a new unique receipt ID.
+     * POST endpoint to generate and check a unique pricing code.
+     *
+     * @return a ResponseEntity containing a map with the generated pricing code and HTTP status OK (200) if successful
+     */
+    @PostMapping("/generateAndCheckPricingCode")
+    public ResponseEntity<Map<String, String>> generateAndCheckPricingCode() {
+        String pricingCode = generateUniquePricingCode();
+        Map<String, String> response = new HashMap<>();
+        response.put("code", pricingCode);
+        return ResponseEntity.ok(response);
+    }
+     /** Generates a warehouse receipt with the current date and a new unique receipt ID.
      *
      * <p>This method generates a new warehouse receipt with the current date and a unique ID,
      * and includes the list of all pricings.
@@ -164,16 +191,12 @@ public class PricingRestController {
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * POST endpoint to generate and check a unique pricing code.
-     *
-     * @return a ResponseEntity containing a map with the generated pricing code and HTTP status OK (200) if successful
-     */
-    @PostMapping("/generateAndCheckPricingCode")
-    public ResponseEntity<Map<String, String>> generateAndCheckPricingCode() {
-        String pricingCode = generateUniquePricingCode();
-        Map<String, String> response = new HashMap<>();
-        response.put("code", pricingCode);
+    @PostMapping("/checkPricingCode")
+    public ResponseEntity<Map<String, Boolean>> checkPricingCode(@RequestBody Map<String, String> request) {
+        String pricingCode = request.get("code");
+        boolean isUnique = pricingService.isPricingCodeUnique(pricingCode);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("isUnique", isUnique);
         return ResponseEntity.ok(response);
     }
 
