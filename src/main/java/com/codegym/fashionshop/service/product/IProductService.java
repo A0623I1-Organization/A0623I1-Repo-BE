@@ -18,4 +18,5 @@ public interface IProductService {
 
 //    void saveProductWithDetail(Product product, List<Pricing> pricingList, List<ProductImage> productImages);
 Page<Product> searchAndSortProducts(String keyword, Pageable pageable);
+void save(Product product);
 }

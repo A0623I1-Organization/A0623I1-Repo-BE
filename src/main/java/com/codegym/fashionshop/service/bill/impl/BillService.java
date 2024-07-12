@@ -157,12 +157,12 @@ public class BillService implements IBillService {
                 }
             }
         }
-
         // Nâng cấp loại khách hàng nếu tìm thấy loại phù hợp
         if (newCustomerType != null && !newCustomerType.equals(bill.getCustomer().getCustomerType())) {
             bill.getCustomer().setCustomerType(newCustomerType);
             System.out.println("nâng cấp ");
-            customerService.save(bill.getCustomer());
+//            customerService.save(bill.getCustomer());
+            repository.updateCustomerTypeOfCustomer(bill.getCustomer().getCustomerId(),newCustomerType.getTypeId());
         }
 
     }

@@ -79,21 +79,26 @@ public class ProductRestController {
     @PreAuthorize("hasRole('ROLE_SALESMAN')")
     @PostMapping("")
     public ResponseEntity<Object> createProduct(@RequestBody @Validated Product product, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            for (FieldError error : bindingResult.getFieldErrors()) {
-                errors.put(error.getField(), error.getDefaultMessage());
-            }
-            throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
-        }
-        // Set relationships for pricing and product images
-        for (Pricing pricing : product.getPricingList()) {
-            pricing.setProduct(product);
-        }
-        for (ProductImage productImage : product.getProductImages()) {
-            productImage.setProduct(product);
-        }
-        productService.createProduct(product);
+       try{
+           if (bindingResult.hasErrors()) {
+               Map<String, String> errors = new HashMap<>();
+               for (FieldError error : bindingResult.getFieldErrors()) {
+                   errors.put(error.getField(), error.getDefaultMessage());
+               }
+               throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
+           }
+           // Set relationships for pricing and product images
+           for (Pricing pricing : product.getPricingList()) {
+               pricing.setProduct(product);
+           }
+           for (ProductImage productImage : product.getProductImages()) {
+               productImage.setProduct(product);
+           }
+           productService.save(product);
+       }catch (Exception e)
+       {
+           System.out.println(e);
+       }
         return new ResponseEntity<>(product, HttpStatus.CREATED);
     }
 
