@@ -51,8 +51,33 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
      * @return The daily sales revenue.
      * @author ThanhTT
      */
-    @Query(value = "select sum(bi.quantity * p.price) as daily_revenue from bill_items as bi inner join bills as b on bi.bill_id = b.bill_id inner join pricings\n" +
-            "as p on bi.pricing_id = p.pricing_id where date(b.date_create) = :date", nativeQuery = true)
+    @Query(value = "SELECT \n" +
+            "    SUM(\n" +
+            "        CASE \n" +
+            "            WHEN p.discount IS NOT NULL AND b.total_amount >= p.required_bill THEN \n" +
+            "                CASE \n" +
+            "                    WHEN p.discount < 1 THEN (bi.quantity * pr.price) * (1 - p.discount) \n" +
+            "                    ELSE (bi.quantity * pr.price) - p.discount \n" +
+            "                END \n" +
+            "            ELSE bi.quantity * pr.price \n" +
+            "        END\n" +
+            "    ) AS daily_revenue \n" +
+            "FROM \n" +
+            "    (\n" +
+            "        SELECT \n" +
+            "            b.bill_id, \n" +
+            "            SUM(bi.quantity * pr.price) AS total_amount,\n" +
+            "            b.date_create,\n" +
+            "            b.promotion_code\n" +
+            "        FROM bills b \n" +
+            "        INNER JOIN bill_items bi ON b.bill_id = bi.bill_id \n" +
+            "        INNER JOIN pricings pr ON bi.pricing_id = pr.pricing_id \n" +
+            "        GROUP BY b.bill_id, b.date_create, b.promotion_code\n" +
+            "    ) b\n" +
+            "INNER JOIN bill_items bi ON b.bill_id = bi.bill_id \n" +
+            "INNER JOIN pricings pr ON bi.pricing_id = pr.pricing_id \n" +
+            "LEFT JOIN promotions p ON b.promotion_code = p.promotion_code \n" +
+            "WHERE DATE(b.date_create) = :date", nativeQuery = true)
     Double getDailySalesRevenue(@Param("date") LocalDate date);
 
     /**
@@ -63,9 +88,32 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
      * @return The monthly sales revenue.
      * @author ThanhTT
      */
-    @Query(value = "select sum(bi.quantity * p.price) as monthly_revenue from bill_items as bi " +
-            "inner join bills as b on bi.bill_id = b.bill_id " +
-            "inner join pricings as p on bi.pricing_id = p.pricing_id " +
+    @Query(value = "SELECT \n" +
+            "    SUM(\n" +
+            "        CASE \n" +
+            "            WHEN p.discount IS NOT NULL AND b.total_amount >= p.required_bill THEN \n" +
+            "                CASE \n" +
+            "                    WHEN p.discount < 1 THEN (bi.quantity * pr.price) * (1 - p.discount) \n" +
+            "                    ELSE (bi.quantity * pr.price) - p.discount \n" +
+            "                END \n" +
+            "            ELSE bi.quantity * pr.price \n" +
+            "        END\n" +
+            "    ) AS daily_revenue \n" +
+            "FROM \n" +
+            "    (\n" +
+            "        SELECT \n" +
+            "            b.bill_id, \n" +
+            "            SUM(bi.quantity * pr.price) AS total_amount,\n" +
+            "            b.date_create,\n" +
+            "            b.promotion_code\n" +
+            "        FROM bills b \n" +
+            "        INNER JOIN bill_items bi ON b.bill_id = bi.bill_id \n" +
+            "        INNER JOIN pricings pr ON bi.pricing_id = pr.pricing_id \n" +
+            "        GROUP BY b.bill_id, b.date_create, b.promotion_code\n" +
+            "    ) b\n" +
+            "INNER JOIN bill_items bi ON b.bill_id = bi.bill_id \n" +
+            "INNER JOIN pricings pr ON bi.pricing_id = pr.pricing_id \n" +
+            "LEFT JOIN promotions p ON b.promotion_code = p.promotion_code \n" +
             "where year(b.date_create) = :year and month(b.date_create) = :month",
             nativeQuery = true)
     Double getMonthlySalesRevenue(@Param("year") int year, @Param("month") int month);
@@ -78,12 +126,35 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
      * @return A list of objects containing the day and the corresponding daily sales revenue.
      * @author ThanhTT
      */
-    @Query(value = "select day(b.date_create) as day, sum(bi.quantity * p.price) as daily_revenue " +
-            "from bill_items as bi " +
-            "inner join bills as b on bi.bill_id = b.bill_id " +
-            "inner join pricings as p on bi.pricing_id = p.pricing_id " +
-            "where year(b.date_create) = :year and month(b.date_create) = :month " +
-            "group by day(b.date_create)",
+    @Query(value = "SELECT \n" +
+            "    DAY(b.date_create) AS day, \n" +
+            "    SUM(\n" +
+            "        CASE \n" +
+            "            WHEN p.discount IS NOT NULL AND b.total_amount >= p.required_bill THEN \n" +
+            "                CASE \n" +
+            "                    WHEN p.discount < 1 THEN (bi.quantity * pr.price) * (1 - p.discount) \n" +
+            "                    ELSE (bi.quantity * pr.price) - p.discount \n" +
+            "                END \n" +
+            "            ELSE bi.quantity * pr.price \n" +
+            "        END\n" +
+            "    ) AS daily_revenue\n" +
+            "FROM (\n" +
+            "    SELECT \n" +
+            "        b.bill_id, \n" +
+            "        b.date_create,\n" +
+            "        b.promotion_code,\n" +
+            "        SUM(bi.quantity * pr.price) AS total_amount\n" +
+            "    FROM bills b \n" +
+            "    INNER JOIN bill_items bi ON b.bill_id = bi.bill_id \n" +
+            "    INNER JOIN pricings pr ON bi.pricing_id = pr.pricing_id \n" +
+            "    GROUP BY b.bill_id\n" +
+            ") b\n" +
+            "INNER JOIN bill_items bi ON b.bill_id = bi.bill_id \n" +
+            "INNER JOIN pricings pr ON bi.pricing_id = pr.pricing_id \n" +
+            "LEFT JOIN promotions p ON b.promotion_code = p.promotion_code \n" +
+            "WHERE YEAR(b.date_create) = :year \n" +
+            "AND MONTH(b.date_create) = :month \n" +
+            "GROUP BY DAY(b.date_create);",
             nativeQuery = true)
     List<Object[]> getDailySalesRevenueForMonth(@Param("year") int year, @Param("month") int month);
 
