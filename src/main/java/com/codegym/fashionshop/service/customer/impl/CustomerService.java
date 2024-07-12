@@ -154,7 +154,14 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void save(Customer customer) {
-        iCustomerRepository.save(customer);
+        try{
+            iCustomerRepository.save(customer);
+
+        }catch (Exception e)
+        {
+            System.out.print(e.getMessage());
+        }
+
     }
 
 }

@@ -1,7 +1,6 @@
 package com.codegym.fashionshop.service.bill.impl;
 
 
-import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.*;
 import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
@@ -158,12 +157,12 @@ public class BillService implements IBillService {
                 }
             }
         }
-
         // Nâng cấp loại khách hàng nếu tìm thấy loại phù hợp
         if (newCustomerType != null && !newCustomerType.equals(bill.getCustomer().getCustomerType())) {
             bill.getCustomer().setCustomerType(newCustomerType);
             System.out.println("nâng cấp ");
-            customerService.save(bill.getCustomer());
+//            customerService.save(bill.getCustomer());
+            repository.updateCustomerTypeOfCustomer(bill.getCustomer().getCustomerId(),newCustomerType.getTypeId());
         }
 
     }
