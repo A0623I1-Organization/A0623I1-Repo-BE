@@ -1,8 +1,10 @@
 package com.codegym.fashionshop.controller.product;
 
 import com.codegym.fashionshop.entities.Pricing;
+import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.product.IPricingService;
+import com.codegym.fashionshop.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,13 +20,16 @@ import java.util.List;
 @CrossOrigin("*")
 public class PublicPricingController {
 
+//    @Autowired
+//    private IPricingService iPicingService;
+
     @Autowired
-    private IPricingService iPicingService;
+    private IProductService iProductService;
 
     @GetMapping("/new")
-    public ResponseEntity<Page<Pricing>> getAllPricingNew(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<?> getAllPricingNew(@RequestParam(name = "page", defaultValue = "0") int page) {
 
-        final int MAX_PAGES = 4;
+        final int MAX_PAGES = 2;
         final int PAGE_SIZE = 5;
 
         if (page < 0) {
@@ -34,7 +39,7 @@ public class PublicPricingController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        Page<Pricing> pricings = iPicingService.findAllPricing(PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id")));
+        Page<Product> pricings = iProductService.findAllProduct(PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "productId")));
         if (pricings.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -42,11 +47,11 @@ public class PublicPricingController {
     }
 
     @GetMapping("/nam-nu")
-    public ResponseEntity<Page<Pricing>> getAllPricingGender(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<?> getAllPricingGender(@RequestParam(name = "page", defaultValue = "0") int page) {
         if (page < 0) {
             page = 0;
         }
-        Page<Pricing> pricings = iPicingService.findAllPricing(PageRequest.of(page, 10));
+        Page<Product> pricings = iProductService.findAllProduct(PageRequest.of(page, 10));
         if (pricings.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
