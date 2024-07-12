@@ -1,7 +1,6 @@
 package com.codegym.fashionshop.service.bill.impl;
 
 
-import com.codegym.fashionshop.dto.SoldPricings;
 import com.codegym.fashionshop.entities.*;
 import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
