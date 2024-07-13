@@ -2,14 +2,19 @@ package com.codegym.fashionshop.controller;
 
 import com.codegym.fashionshop.dto.request.AppUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
+import com.codegym.fashionshop.entities.AppRole;
+import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.authenticate.impl.RoleService;
 import com.codegym.fashionshop.service.authenticate.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * REST controller for managing users and roles.
@@ -19,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth/users")
 public class UserRestController {
     @Autowired
     private UserService userService;
@@ -50,8 +55,13 @@ public class UserRestController {
      * @return A {@link ResponseEntity} containing the list of roles.
      */
     @GetMapping("/roles")
-    public ResponseEntity<?> getAllRoles() {
-        return ResponseEntity.ok(roleService.findAll());
+    public ResponseEntity<List<AppRole>> getAllRoles() {
+        List<AppRole> roles = roleService.findAll();
+        System.out.println(roles);
+        if (roles.isEmpty()) {
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin chức vụ");
+        }
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     /**
