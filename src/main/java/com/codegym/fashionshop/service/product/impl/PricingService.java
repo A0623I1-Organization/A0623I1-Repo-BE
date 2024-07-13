@@ -68,8 +68,8 @@ public class PricingService implements IPricingService {
     }
 
     @Override
-    public Page<Pricing> searchAndSortPricing( Long ProductId,String keyword, Pageable pageable) {
-        return pricingRepository.findAllByProduct_ProductIdAndPricingCodeContainingIgnoreCaseOrPricingNameContainingIgnoreCaseOrSizeContainingIgnoreCaseOrColor_ColorNameContainingIgnoreCase(ProductId,keyword,keyword,keyword,keyword,pageable);
+    public Page<Pricing> searchPricingsByProductAndCriteria( Long productId, String search, Pageable pageable) {
+        return pricingRepository.searchByProductAndCriteria(productId,search,pageable);
     }
 
     @Override

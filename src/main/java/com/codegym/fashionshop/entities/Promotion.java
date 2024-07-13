@@ -36,9 +36,9 @@ public class Promotion {
     @Column(name = "start_day")
     private LocalDate startDay;
 
+    @Column(name = "end_day")
+    private LocalDate endDay;
 
-    @Column(name = "required_bill")
-    private Double requiredBill;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -51,11 +51,16 @@ public class Promotion {
      * Reduces the quantity by 1 and disables the promotion if quantity is 0.
      */
     public void usePromotion() {
-        if (this.quantity > 0) {
-            this.quantity--;
-        }
-        if (this.quantity == 0) {
-            this.enabled = false;
+        if(this.endDay != null && this.endDay.isBefore(LocalDate.now()))
+        {
+            this.enabled = false;//endDay nhỏ hơn ngày hiện tại
+        }else {
+            if (this.quantity > 0) {
+                this.quantity--;
+            }
+            if (this.quantity == 0) {
+                this.enabled = false; // Vô hiệu hóa nếu quantity = 0
+            }
         }
     }
 }

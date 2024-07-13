@@ -117,13 +117,14 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Pricing p WHERE p.pricingCode = :pricingCode")
     boolean existsByPricingCode(@Param("pricingCode") String pricingCode);
 
-    Page<Pricing> findAllByProduct_ProductIdAndPricingCodeContainingIgnoreCaseOrPricingNameContainingIgnoreCaseOrSizeContainingIgnoreCaseOrColor_ColorNameContainingIgnoreCase(
-            Long ProductId,
-            String pricingCode,
-            String pricingName,
-            String size,
-            String color,
-            Pageable pageable
-    );
+    @Query("SELECT p FROM Pricing p WHERE p.product.productId = :productId " +
+            "AND (p.pricingCode LIKE %:search% " +
+            "OR p.pricingName LIKE %:search% " +
+            "OR p.size LIKE %:search% " +
+            "OR p.color.colorName LIKE %:search%)")
+    Page<Pricing> searchByProductAndCriteria(
+            @Param("productId") Long productId,
+            @Param("search") String search,
+            Pageable pageable);
 
 }
