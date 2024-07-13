@@ -48,6 +48,11 @@ public class ProductService implements IProductService{
       return productRepository.findByProductCodeContainingIgnoreCaseOrProductNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrProductType_TypeNameContainingIgnoreCase(keyword,keyword,keyword,keyword,pageable);
     }
 
+    @Override
+    public Product findProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
 //    @Override
 //    public void saveProductWithDetail(Product product, List<Pricing> pricingList, List<ProductImage> productImages) {
 //        for (Pricing pricing:pricingList) {
