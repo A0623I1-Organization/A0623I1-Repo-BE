@@ -6,8 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
+import java.time.Period;
+
 /**
  * Represents a request to create or update an AppUser.
  * This includes various user details like username, password, contact information, and role.
@@ -18,7 +22,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUserRequest {
+public class AppUserRequest implements Validator {
     private Long userId;
 
     @NotBlank(message = "Tên đăng nhập không được để trống!")
@@ -58,6 +62,7 @@ public class AppUserRequest {
     @NotBlank(message = "Địa chỉ Không được để trống!")
     private String address;
 
+    @NotNull(message = "Chức vụ Không được để trống!")
     private AppRole role;
 
     private LocalDate dateCreate;
@@ -69,4 +74,22 @@ public class AppUserRequest {
     private Boolean credentialsNonExpired;
 
     private Boolean enabled;
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return AppUserRequest.class.isAssignableFrom(clazz);
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+        AppUserRequest appUserRequest = (AppUserRequest) target;
+        LocalDate currentDate = LocalDate.now();
+        LocalDate dateOfBirth = appUserRequest.getDateOfBirth();
+        int acceptYear = Period.between(dateOfBirth, currentDate).getYears();
+        System.out.println(acceptYear);
+        if (acceptYear < 18) {
+
+            errors.rejectValue("dateOfBirth","", "Ngày sinh phải lớn hơn ngày hiện tại 18 năm!!");
+        }
+    }
 }

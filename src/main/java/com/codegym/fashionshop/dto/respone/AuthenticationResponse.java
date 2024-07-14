@@ -57,6 +57,14 @@ public class AuthenticationResponse {
 
     private AppRole role;
 
+    private Boolean accountNonExpired;
+
+    private Boolean accountNonLocked;
+
+    private Boolean credentialsNonExpired;
+
+    private Boolean enabled;
+
     private Page<AppUser> users;
 
     private List<AppRole> roles;

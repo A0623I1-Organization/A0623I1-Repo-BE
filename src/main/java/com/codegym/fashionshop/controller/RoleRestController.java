@@ -35,7 +35,6 @@ public class RoleRestController {
     @GetMapping
     public ResponseEntity<List<AppRole>> getAllRoles() {
         List<AppRole> roles = roleService.findAll();
-        System.out.println(roles);
         if (roles.isEmpty()) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin chức vụ");
         }
