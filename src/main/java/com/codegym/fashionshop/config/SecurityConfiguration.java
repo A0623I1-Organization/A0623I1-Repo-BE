@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -12,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -27,17 +30,10 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())  // Sử dụng phương pháp mới để vô hiệu hóa CSRF
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**","/public/**").permitAll()
-                        .requestMatchers(HttpMethod.GET).permitAll()
-                        .requestMatchers("/api/auth/**").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
-                        .requestMatchers("/auth/**","api/public/**").permitAll()
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/api/auth/**", "/api/users/roles").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
-                        .requestMatchers("/api/auth/notification/create").permitAll() // Tạm thời không xác thực, sau đổi sang .authenticated()
-                        .requestMatchers("/api/users/**", "/api/auth/dashboard/**", "/auth/get-profile",
-                                "/auth/update-password", "/auth/update-image").authenticated()
+                        .requestMatchers("/auth/**","/api/public/**","/api/auth/authenticate", "/api/auth/users/roles").permitAll()
+                        .requestMatchers("/api/auth/**").authenticated()
+                        .requestMatchers("/api/auth/users/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
-
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

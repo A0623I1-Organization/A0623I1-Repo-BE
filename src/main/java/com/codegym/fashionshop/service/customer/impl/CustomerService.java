@@ -143,13 +143,25 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public List< Customer > getAllCustomers() {
+    public List<Customer> getAllCustomers() {
         return iCustomerRepository.getAllCustomer();
     }
 
     @Override
     public Page< Customer > searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
         return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
+    }
+
+    @Override
+    public void save(Customer customer) {
+        try{
+            iCustomerRepository.save(customer);
+
+        }catch (Exception e)
+        {
+            System.out.print(e.getMessage());
+        }
+
     }
 
 }

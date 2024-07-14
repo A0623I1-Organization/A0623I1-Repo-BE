@@ -23,9 +23,6 @@ import java.util.List;
  * <p>Author: [QuyLV]</p>
  */
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
-
-
-    @Query("SELECT c FROM Customer c")
     /**
      * Finds all customers with pagination support.
      *
@@ -92,7 +89,7 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      */
     @Modifying
     @Transactional
-    @Query(value = "UPDATE customers SET customer_name = :customerName, date_of_birth = :dateOfBirth, gender = :gender, email = :email, phone_number = :phoneNumber, address = :address, type_id = :customerTypeId, accumulated_points = :accumulatedPoints WHERE customer_id = :id", nativeQuery = true)
+    @Query(value = "UPDATE customers SET customer_name = :customerName, date_of_birth = :dateOfBirth, gender = :gender, email = :email, phone_number = :phoneNumber, address = :address, type_id = :customerTypeId, accumulated_points = :accumulatedPoints WHERE customer_id =:id", nativeQuery = true)
     void updateCustomer(@Param("id") Long id,
                         @Param("customerName") String customerName,
                         @Param("dateOfBirth") LocalDate dateOfBirth,
@@ -141,4 +138,5 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
 
     @Query("select c from Customer c")
     List< Customer > getAllCustomer();
+
 }

@@ -16,7 +16,7 @@ import java.util.List;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/productType")
+@RequestMapping("/api/auth/productType")
 @CrossOrigin("*")
 public class ProductTypeRestController {
 
@@ -33,7 +33,7 @@ public class ProductTypeRestController {
     public ResponseEntity<List<ProductType>> getAllProduct() {
         List<ProductType> productTypes = productTypeService.findAll();
         if (productTypes.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin loại sản phẩm!");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin danh mục sản phẩm");
         }
         return new ResponseEntity<>(productTypes, HttpStatus.OK);
     }

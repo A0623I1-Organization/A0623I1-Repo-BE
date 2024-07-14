@@ -2,14 +2,23 @@ package com.codegym.fashionshop.controller;
 
 import com.codegym.fashionshop.dto.request.AppUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
+import com.codegym.fashionshop.dto.respone.ErrorDetail;
+import com.codegym.fashionshop.entities.AppRole;
+import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.authenticate.impl.RoleService;
 import com.codegym.fashionshop.service.authenticate.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * REST controller for managing users and roles.
@@ -19,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth/users")
 public class UserRestController {
     @Autowired
     private UserService userService;
@@ -32,16 +41,54 @@ public class UserRestController {
      *
      * @param page          The page number for pagination (default is 0).
      * @param searchContent The search content to filter users by username, user code, or role name (default is empty).
+     * @param codeSort      The field to sort by user code (optional).
+     * @param codeDirection The sort direction for user code ('asc' or 'desc').
+     * @param nameSort      The field to sort by full name (optional).
+     * @param nameDirection The sort direction for full name ('asc' or 'desc').
+     * @param roleSort      The field to sort by role ID (optional).
+     * @param roleDirection The sort direction for role ID ('asc' or 'desc').
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse} with the list of users.
-     */
+     * */
     @GetMapping()
-    public ResponseEntity<?> getAllUsers(@RequestParam(name = "page", defaultValue = "0") int page
-            , @RequestParam(name = "searchContent", defaultValue = "") String searchContent) {
+    public ResponseEntity<?> getAllUsers(@RequestParam(name = "page", defaultValue = "0") int page,
+                                         @RequestParam(name = "searchContent", defaultValue = "") String searchContent,
+                                         @RequestParam(name = "codeSort", defaultValue = "") String codeSort,
+                                         @RequestParam(name = "codeDirection", defaultValue = "") String codeDirection,
+                                         @RequestParam(name = "nameSort", defaultValue = "") String nameSort,
+                                         @RequestParam(name = "nameDirection", defaultValue = "") String nameDirection,
+                                         @RequestParam(name = "roleSort", defaultValue = "") String roleSort,
+                                         @RequestParam(name = "roleDirection", defaultValue = "") String roleDirection) {
         if (page < 0) {
             page = 0;
         }
-        AuthenticationResponse response = userService.searchAllByUsernameOrUserCodeOrRoleName(searchContent, PageRequest.of(page, 10));
+        // Tạo danh sách các Sort.Order dựa trên các tham số từ RequestParam
+        List<Sort.Order> orders = new ArrayList<>();
+        if (codeSort != null && !codeSort.isEmpty()) {
+            orders.add(createSortOrder("user_code", codeDirection));
+        }
+        if (nameSort != null && !nameSort.isEmpty()) {
+            orders.add(createSortOrder("full_name", nameDirection));
+        }
+        if (roleSort != null && !roleSort.isEmpty()) {
+            orders.add(createSortOrder("role_id", roleDirection));
+        }
+
+        // Tạo đối tượng PageRequest với Sort tương ứng
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by(orders));
+        AuthenticationResponse response = userService.searchAllByFullNameOrUserCodeOrRoleName(searchContent, pageRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    /**
+     * Creates a Sort.Order instance based on the given sort field and direction.
+     *
+     * @param sortBy       The field to sort by.
+     * @param sortDirection The sort direction ('asc' or 'desc').
+     * @return A Sort.Order instance representing the sort criteria.
+     */
+    private Sort.Order createSortOrder(String sortBy, String sortDirection) {
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        return new Sort.Order(direction, sortBy);
     }
 
     /**
@@ -50,8 +97,13 @@ public class UserRestController {
      * @return A {@link ResponseEntity} containing the list of roles.
      */
     @GetMapping("/roles")
-    public ResponseEntity<?> getAllRoles() {
-        return ResponseEntity.ok(roleService.findAll());
+    public ResponseEntity<List<AppRole>> getAllRoles() {
+        List<AppRole> roles = roleService.findAll();
+        System.out.println(roles);
+        if (roles.isEmpty()) {
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin chức vụ");
+        }
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     /**
@@ -76,9 +128,11 @@ public class UserRestController {
     public ResponseEntity<?> createUser(@Validated @RequestBody AppUserRequest appUserRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.out.println("Errors encountered");
-            System.out.println(bindingResult.getAllErrors());
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         AuthenticationResponse response = userService.save(appUserRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -95,7 +149,11 @@ public class UserRestController {
     public ResponseEntity<?> updateUser(@PathVariable Long id, @Validated @RequestBody AppUserRequest appUserRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         AuthenticationResponse response = userService.updateUser(id, appUserRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);

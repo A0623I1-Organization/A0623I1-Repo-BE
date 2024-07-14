@@ -24,7 +24,7 @@ public interface IRoleRepository extends JpaRepository<AppRole, Long> {
      * @param roleName the role name to search for
      * @return the found AppRole entity or null if not found
      */
-    @Query(value = "SELECT * FROM app_role WHERE role_name = :roleName", nativeQuery = true)
+    @Query(value = "SELECT role_id, role_name FROM app_role WHERE role_name = :roleName", nativeQuery = true)
     AppRole findByRoleName(@Param("roleName") String roleName);
 
     /**
@@ -32,7 +32,7 @@ public interface IRoleRepository extends JpaRepository<AppRole, Long> {
      *
      * @return a list of all AppRole entities
      */
-    @Query(value = "SELECT * FROM app_role", nativeQuery = true)
+    @Query(value = "SELECT role_id, role_name FROM app_role", nativeQuery = true)
     List<AppRole> findAll();
 
 
@@ -42,7 +42,7 @@ public interface IRoleRepository extends JpaRepository<AppRole, Long> {
      * @param roleId the role ID to search for
      * @return an Optional containing the found AppRole entity or an empty Optional if not found
      */
-    @Query(value = "SELECT * FROM app_role WHERE role_id = :roleId", nativeQuery = true)
+    @Query(value = "SELECT role_id, role_name FROM app_role WHERE role_id = :roleId", nativeQuery = true)
     Optional<AppRole> findById(@Param("roleId") Long roleId);
 
     /**

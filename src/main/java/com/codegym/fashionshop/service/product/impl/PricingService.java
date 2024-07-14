@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.service.product.impl;
 
-import com.codegym.fashionshop.dto.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.repository.product.IInventoryRepository;
@@ -46,7 +46,7 @@ public class PricingService implements IPricingService {
      * @author ThanhTT
      */
     @Override
-    public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {
+    public void updatePricingQuantity(WarehouseReceiptDTO warehouseReceipt) {
         AppUser user = appUserService.findByUsername(warehouseReceipt.getUsername());
         inventoryRepository.saveInventory(user.getUserId(), warehouseReceipt.getDate(), warehouseReceipt.getReceiptId());
         Long inventoryId = inventoryRepository.getLastInsertId();
@@ -67,19 +67,11 @@ public class PricingService implements IPricingService {
         return pricingRepository.findByPricingCode(pricingCode);
     }
 
+    @Override
+    public Page<Pricing> searchPricingsByProductAndCriteria( Long productId, String search, Pageable pageable) {
+        return pricingRepository.searchByProductAndCriteria(productId,search,pageable);
+    }
 
-//    @Override
-//    public void createPricing(Pricing pricing) {
-//        pricingRepository.createPricing(pricing.getPricingName(),
-//                pricing.getPricingCode(),
-//                pricing.getProduct().getProductId(),
-//                pricing.getPrice(),
-//                pricing.getSize(),
-//                pricing.getQrCode(),
-//                pricing.getInventory(),
-//                Long.valueOf(pricing.getColor().getColorId()),
-//                pricing.getPricingImgUrl());
-//    }
     @Override
     public void createPricing(Pricing pricing) {
         pricingRepository.createPricing(
@@ -93,8 +85,11 @@ public class PricingService implements IPricingService {
                 pricing.getInventory().getInventoryId(),
                 pricing.getColor().getColorId(),
                 pricing.getPricingImgUrl()
+                 // assuming this is the inventory_id field in Pricing entity
         );
     }
 
+  }
 
-}
+
+

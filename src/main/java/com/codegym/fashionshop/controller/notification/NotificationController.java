@@ -13,6 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -74,7 +77,9 @@ public class NotificationController {
      * @param bindingResult the binding result for validation errors.
      * @return ResponseEntity containing the result of the creation or validation errors.
      */
+  
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ResponseEntity<?> createNotification(@Validated @RequestBody AddNewNotificationDTO addNewNotificationDTO, BindingResult bindingResult) {
         if (addNewNotificationDTO == null) {
             return new ResponseEntity<AddNewNotificationDTO>(HttpStatus.NO_CONTENT);

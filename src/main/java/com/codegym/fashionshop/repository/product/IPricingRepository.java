@@ -1,6 +1,7 @@
 package com.codegym.fashionshop.repository.product;
 
 import com.codegym.fashionshop.entities.Pricing;
+import com.codegym.fashionshop.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -56,7 +57,7 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
                        @Param("size") String size,
                        @Param("qrCode") String qrCode,
                        @Param("quantity") Long quantity,
-                       @Param("inventory") Long inventoryId,
+                       @Param("inventoryId") Long inventoryId,
                        @Param("colorId") Integer colorId,
                        @Param("pricingImgUrl") String pricingImgUrl);
 
@@ -78,7 +79,6 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     @Transactional
     @Query(value = "UPDATE pricings SET quantity = quantity + :quantity, inventory_id = :inventoryId WHERE pricing_id = :id", nativeQuery = true)
     void updateQuantityAndInventory(@Param("id") Long id, @Param("quantity") int quantity, @Param("inventoryId") Long inventoryId);
-
 
     /**
      * Retrieves all pricings with pagination.
@@ -116,5 +116,15 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
      */
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Pricing p WHERE p.pricingCode = :pricingCode")
     boolean existsByPricingCode(@Param("pricingCode") String pricingCode);
+
+    @Query("SELECT p FROM Pricing p WHERE p.product.productId = :productId " +
+            "AND (p.pricingCode LIKE %:search% " +
+            "OR p.pricingName LIKE %:search% " +
+            "OR p.size LIKE %:search% " +
+            "OR p.color.colorName LIKE %:search%)")
+    Page<Pricing> searchByProductAndCriteria(
+            @Param("productId") Long productId,
+            @Param("search") String search,
+            Pageable pageable);
 
 }

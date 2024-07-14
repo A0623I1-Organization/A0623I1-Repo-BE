@@ -18,7 +18,7 @@ import java.util.List;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/auth/category")
 @CrossOrigin("*")
 public class CategoryRestController {
 
@@ -35,7 +35,7 @@ public class CategoryRestController {
     public ResponseEntity<List<Category>> getAllCategories() {
         List<Category> categories = categoryService.findAllCategories();
         if (categories.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin danh mục sản phẩm!");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin danh mục sản phẩm");
         }
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }

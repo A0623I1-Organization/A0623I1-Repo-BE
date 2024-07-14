@@ -1,13 +1,20 @@
 package com.codegym.fashionshop.controller.bill;
 
-import com.codegym.fashionshop.dto.SoldPricings;
+
+import com.codegym.fashionshop.entities.*;
+import com.codegym.fashionshop.dto.DailyRevenueDTO;
+import com.codegym.fashionshop.dto.SoldPricingsDTO;
+import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.entities.Bill;
-import com.codegym.fashionshop.entities.BillItem;
+
 import com.codegym.fashionshop.exceptions.HttpExceptions;
+import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.bill.IBillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -26,12 +33,15 @@ import java.util.Random;
  * Author: HoaNTT
  */
 @RestController
-@RequestMapping("/api/bills")
+@RequestMapping("/api/auth/bills")
 @CrossOrigin("*")
 public class BillRestController {
 
     @Autowired
     private IBillService billService;
+    @Autowired
+    private IAppUserService userService;
+
 
     /**
      * GET endpoint to retrieve all bills.
@@ -40,10 +50,10 @@ public class BillRestController {
      * @throws HttpExceptions.NotFoundException if no bills are found
      */
     @GetMapping
-    public ResponseEntity<List<Bill>> getAllBill() {
+    public ResponseEntity<List<Bill>> getAllBills() {
         List<Bill> bills = billService.findAll();
         if (bills.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin đơn hàng");
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin hóa đơn");
         }
         return new ResponseEntity<>(bills, HttpStatus.OK);
     }
@@ -51,8 +61,8 @@ public class BillRestController {
     /**
      * POST endpoint to create a new bill.
      *
-     * @param bill           the bill object to be created (validated using @Validated)
-     * @param bindingResult  captures and exposes errors from binding/validation process
+     * @param bill          the bill object to be created (validated using @Validated)
+     * @param bindingResult captures and exposes errors from binding/validation process
      * @return a ResponseEntity containing the created bill and HTTP status CREATED (201) if successful
      * @throws HttpExceptions.BadRequestException if there are validation errors in the request body
      */
@@ -65,15 +75,19 @@ public class BillRestController {
             }
             throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
         }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        AppUser user = userService.findByUsername(username);
+        System.out.println(username);
         for (BillItem billItem : bill.getBillItemList()) {
             billItem.setBill(bill);
-            System.out.println("billItem = "+billItem.getQuantity());
+            System.out.println("billItem = " + billItem.getQuantity());
         }
-        // Example points to add (adjust logic as needed)
         int pointsToAdd = calculatePoints(bill);
-        System.out.println("bill = "+bill.getCustomer().getCustomerName());
-        System.out.println("mâ = "+pointsToAdd);
+        bill.setAppUser(user);
         billService.createBillAndUpdatePoints(bill, pointsToAdd);
+        billService.updateCustomerTypeOfCustomer(bill);
+
         return new ResponseEntity<>(bill, HttpStatus.CREATED);
     }
 
@@ -91,6 +105,7 @@ public class BillRestController {
     }
 
     /**
+
      * Retrieves the daily sales revenue for a specific date.
      *
      * @param date The date for which to retrieve the daily sales revenue.
@@ -128,8 +143,8 @@ public class BillRestController {
      * @author ThanhTT
      */
     @GetMapping("/revenue/daily/month")
-    public ResponseEntity<Map<Integer, Double>> getDailySalesRevenueForMonth(@RequestParam("month") YearMonth yearMonth) {
-        Map<Integer, Double> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
+    public ResponseEntity<List<DailyRevenueDTO>> getDailySalesRevenueForMonth(@RequestParam("month") YearMonth yearMonth) {
+        List<DailyRevenueDTO> dailyRevenue = billService.getDailySalesRevenueForMonth(yearMonth);
         if (dailyRevenue.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -161,6 +176,7 @@ public class BillRestController {
         }
         return (int) (sum / 100000);
     }
+
     /**
      * Retrieves daily sold pricings for a given date.
      *
@@ -171,7 +187,7 @@ public class BillRestController {
     @GetMapping("/sold-pricings/daily")
     public ResponseEntity<?> getDailySoldPricings(@RequestParam("date") LocalDate date) {
         try {
-            List<SoldPricings> soldPricings = billService.getDailySoldPricings(date);
+            List<SoldPricingsDTO> soldPricings = billService.getDailySoldPricings(date);
             if (soldPricings.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
@@ -194,7 +210,7 @@ public class BillRestController {
         if (month < 1 || month > 12) {
             return new ResponseEntity<>("Invalid month value. Please provide a month between 1 and 12.", HttpStatus.BAD_REQUEST);
         }
-        List<SoldPricings> soldPricings = billService.getDailySoldPricings(year, month);
+        List<SoldPricingsDTO> soldPricings = billService.getDailySoldPricings(year, month);
         if (soldPricings.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

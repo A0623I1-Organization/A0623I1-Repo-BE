@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +36,10 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
      * @param username the username to search for
      * @return the found AppUser entity or null if not found
      */
-    @Query(value = "SELECT * FROM app_user WHERE user_name = :username", nativeQuery = true)
+    @Query(value = "SELECT user_id, user_name, encrypted_password, user_code, date_create, background_image, avatar, " +
+            "full_name, gender, date_of_birth, phone_number, email, address, role_id, account_non_expired, " +
+            "account_non_locked, credentials_non_expired, enabled FROM app_user " +
+            "WHERE user_name = :username", nativeQuery = true)
     AppUser findByUsername(@Param("username") String username);
 
     /**
@@ -47,18 +49,23 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
      * @param pageable      the pagination information
      * @return a Page of AppUser entities matching the search criteria
      */
-    @Query(value = "SELECT u.* FROM app_user u JOIN app_role r on u.role_id = r.role_id WHERE " +
-            "u.user_name LIKE %:searchContent% " +
+    @Query(value = "SELECT u.user_id, u.user_name,u.encrypted_password, u.user_code, u.date_create, " +
+            "u.background_image, u.avatar, u.full_name, u.gender, u.date_of_birth, u.phone_number, " +
+            "u.email, u.address, u.role_id, u.account_non_expired, u.account_non_locked, " +
+            "u.credentials_non_expired, u.enabled FROM app_user u JOIN app_role r on u.role_id = r.role_id " +
+            "WHERE u.full_name LIKE %:searchContent% " +
             "OR u.user_code LIKE %:searchContent% " +
             "OR r.role_name LIKE %:searchContent%", nativeQuery = true)
-    Page<AppUser> searchAppUserByUsernameOrUserCodeOrRoleName(@Param("searchContent") String searchContent, Pageable pageable);
+    Page<AppUser> searchAppUserByFullNameOrUserCodeOrRoleName(@Param("searchContent") String searchContent, Pageable pageable);
 
     /**
      * Retrieves all AppUser entities.
      * <p>
      * @return a list of all AppUser entities
      */
-    @Query(value = "SELECT * FROM app_user", nativeQuery = true)
+    @Query(value = "SELECT user_id, user_name, encrypted_password, user_code, date_create, background_image, " +
+            "avatar, full_name, gender, date_of_birth, phone_number, email, address, role_id, account_non_expired, " +
+            "account_non_locked, credentials_non_expired, enabled FROM app_user", nativeQuery = true)
     List<AppUser> findAll();
 
     /**
@@ -67,7 +74,9 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
      * @param userId the user ID to search for
      * @return an Optional containing the found AppUser entity or an empty Optional if not found
      */
-    @Query(value = "SELECT * FROM app_user WHERE user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT user_id, user_name, encrypted_password, user_code, date_create, background_image, " +
+            "avatar, full_name, gender, date_of_birth, phone_number, email, address, role_id, account_non_expired, " +
+            "account_non_locked, credentials_non_expired, enabled FROM app_user WHERE user_id = :userId", nativeQuery = true)
     Optional<AppUser> findById(@Param("userId") Long userId);
 
     /**
