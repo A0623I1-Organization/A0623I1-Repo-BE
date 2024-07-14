@@ -53,9 +53,9 @@ public class UserService implements IAppUserService {
      * @return An {@link AuthenticationResponse} containing the status code and a list of matching {@link AppUser} entities.
      */
     @Override
-    public AuthenticationResponse searchAllByUsernameOrUserCodeOrRoleName(String searchContent, Pageable pageable) {
-        Page<AppUser> users = userRepository.searchAppUserByUsernameOrUserCodeOrRoleName(searchContent, pageable);
-        if (users.getTotalElements() == 0) {
+    public AuthenticationResponse searchAllByFullNameOrUserCodeOrRoleName(String searchContent, Pageable pageable) {
+        Page<AppUser> users = userRepository.searchAppUserByFullNameOrUserCodeOrRoleName(searchContent, pageable);
+        if (users == null || users.getTotalElements() == 0) {
             return AuthenticationResponse.builder()
                     .statusCode(404)
                     .message("Không tìm thấy kết quả!")
@@ -98,6 +98,9 @@ public class UserService implements IAppUserService {
     @Override
     public AuthenticationResponse save(AppUserRequest appUserRequest) {
         String username = appUserRequest.getUsername();
+        if (appUserRequest.getPassword() == null || appUserRequest.getPassword().isEmpty()) {
+            appUserRequest.setPassword("123");
+        }
         String encryptedPassword = passwordEncoder.encode(appUserRequest.getPassword());
         String userCode = appUserRequest.getUserCode();
         LocalDate dateCreate = LocalDate.now();
@@ -119,7 +122,7 @@ public class UserService implements IAppUserService {
                 accountNonLocked, enabled);
         return AuthenticationResponse.builder()
                 .statusCode(200)
-                .message("Thêm mới thành công!")
+                .message("Thêm mới thành công!\n" + "Tên đăng nhập: " + username + "\n" + "Mật khẩu: " + appUserRequest.getPassword())
                 .build();
     }
 
@@ -140,7 +143,10 @@ public class UserService implements IAppUserService {
                     .build();
         }
         String username = appUserRequest.getUsername();
-        String encryptedPassword = passwordEncoder.encode(appUserRequest.getPassword());
+        String encryptedPassword = user.get().getEncryptedPassword();
+        if (appUserRequest.getPassword() != null || !appUserRequest.getPassword().isEmpty()) {
+            encryptedPassword = passwordEncoder.encode(appUserRequest.getPassword());
+        }
         String userCode = appUserRequest.getUserCode();
         LocalDate dateCreate = LocalDate.now();
         String backgroundImage = appUserRequest.getBackgroundImage();

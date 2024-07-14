@@ -50,7 +50,6 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
     void updateCustomerTypeOfCustomer(@Param("customerId") Long customerId, @Param("typeId") Long typeId);
 
     /**
-
      * Retrieves the daily sales revenue for a specific date.
      *
      * @param date The date for which to retrieve the daily sales revenue.

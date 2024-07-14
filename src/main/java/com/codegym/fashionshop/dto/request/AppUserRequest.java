@@ -26,9 +26,6 @@ public class AppUserRequest {
     @Pattern(regexp = "^[A-Za-z][A-Za-z0-9]*$", message="Tên đăng nhập không được bắt đầu bằng số và không được chứa các ký tự đặc biệt!")
     private String username;
 
-    @NotBlank(message = "Mật khẩu không được để trống!")
-    @Size(min = 8, max = 50, message = "Mật khẩu phải từ 8 đến 50 chữ!")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,50}$", message = "Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường, và một chữ số, và phải dài từ 8 đến 50 ký tự!")
     private String password;
 
     @NotBlank(message = "Mã nhân viên không được để trống!")
@@ -40,7 +37,8 @@ public class AppUserRequest {
     private String avatar;
 
     @NotBlank(message = "Tên không được để trống!")
-    @Size(max = 50, message = "Họ và tên không được quá 50 chữ!")
+    @Size(max = 50, message = "Họ và tên không được quá 50 Ký tự!")
+    @Pattern(regexp = "^[A-Za-zÀ-ỹà-ỹĂăÂâÊêÔôƠơƯưĐđ\\s]+$", message = "Tên nhân viên phải bắt đầu bằng chữ IN HOA, không được chứa ký tự số và không được chứa ký tự đặc biệt!")
     private String fullName;
 
     @NotNull(message = "Ngày sinh không được để trống!")
@@ -50,7 +48,7 @@ public class AppUserRequest {
     private Integer gender;
 
     @NotBlank(message = "Số điện thoại không được bỏ trống!")
-    @Pattern(regexp = "^+84|0\\d{9}", message = "Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!")
+    @Pattern(regexp = "^(?:\\+84|0)\\d{9}$", message = "Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!")
     private String phoneNumber;
 
     @Email(message = "Email không được để trống!")
