@@ -161,7 +161,6 @@ public class BillService implements IBillService {
         if (newCustomerType != null && !newCustomerType.equals(bill.getCustomer().getCustomerType())) {
             bill.getCustomer().setCustomerType(newCustomerType);
             System.out.println("nâng cấp ");
-//            customerService.save(bill.getCustomer());
             repository.updateCustomerTypeOfCustomer(bill.getCustomer().getCustomerId(),newCustomerType.getTypeId());
         }
 

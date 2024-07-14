@@ -60,7 +60,7 @@ public class PricingRestController {
             sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         }
 
-        pricings = pricingService.searchAndSortPricing(productId, keyword, PageRequest.of(page, 10, sort));
+        pricings = pricingService.searchPricingsByProductAndCriteria(productId, keyword, PageRequest.of(page, 10, sort));
 
         if (pricings.isEmpty()) {
             // Nếu không tìm thấy kết quả, trả về một trang rỗng thay vì ném NotFoundException
