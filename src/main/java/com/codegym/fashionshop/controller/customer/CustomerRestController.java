@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * The CustomerRestController class handles HTTP requests for managing customers.
@@ -158,5 +159,22 @@ public class CustomerRestController {
         Pageable p = PageRequest.of(0, 5, Sort.Direction.ASC, "customerId");
         Page<Customer> list = iCustomerService.searchCustomer("%" + customerCode + "%", "%" + customerName + "%", "%" + phoneNumber + "%", p);
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+    /**
+     * Generates an auto-generated customer code that is unique in the database.
+     * The generated code format is "KH-" followed by a 4-digit random number.
+     * Checks if the generated code already exists in the database and generates
+     * a new code if necessary until a unique code is found.
+     *
+     * @return ResponseEntity containing the auto-generated customer code if successful.
+     */
+    @GetMapping("/code-auto")
+    public ResponseEntity<?> autoCodeCustomer() {
+        String codeAuto;
+        do {
+            int randomNumber = new Random().nextInt(10000);
+            codeAuto = "KH-" + String.format("%04d", randomNumber);
+        } while (iCustomerService.existsByCustomerCode(codeAuto));
+        return new ResponseEntity<>(codeAuto, HttpStatus.OK);
     }
 }
