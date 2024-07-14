@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.service.product.impl;
 
-import com.codegym.fashionshop.dto.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.repository.product.IInventoryRepository;
@@ -46,7 +46,7 @@ public class PricingService implements IPricingService {
      * @author ThanhTT
      */
     @Override
-    public void updatePricingQuantity(WarehouseReceipt warehouseReceipt) {
+    public void updatePricingQuantity(WarehouseReceiptDTO warehouseReceipt) {
         AppUser user = appUserService.findByUsername(warehouseReceipt.getUsername());
         inventoryRepository.saveInventory(user.getUserId(), warehouseReceipt.getDate(), warehouseReceipt.getReceiptId());
         Long inventoryId = inventoryRepository.getLastInsertId();
@@ -68,14 +68,8 @@ public class PricingService implements IPricingService {
     }
 
     @Override
-    public Page<Pricing> searchAndSortPricing( Long ProductId,String keyword, Pageable pageable) {
-        return pricingRepository.findAllByProduct_ProductIdAndPricingCodeContainingIgnoreCaseOrPricingNameContainingIgnoreCaseOrSizeContainingIgnoreCaseOrColor_ColorNameContainingIgnoreCase(ProductId,keyword,keyword,keyword,keyword,pageable);
-    }
-
-
-    public void updatePricingQuantity(Long id, int quantity) {
-        int result = pricingRepository.updateQuantity(id, quantity);
-
+    public Page<Pricing> searchPricingsByProductAndCriteria( Long productId, String search, Pageable pageable) {
+        return pricingRepository.searchByProductAndCriteria(productId,search,pageable);
     }
 
     @Override
@@ -87,10 +81,11 @@ public class PricingService implements IPricingService {
                 pricing.getPrice(),
                 pricing.getSize(),
                 pricing.getQrCode(),
-                pricing.getQuantity(),  // assuming this is the quantity field in Pricing entity
+                Long.valueOf(pricing.getQuantity()),
+                pricing.getInventory().getInventoryId(),
                 pricing.getColor().getColorId(),
-                pricing.getPricingImgUrl(),
-                pricing.getInventory().getInventoryId()  // assuming this is the inventory_id field in Pricing entity
+                pricing.getPricingImgUrl()
+                 // assuming this is the inventory_id field in Pricing entity
         );
     }
 

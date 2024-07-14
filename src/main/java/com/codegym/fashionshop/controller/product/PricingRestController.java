@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.controller.product;
 
-import com.codegym.fashionshop.dto.WarehouseReceipt;
+import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
@@ -31,15 +31,16 @@ public class PricingRestController {
 
     @Autowired
     private IPricingService pricingService;
-    @Autowired
-    private IAppUserService appUserService;
 
     /**
      * GET endpoint to retrieve a page of pricings.
      *
-     * @param page the page number (default 0)
+     * @param productId the product ID to search pricings for
+     * @param keyword   the keyword to search for
+     * @param sortBy    the field to sort by
+     * @param ascending whether to sort in ascending order
+     * @param page      the page number (default 0)
      * @return a ResponseEntity containing a page of pricings and HTTP status OK (200) if successful
-     * @throws HttpExceptions.NotFoundException if no pricings are found
      */
     @GetMapping("/all/{productId}")
     public ResponseEntity<Page<Pricing>> getAllPricing(
@@ -59,7 +60,7 @@ public class PricingRestController {
             sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         }
 
-        pricings = pricingService.searchAndSortPricing(productId, keyword, PageRequest.of(page, 10, sort));
+        pricings = pricingService.searchPricingsByProductAndCriteria(productId, keyword, PageRequest.of(page, 10, sort));
 
         if (pricings.isEmpty()) {
             // Nếu không tìm thấy kết quả, trả về một trang rỗng thay vì ném NotFoundException
@@ -68,7 +69,7 @@ public class PricingRestController {
 
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-  
+
     /**
      * GET endpoint to retrieve pricing by pricing code.
      *
@@ -126,7 +127,7 @@ public class PricingRestController {
         pricingService.createPricing(pricing);
         return new ResponseEntity<>(pricing, HttpStatus.CREATED);
     }
-  
+
     /**
      * Retrieving a pricings list.
      *
@@ -143,7 +144,7 @@ public class PricingRestController {
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
-  
+
     /**
      * POST endpoint to generate and check a unique pricing code.
      *
@@ -165,11 +166,11 @@ public class PricingRestController {
      * @author ThanhTT
      */
     @GetMapping("/update")
-    public ResponseEntity<WarehouseReceipt> getPricingListWithUserAndDate() {
+    public ResponseEntity<WarehouseReceiptDTO> getPricingListWithUserAndDate() {
         List<Pricing> pricings = new ArrayList<>();
         LocalDate date = LocalDate.now();
         String id = UUID.randomUUID().toString();
-        WarehouseReceipt receipt = WarehouseReceipt.builder().receiptId(id).date(date).pricingList(pricings).build();
+        WarehouseReceiptDTO receipt = WarehouseReceiptDTO.builder().receiptId(id).date(date).pricingList(pricings).build();
         return new ResponseEntity<>(receipt, HttpStatus.OK);
     }
     /**
@@ -183,7 +184,7 @@ public class PricingRestController {
      * @author ThanhTT
      */
     @PutMapping("/update")
-    public ResponseEntity<?> updatePricingQuantity(@RequestBody WarehouseReceipt warehouseReceipt) {
+    public ResponseEntity<?> updatePricingQuantity(@RequestBody WarehouseReceiptDTO warehouseReceipt) {
         if (warehouseReceipt == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

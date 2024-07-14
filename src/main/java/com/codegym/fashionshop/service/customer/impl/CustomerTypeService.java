@@ -29,4 +29,9 @@ public class CustomerTypeService implements ICustomerTypeService {
     public List<CustomerType> getAllCustomerTypes() {
         return iCustomerTypeRepository.findAll();
     }
+
+    @Override
+    public CustomerType findById(Long id) {
+        return iCustomerTypeRepository.findById(id).get();
+    }
 }

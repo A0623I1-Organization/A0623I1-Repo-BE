@@ -36,4 +36,11 @@ public class AppRole{
     @Column(name = "role_name", length = 30, nullable = false)
     private String roleName;
 
+    @Override
+    public String toString() {
+        return "AppRole{" +
+                "roleId=" + roleId +
+                ", roleName='" + roleName + '\'' +
+                '}';
+    }
 }

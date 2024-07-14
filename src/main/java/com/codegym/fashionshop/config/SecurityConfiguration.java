@@ -14,7 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -30,9 +30,9 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())  // Sử dụng phương pháp mới để vô hiệu hóa CSRF
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**","/api/public/**","/api/auth/authenticate").permitAll()
+                        .requestMatchers("/auth/**","/api/public/**","/api/auth/authenticate", "/api/auth/users/roles").permitAll()
                         .requestMatchers("/api/auth/**").authenticated()
-                        .requestMatchers("/api/users/**").hasRole("MANAGER")
+                        .requestMatchers("/api/auth/users/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
