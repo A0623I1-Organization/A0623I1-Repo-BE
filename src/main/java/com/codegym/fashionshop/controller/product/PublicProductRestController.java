@@ -10,14 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("api/public/product")
 @CrossOrigin("*")
 public class PublicProductRestController {
-
-//    @Autowired
-//    private IPricingService iPicingService;
-
+    
     @Autowired
     private IProductService iProductService;
 
@@ -57,6 +55,26 @@ public class PublicProductRestController {
     public ResponseEntity<?> getProductById(@PathVariable Long id) {
         Product product = iProductService.findProductById(id);
         return new ResponseEntity<>(product,HttpStatus.OK);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<Page<Product>> getAllProduct(
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "ascending", defaultValue = "true") boolean ascending,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
+        if (page < 0) {
+            page = 0;
+        }
+        Sort sort = Sort.unsorted();
+        if (sortBy != null && !sortBy.isEmpty()) {
+            sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        }
+        Page<Product> products = iProductService.searchAndSortProducts(keyword, PageRequest.of(page, 10, sort));
+        if (products.isEmpty()) {
+            products = Page.empty();
+            return new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( products,HttpStatus.OK);
     }
 
 }
