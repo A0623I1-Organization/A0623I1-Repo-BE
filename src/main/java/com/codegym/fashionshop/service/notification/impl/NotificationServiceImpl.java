@@ -17,11 +17,19 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Implementation of {@link INotificationService} for managing notifications.
+ * This class interacts with the repository layer to perform CRUD operations on notifications.
+ *
+ * @author NhiNTY
+ */
 @Service
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements INotificationService {
+
     @Autowired
     INotificationRepository notificationRepository;
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -73,7 +81,6 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     public void updateStatusRead(Long notifId) {
-        System.out.println("");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         AuthenticationResponse response = authenticationService.getMyInfo(username);
@@ -86,9 +93,14 @@ public class NotificationServiceImpl implements INotificationService {
                 checkNotificationExistsDTO.getTopic(),
                 checkNotificationExistsDTO.getContent(),
                 checkNotificationExistsDTO.getListRole());
-        if (listSize>0){
-            return true;
-        }
-        return false;
+        return listSize > 0;
+    }
+
+    @Override
+    public AuthenticationResponse responseAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        AuthenticationResponse response = authenticationService.getMyInfo(username);
+        return response;
     }
 }
