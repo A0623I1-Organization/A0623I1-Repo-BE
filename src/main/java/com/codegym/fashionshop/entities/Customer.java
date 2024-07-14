@@ -31,11 +31,12 @@ public class Customer {
     private Long customerId;
 
     @NotBlank(message = "Mã khách hàng không được để trống !")
-    @Pattern(regexp = "^KH-\\d{3,}$", message = "Mã khách hàng phải có định dạng KH-XXX")
+    @Pattern(regexp = "^KH-\\d{4,}$", message = "Mã khách hàng phải có định dạng KH-XXXX")
     @Column(name = "customer_code", unique = true, nullable = false)
     private String customerCode;
 
     @NotBlank(message = "Tên khách hàng không được để trống !")
+    @Size(max = 50, message = "Tên khách hàng không quá 50 ký tự !")
     @Column(name = "customer_name", nullable = false)
     private String customerName;
 
