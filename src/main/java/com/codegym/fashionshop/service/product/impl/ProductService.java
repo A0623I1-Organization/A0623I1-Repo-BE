@@ -49,6 +49,27 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public Product findProductById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
+//    @Override
+//    public void saveProductWithDetail(Product product, List<Pricing> pricingList, List<ProductImage> productImages) {
+//        for (Pricing pricing:pricingList) {
+//            pricing.setProduct(product);
+//        }
+//        for (ProductImage productImage:productImages) {
+//            productImage.setProduct(product);
+//        }
+//        productRepository.save(product);
+//    }
+
+//    public void createProduct(Product product) {
+//        productRepository.createProduct(product.getProductCode(),
+//                product.getProductName(),
+//                product.getDescription(),
+//                product.getProductType().getTypeId());
+//    }
     public void save(Product product) {
         productRepository.save(product);
     }
