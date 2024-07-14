@@ -224,6 +224,10 @@ public class UserService implements IAppUserService {
                 .phoneNumber(updatedAppUser.getPhoneNumber())
                 .address(updatedAppUser.getAddress())
                 .role(updatedAppUser.getRole())
+                .accountNonExpired(updatedAppUser.getAccountNonExpired())
+                .credentialsNonExpired(updatedAppUser.getCredentialsNonExpired())
+                .accountNonLocked(updatedAppUser.getAccountNonLocked())
+                .enabled(updatedAppUser.getEnabled())
                 .roles(roles)
                 .build();
     }

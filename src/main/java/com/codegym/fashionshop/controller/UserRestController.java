@@ -2,6 +2,7 @@ package com.codegym.fashionshop.controller;
 
 import com.codegym.fashionshop.dto.request.AppUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
+import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.AppRole;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.authenticate.impl.RoleService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,9 +128,11 @@ public class UserRestController {
     public ResponseEntity<?> createUser(@Validated @RequestBody AppUserRequest appUserRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            System.out.println("Errors encountered");
-            System.out.println(bindingResult.getAllErrors());
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         AuthenticationResponse response = userService.save(appUserRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -145,7 +149,11 @@ public class UserRestController {
     public ResponseEntity<?> updateUser(@PathVariable Long id, @Validated @RequestBody AppUserRequest appUserRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         AuthenticationResponse response = userService.updateUser(id, appUserRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
