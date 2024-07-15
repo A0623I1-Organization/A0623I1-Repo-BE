@@ -1,5 +1,7 @@
 package com.codegym.fashionshop.repository.product;
 
+import com.codegym.fashionshop.entities.Color;
+import com.codegym.fashionshop.entities.Inventory;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.entities.Product;
 import org.springframework.data.domain.Page;
@@ -126,5 +128,20 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
             @Param("productId") Long productId,
             @Param("search") String search,
             Pageable pageable);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Pricing p " +
+            "SET p.pricingName = :pricingName, " +
+            "    p.pricingCode = :pricingCode, " +
+            "    p.price = :price, " +
+            "    p.size = :size, " +
+            "    p.qrCode = :qrCode, " +
+            "    p.quantity = :quantity, " +
+            "    p.color = :color, " +
+            "    p.pricingImgUrl = :pricingImgUrl, " +
+            "    p.inventory = :inventory " +
+            "WHERE p.pricingId = :pricingId")
+    void updatePricing(Long pricingId, String pricingName, String pricingCode, Double price, String size, String qrCode, Integer quantity, Color color, String pricingImgUrl, Inventory inventory);
 
+    Pricing findPricingByPricingId(Long pricingId);
 }

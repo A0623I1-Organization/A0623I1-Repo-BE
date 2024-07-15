@@ -2,6 +2,7 @@ package com.codegym.fashionshop.repository.product;
 
 import com.codegym.fashionshop.entities.BillItem;
 import com.codegym.fashionshop.entities.Product;
+import com.codegym.fashionshop.entities.ProductType;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,4 +76,17 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             String productTypeName,
             Pageable pageable
     );
+    @Modifying
+    @Query("UPDATE Product p " +
+            "SET p.productName = :productName, " +
+            "    p.productCode = :productCode, " +
+            "    p.description = :description, " +
+            "    p.productType = :productType " +
+            "WHERE p.productId = :productId")
+    void updateProduct(@Param("productId") Long productId,
+                       @Param("productName") String productName,
+                       @Param("productCode") String productCode,
+                       @Param("description") String description,
+                       @Param("productType") ProductType productType);
+
 }
