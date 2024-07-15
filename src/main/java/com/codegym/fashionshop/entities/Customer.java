@@ -55,7 +55,7 @@ public class Customer {
     private String email;
 
     @NotBlank(message = "Số điện thoại không được để trống!")
-    @Pattern(regexp = "^+84|0\\d{9}$", message = "Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!")
+    @Pattern(regexp = "^(\\+84|0)\\d{9}$", message = "Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!")
     @Column(name = "phone_number")
     private String phoneNumber;
 

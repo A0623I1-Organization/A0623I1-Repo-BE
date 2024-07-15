@@ -20,7 +20,7 @@ public class PublicProductRestController {
     private IProductService iProductService;
 
     @GetMapping("/new")
-    public ResponseEntity<?> getAllProductNew(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<Page<Product>> getAllProductNew(@RequestParam(name = "page", defaultValue = "0") int page) {
 
         final int MAX_PAGES = 2;
         final int PAGE_SIZE = 5;
@@ -32,27 +32,27 @@ public class PublicProductRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        Page<Product> pricings = iProductService.findAllProduct(PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "productId")));
-        if (pricings.isEmpty()) {
+        Page<Product> products = iProductService.findAllProduct(PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "productId")));
+        if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(pricings, HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/nam-nu")
-    public ResponseEntity<?> getAllProductGender(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<Page<Product>> getAllProductGender(@RequestParam(name = "page", defaultValue = "0") int page) {
         if (page < 0) {
             page = 0;
         }
-        Page<Product> pricings = iProductService.findAllProduct(PageRequest.of(page, 10));
-        if (pricings.isEmpty()) {
+        Page<Product> products = iProductService.findAllProduct(PageRequest.of(page, 10));
+        if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(pricings, HttpStatus.OK);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> getProductById(@PathVariable Long id) {
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
         Product product = iProductService.findProductById(id);
         return new ResponseEntity<>(product,HttpStatus.OK);
     }
