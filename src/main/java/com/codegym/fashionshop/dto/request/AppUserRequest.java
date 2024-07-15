@@ -84,9 +84,8 @@ public class AppUserRequest implements Validator {
     public void validate(Object target, Errors errors) {
         AppUserRequest appUserRequest = (AppUserRequest) target;
         LocalDate currentDate = LocalDate.now();
-        LocalDate dateOfBirth = appUserRequest.getDateOfBirth();
-        int acceptYear = Period.between(dateOfBirth, currentDate).getYears();
-        System.out.println(acceptYear);
+        LocalDate dateOfBirthCheck = appUserRequest.getDateOfBirth();
+        int acceptYear = Period.between(dateOfBirthCheck, currentDate).getYears();
         if (acceptYear < 18) {
 
             errors.rejectValue("dateOfBirth","", "Ngày sinh phải lớn hơn ngày hiện tại 18 năm!!");
