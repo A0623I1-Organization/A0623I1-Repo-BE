@@ -1,7 +1,6 @@
 package com.codegym.fashionshop.repository.product;
 
 import com.codegym.fashionshop.entities.Pricing;
-import com.codegym.fashionshop.entities.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
