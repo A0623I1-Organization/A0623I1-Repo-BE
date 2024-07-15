@@ -4,7 +4,6 @@ import com.codegym.fashionshop.dto.request.AuthenticationRequest;
 import com.codegym.fashionshop.dto.request.UpdatePasswordRequest;
 import com.codegym.fashionshop.dto.request.UpdateUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
-import com.codegym.fashionshop.exceptions.UserIsExistException;
 import com.codegym.fashionshop.service.authenticate.impl.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,7 +43,7 @@ public class AuthenticationController {
      */
     @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
     @GetMapping("/get-profile")
-    public ResponseEntity<?> getMyProfile() throws RuntimeException{
+    public ResponseEntity<?> getMyProfile(){
         System.out.println("call");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
