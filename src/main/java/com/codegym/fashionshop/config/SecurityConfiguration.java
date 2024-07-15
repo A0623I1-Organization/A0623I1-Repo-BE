@@ -30,6 +30,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**","/api/public/**","/api/auth/authenticate", "/api/auth/users/roles").permitAll()
                         .requestMatchers("/api/auth/**").authenticated()
                         .requestMatchers("/api/auth/users/**").hasRole("MANAGER")
+                        .requestMatchers("/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
