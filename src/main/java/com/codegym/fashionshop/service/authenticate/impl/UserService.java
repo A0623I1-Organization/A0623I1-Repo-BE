@@ -219,7 +219,7 @@ public class UserService implements IAppUserService {
                 .fullName(updatedAppUser.getFullName())
                 .gender(updatedAppUser.getGender())
                 .dateOfBirth(updatedAppUser.getDateOfBirth())
-                .dateOfBirth(updatedAppUser.getDateCreate())
+                .dateCreate(updatedAppUser.getDateCreate())
                 .email(updatedAppUser.getEmail())
                 .phoneNumber(updatedAppUser.getPhoneNumber())
                 .address(updatedAppUser.getAddress())
