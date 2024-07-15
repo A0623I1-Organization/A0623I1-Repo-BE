@@ -90,6 +90,18 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
     void deleteById(@Param("userId") Long userId);
 
     /**
+     * Disable an AppUser entity by user ID.
+     * <p>
+     * @param userId the user ID to disable
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE app_user SET account_non_expired = 0, account_non_locked = 0, credentials_non_expired = 0, " +
+            "enabled = 0 WHERE user_id = :userId", nativeQuery = true)
+    void disableUser(@Param("userId") Long userId);
+
+
+    /**
      * Inserts a new AppUser entity into the database.
      * <p>
      * @param username             the username of the new AppUser

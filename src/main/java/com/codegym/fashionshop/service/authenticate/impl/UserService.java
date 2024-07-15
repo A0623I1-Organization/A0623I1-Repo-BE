@@ -178,7 +178,7 @@ public class UserService implements IAppUserService {
      */
     @Override
     public void remove(Long id) {
-        userRepository.deleteById(id);
+        userRepository.disableUser(id);
     }
 
     /**
