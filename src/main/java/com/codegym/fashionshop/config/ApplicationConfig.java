@@ -2,7 +2,6 @@ package com.codegym.fashionshop.config;
 
 import com.codegym.fashionshop.service.authenticate.impl.UserInforDetailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-    @Autowired
-    private UserInforDetailService userDetailsService;
-
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
+        UserInforDetailService userInforDetailService = new UserInforDetailService();
+        authProvider.setUserDetailsService(userInforDetailService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
