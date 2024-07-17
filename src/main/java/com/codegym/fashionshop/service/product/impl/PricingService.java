@@ -73,6 +73,21 @@ public class PricingService implements IPricingService {
     }
 
     @Override
+    public void updatePricing(Long pricingId, Pricing pricing) {
+        pricingRepository.updatePricing(pricingId, pricing.getPricingName(), pricing.getPricingCode(), pricing.getPrice(), pricing.getSize(), pricing.getQrCode(), pricing.getQuantity(), pricing.getColor(), pricing.getPricingImgUrl(), pricing.getInventory());
+    }
+
+    @Override
+    public Pricing findByPricingId(Long pricingId) {
+        return pricingRepository.findPricingByPricingId(pricingId);
+    }
+
+    @Override
+    public void deletePricing(Long pricingId) {
+        pricingRepository.deleteById(pricingId);
+    }
+
+    @Override
     public void createPricing(Pricing pricing) {
         pricingRepository.createPricing(
                 pricing.getPricingName(),
