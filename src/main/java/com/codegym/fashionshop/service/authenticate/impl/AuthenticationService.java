@@ -118,7 +118,6 @@ public class AuthenticationService {
                     .statusCode(404)
                     .message("Người dùng không được tìm thấy!")
                     .build();
-
         }
         if (!passwordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getEncryptedPassword())) {
             return AuthenticationResponse.builder()
