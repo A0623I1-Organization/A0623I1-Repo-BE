@@ -1,6 +1,5 @@
 package com.codegym.fashionshop.controller.customer;
 
-import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
@@ -19,7 +18,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -40,6 +38,8 @@ public class CustomerRestController {
     @Autowired
     private IBillService billService;
 
+    private final Random random = new Random();
+
     /**
      * Creates a new customer.
      *
@@ -51,7 +51,7 @@ public class CustomerRestController {
      * @throws HttpExceptions.BadRequestException if validation errors occur or customer code/email already exists
      */
     @PostMapping("/create")
-    public ResponseEntity< ? > createCustomer(@Validated @RequestBody Customer customer, BindingResult bindingResult) {
+    public ResponseEntity< Object > createCustomer(@Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorDetail errors = new ErrorDetail("Validation errors");
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -87,7 +87,7 @@ public class CustomerRestController {
      * @throws HttpExceptions.BadRequestException if validation errors occur or email already exists
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorDetail errors = new ErrorDetail("Validation errors");
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -111,7 +111,7 @@ public class CustomerRestController {
      * @return ResponseEntity with the customer data if found, otherwise NOT_FOUND status
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdCustomer(@PathVariable Long id) {
+    public ResponseEntity<Customer> findByIdCustomer(@PathVariable Long id) {
         Customer customer = iCustomerService.findById(id);
         if (customer == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -169,10 +169,10 @@ public class CustomerRestController {
      * @return ResponseEntity containing the auto-generated customer code if successful.
      */
     @GetMapping("/code-auto")
-    public ResponseEntity<?> autoCodeCustomer() {
+    public ResponseEntity<String> autoCodeCustomer() {
         String codeAuto;
         do {
-            int randomNumber = new Random().nextInt(10000);
+            int randomNumber = random.nextInt(10000);
             codeAuto = "KH-" + String.format("%04d", randomNumber);
         } while (iCustomerService.existsByCustomerCode(codeAuto));
         return new ResponseEntity<>(codeAuto, HttpStatus.OK);
