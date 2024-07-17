@@ -34,4 +34,7 @@ public interface INewsService {
      */
     NewsDTO findNewsByID(Long newsId);
 
+    boolean existsById(Long newsId);
+
+    void deleteById(Long newsId);
 }

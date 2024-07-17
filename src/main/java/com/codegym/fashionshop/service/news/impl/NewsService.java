@@ -76,14 +76,32 @@ public class NewsService implements INewsService {
      * @param newsId the ID of the news to retrieve
      * @return the NewsDTO object corresponding to the given ID, or null if not found
      */
+
     @Override
     public NewsDTO findNewsByID(Long newsId) {
-        NewsDTO newsDTO = null;
-        Object[] result = iNewsRepository.findNewsById(newsId);
+        Object result = iNewsRepository.findNewsById(newsId);
         if (result != null) {
-            newsDTO = convertToNewsDTO(result);
+            NewsDTO dto = new NewsDTO();
+            dto.setNewsId((Long) ((Object[]) result)[0]);
+            dto.setTitle((String) ((Object[]) result)[1]);
+            dto.setNewsDescription((String) ((Object[]) result)[2]);
+            dto.setContent((String) ((Object[]) result)[3]);
+            dto.setNewsImgUrl((String) ((Object[]) result)[4]);
+            dto.setDateCreate(((java.sql.Date) ((Object[]) result)[5]).toLocalDate());
+            dto.setFullName((String) ((Object[]) result)[6]);
+            return dto;
         }
-        return newsDTO;
+        return null;
+    }
+
+    @Override
+    public boolean existsById(Long newsId) {
+        return iNewsRepository.existsById(newsId);
+    }
+
+    @Override
+    public void deleteById(Long newsId) {
+        iNewsRepository.deleteNewsById(newsId);
     }
 
 }
