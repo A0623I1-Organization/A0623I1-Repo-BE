@@ -22,8 +22,13 @@ public class NotificationWebSocketHandler {
      * @return the same notification DTO received, which is broadcasted to subscribers.
      */
     @MessageMapping("/sendNotification")
-    @SendTo("/topic/notification")
+    @SendTo("/topic/createNotification")
     public AddNewNotificationDTO sendNotification(AddNewNotificationDTO addNewNotificationDTO){
         return addNewNotificationDTO ;
+    }
+    @MessageMapping("/detailNotification")
+    @SendTo("/topic/notification")
+    public String sendNotification(String message){
+        return message ;
     }
 }
