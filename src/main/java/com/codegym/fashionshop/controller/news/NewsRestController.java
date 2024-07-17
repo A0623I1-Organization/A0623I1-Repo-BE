@@ -98,4 +98,19 @@ public class NewsRestController {
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
+    /**
+     * Deletes a news article by its ID.
+     *
+     * @param newsId The ID of the news article to delete
+     * @return ResponseEntity with HttpStatus OK if deletion is successful, or HttpStatus NOT_FOUND if the news article is not found
+     */
+    @DeleteMapping("auth/news/{newsId}")
+    public ResponseEntity<?> deleteNewsById(@PathVariable Long newsId) {
+        if (!iNewsService.existsById(newsId)) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        iNewsService.deleteById(newsId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

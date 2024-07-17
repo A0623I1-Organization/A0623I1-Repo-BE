@@ -64,6 +64,10 @@ public interface INewsRepository extends JpaRepository<News, Long> {
             "LEFT JOIN app_user u ON n.user_id = u.user_id " +
             "WHERE n.news_id = :newsId",
             nativeQuery = true)
-    Object[] findNewsById(@Param("newsId") Long newsId);
+    Object findNewsById(@Param("newsId") Long newsId);
 
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM news WHERE news_id = :newsId", nativeQuery = true)
+    void deleteNewsById(Long newsId);
 }
