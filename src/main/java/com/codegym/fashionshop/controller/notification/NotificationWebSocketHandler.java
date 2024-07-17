@@ -1,7 +1,6 @@
 package com.codegym.fashionshop.controller.notification;
 
 import com.codegym.fashionshop.dto.AddNewNotificationDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
