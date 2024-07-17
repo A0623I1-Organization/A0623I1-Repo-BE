@@ -40,16 +40,18 @@ public class Customer {
     @Column(name = "customer_name", nullable = false)
     private String customerName;
 
-    @NotNull(message = "Ngày sinh không được để trống")
+    @NotNull(message = "Ngày sinh không được để trống !")
     @Past(message = "Ngày phải là ngày quá khứ !")
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @NotNull(message = "Giới tính không được để trống !")
+    @Min(value = 0, message = "Giới tính nhỏ nhất là 0 !")
+    @Max(value = 2, message = "Giới tính lớn nhất là 2 !")
     @Column(name = "gender")
     private Integer gender;
 
-    @Email(message = "Email phải hợp lệ")
+    @Email(message = "Email phải hợp lệ !")
     @NotBlank(message = "Email không được để trống !")
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -60,13 +62,14 @@ public class Customer {
     private String phoneNumber;
 
     @NotBlank(message = "Địa chỉ không được để trống !")
+    @Size(max = 255, message = "Tối đa 255 ký tự !" )
     @Column(name = "address")
     private String address;
 
     @Column(name = "date_register")
     private LocalDate dateRegister;
 
-    @Min(value = 0, message = "Điểm phải lớn hơn hoặc bằng 0")
+    @Min(value = 0, message = "Điểm phải lớn hơn hoặc bằng 0 !")
     @Column(name = "accumulated_points")
     private int accumulatedPoints;
 
