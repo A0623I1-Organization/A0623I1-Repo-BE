@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -60,6 +61,7 @@ public class AppUserRequest implements Validator {
     private String email;
 
     @NotBlank(message = "Địa chỉ Không được để trống!")
+    @Length(min = 0, max = 255, message = "Địa chỉ không thể vượt quá tối đa 255 ký tự!")
     private String address;
 
     @NotNull(message = "Chức vụ Không được để trống!")
