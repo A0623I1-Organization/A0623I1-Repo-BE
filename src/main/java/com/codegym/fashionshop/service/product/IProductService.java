@@ -12,12 +12,18 @@ public interface IProductService {
     void createProduct(Product product);
 
     List<Product> findAllProduct();
+
     Page<Product> findAllProduct(Pageable pageable);
 
     boolean isProductCodeUnique(String productCode);
 
-//    void saveProductWithDetail(Product product, List<Pricing> pricingList, List<ProductImage> productImages);
-Page<Product> searchAndSortProducts(String keyword, Pageable pageable);
+    Page<Product> searchAndSortProducts(String keyword, Pageable pageable);
+
     Product findProductById(Long id);
-void save(Product product);
+
+    void save(Product product);
+
+    void updateProduct(Long productId, Product product);
+
+    void deleteProduct(Long productId);
 }

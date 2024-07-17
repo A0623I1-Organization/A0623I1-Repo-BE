@@ -33,4 +33,8 @@ public interface IPricingService  {
     boolean isPricingCodeUnique(String pricingCode);
     Pricing findByPricingCode(String pricingCode);
     Page<Pricing> searchPricingsByProductAndCriteria( Long productId, String search, Pageable pageable);
+    void updatePricing(Long pricingId, Pricing pricing);
+
+    Pricing findByPricingId(Long pricingId);
+    void deletePricing(Long pricingId);
 }

@@ -1,6 +1,5 @@
 package com.codegym.fashionshop.service.notification.impl;
 
-import com.codegym.fashionshop.dto.AddNewNotificationDTO;
 import com.codegym.fashionshop.dto.CheckNotificationExistsDTO;
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
@@ -9,7 +8,6 @@ import com.codegym.fashionshop.repository.notification.INotificationRepository;
 import com.codegym.fashionshop.service.authenticate.impl.AuthenticationService;
 import com.codegym.fashionshop.service.notification.INotificationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,11 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements INotificationService {
 
-    @Autowired
-    INotificationRepository notificationRepository;
-
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final INotificationRepository notificationRepository;
+    private final AuthenticationService authenticationService;
 
     @Override
     public List<INotificationDTO> getAllNotification(Long roleId, Long userId) {
@@ -40,10 +35,10 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     public int addNotification(String content, LocalDateTime createDate, String topic, List<Long> listRole) {
-        int create_insert = notificationRepository.createNotification(content, createDate, topic);
-        if (create_insert > 0) {
-            Long last_insert = notificationRepository.getLastInsertNotificationId();
-            return notificationRepository.addNewNotification(last_insert, listRole);
+        int createInsert = notificationRepository.createNotification(content, createDate, topic);
+        if (createInsert > 0) {
+            Long lastInsert = notificationRepository.getLastInsertNotificationId();
+            return notificationRepository.addNewNotification(lastInsert, listRole);
         }
         return 0;
     }
@@ -73,10 +68,7 @@ public class NotificationServiceImpl implements INotificationService {
         String username = authentication.getName();
         AuthenticationResponse response = authenticationService.getMyInfo(username);
         List<INotificationDTO> list = notificationRepository.findNotificationsByStatusRead(response.getUserId(), false);
-        if (list == null) {
-            return true;
-        }
-        return false;
+        return list == null;
     }
 
     @Override
@@ -98,9 +90,12 @@ public class NotificationServiceImpl implements INotificationService {
 
     @Override
     public AuthenticationResponse responseAuthentication() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        AuthenticationResponse response = authenticationService.getMyInfo(username);
-        return response;
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            return authenticationService.getMyInfo(username);
+        } catch (Exception e) {
+            return new AuthenticationResponse();
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.codegym.fashionshop.service.notification;
 
-import com.codegym.fashionshop.dto.AddNewNotificationDTO;
+
 import com.codegym.fashionshop.dto.CheckNotificationExistsDTO;
 import com.codegym.fashionshop.dto.INotificationDTO;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;

@@ -7,15 +7,12 @@ import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
 import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.Notification;
 import com.codegym.fashionshop.service.notification.INotificationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,18 +21,19 @@ import java.util.List;
  * REST controller for managing notifications.
  * Provides endpoints for CRUD operations on notifications.
  *
- * @auther NhiNTY
+ * @author NhiNTY
  */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth/notification")
 public class NotificationController {
 
-    @Autowired
-    INotificationService notificationService;
+    private final INotificationService notificationService;
+    private static final String FETCH_ERROR_MESSAGE = "An error occurred while fetching notifications";
 
-    @Autowired
-    NotificationWebSocketHandler notificationWebSocketHandler;
+    public NotificationController(INotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     /**
      * Get a list of all notifications.
@@ -43,13 +41,13 @@ public class NotificationController {
      * @return ResponseEntity containing the list of notifications or an error message.
      */
     @GetMapping("/list")
-    public ResponseEntity<?> findAllNotification() {
+    public ResponseEntity<Object> findAllNotification() {
         try {
             AuthenticationResponse response = notificationService.responseAuthentication();
             List<INotificationDTO> notification = notificationService.getAllNotification(response.getRole().getRoleId(), response.getUserId());
             return ResponseEntity.ok(notification);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching notifications");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(FETCH_ERROR_MESSAGE);
         }
     }
 
@@ -60,13 +58,13 @@ public class NotificationController {
      * @return ResponseEntity containing the list of notifications or an error message.
      */
     @GetMapping("/listByStatusRead/{statusRead}")
-    public ResponseEntity<?> findAllNotificationByStatusRead(@PathVariable("statusRead") boolean statusRead) {
+    public ResponseEntity<Object> findAllNotificationByStatusRead(@PathVariable("statusRead") boolean statusRead) {
         try {
             AuthenticationResponse response = notificationService.responseAuthentication();
             List<INotificationDTO> notification = notificationService.findNotificationsByStatusRead(response.getUserId(), statusRead);
             return ResponseEntity.ok(notification);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching notifications");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(FETCH_ERROR_MESSAGE);
         }
     }
 
@@ -77,12 +75,11 @@ public class NotificationController {
      * @param bindingResult the binding result for validation errors.
      * @return ResponseEntity containing the result of the creation or validation errors.
      */
-  
     @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
-    public ResponseEntity<?> createNotification(@Validated @RequestBody AddNewNotificationDTO addNewNotificationDTO, BindingResult bindingResult) {
+    public ResponseEntity<Object> createNotification(@Validated @RequestBody AddNewNotificationDTO addNewNotificationDTO, BindingResult bindingResult) {
         if (addNewNotificationDTO == null) {
-            return new ResponseEntity<AddNewNotificationDTO>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         if (bindingResult.hasErrors()) {
             ErrorDetail errorDetail = new ErrorDetail("Validation errors");
@@ -106,7 +103,7 @@ public class NotificationController {
      * @return ResponseEntity containing the notification or an error message.
      */
     @GetMapping("/getInfoNotification/{notifId}")
-    public ResponseEntity<?> findNotificationById(@PathVariable("notifId") Long notifId) {
+    public ResponseEntity<Object> findNotificationById(@PathVariable("notifId") Long notifId) {
         Notification notification = notificationService.findNotificationById(notifId);
         if (notification == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -115,7 +112,7 @@ public class NotificationController {
             notificationService.updateStatusRead(notifId);
             return ResponseEntity.ok(notification);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching notifications");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(FETCH_ERROR_MESSAGE);
         }
     }
 
