@@ -71,8 +71,31 @@ public interface ICustomerService {
      */
     boolean existsByEmailAndCustomerCodeNot(String email, String customerCode);
 
+    /**
+     * Deletes a customer based on their ID.
+     *
+     * @param customerId the ID of the customer to delete
+     */
     void deleteCustomer(Long customerId);
-    List<Customer> getAllCustomers();
-    Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber,Pageable pageable);
+
+    /**
+     * Retrieves a paginated list of customers based on a search keyword.
+     *
+     * @param keyword the keyword to search for (can be part of customer name, code, etc.)
+     * @param pageable the pagination information
+     * @return a page of customers matching the search keyword
+     */
+    Page<Customer> getAllCustomers(String keyword, Pageable pageable);
+
+    /**
+     * Searches for customers based on their code, name, and phone number.
+     *
+     * @param customerCode the customer code to search for
+     * @param customerName the customer name to search for
+     * @param phoneNumber the phone number to search for
+     * @param pageable the pagination information
+     * @return a page of customers matching the search criteria
+     */
+    Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable);
     void save(Customer customer);
 }
