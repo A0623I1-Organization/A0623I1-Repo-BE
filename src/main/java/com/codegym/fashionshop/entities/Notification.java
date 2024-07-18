@@ -25,11 +25,12 @@ public class Notification {
 
     @NotNull(message = "Không được để trống")
     @NotBlank(message = "Không được để trống")
-    @Size(min = 2, message = "Tiêu đề phải hơn 2 ký tự.")
+    @Size(min=2,max = 50,message = "Tiêu đề không quá 50 ký tự và phải hơn 2 ký tự .")
     private String topic;
 
     @NotNull(message = "Không được để trống")
     @NotBlank(message = "Không được để trống")
+    @Size(min=0,max = 500,message = "Nội dung không vượt quá 500 ký tự ")
     private String content;
 
 }
