@@ -13,20 +13,28 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Repository interface for managing Notification entities.
- * Provides methods for performing CRUD operations and custom queries on notifications.
- * Author: NhiNTY
+ * Repository interface for managing {@link Notification} entities.
+ * Provides methods for performing CRUD operations and custom queries related to notifications.
+ * <p>
+ * This repository uses native SQL queries for operations that are not easily expressed using JPA methods.
+ * </p>
+ *
+ * <p>
+ * All modifying operations are transactional.
+ * </p>
+ *
+ * @author NhiNTY
  */
 @Transactional
 @Repository
 public interface INotificationRepository extends JpaRepository<Notification, Long> {
 
     /**
-     * Retrieves a list of notifications based on the role ID and user ID.
+     * Retrieves a list of notifications for a given role and user.
      *
-     * @param roleId the ID of the role.
-     * @param userId the ID of the user.
-     * @return a list of notification DTOs.
+     * @param roleId the ID of the role to filter notifications.
+     * @param userId the ID of the user to filter notifications.
+     * @return a list of {@link INotificationDTO} objects representing the notifications.
      */
     @Query(value = """
             SELECT n.notif_id, n.topic, n.create_date, n.content, u.status_read 
@@ -55,11 +63,10 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     int createNotification(@Param("content") String content, @Param("createDate") LocalDateTime createDate, @Param("topic") String topic);
 
     /**
-     * Adds a new notification entry for each user specified in the list of roles.
+     * Inserts new user notification entries for each user associated with the given role IDs.
      *
-     * @param notifId   the ID of the notification.
-     * @param listRole  the list of role IDs.
-     * @return the number of rows affected by the insert operation.
+     * @param notifId   the ID of the notification to be associated with users.
+     * @param listRole  a list of role IDs used to filter users for notification association.
      */
     @Modifying
     @Transactional
@@ -70,10 +77,10 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
             JOIN app_role r ON a.role_id = r.role_id
             WHERE r.role_id IN :listRole
             """, nativeQuery = true)
-    int addNewNotification(@Param("notifId") Long notifId, @Param("listRole") List<Long> listRole);
+    void addNewNotification(@Param("notifId") Long notifId, @Param("listRole") List<Long> listRole);
 
     /**
-     * Retrieves the ID of the last inserted notification.
+     * Retrieves the ID of the most recently inserted notification.
      *
      * @return the ID of the last inserted notification.
      */
@@ -85,8 +92,8 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     /**
      * Retrieves a notification by its ID.
      *
-     * @param notifId the ID of the notification.
-     * @return the notification entity.
+     * @param notifId the ID of the notification to retrieve.
+     * @return the {@link Notification} entity with the specified ID.
      */
     @Query(value = """
             SELECT * FROM notification n WHERE n.notif_id = :notifId
@@ -96,9 +103,9 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     /**
      * Retrieves a list of notifications filtered by read status for a specific user.
      *
-     * @param userId    the ID of the user.
-     * @param statusRead the read status of the notifications.
-     * @return a list of notification DTOs.
+     * @param userId    the ID of the user whose notifications are to be retrieved.
+     * @param statusRead the read status of the notifications to retrieve.
+     * @return a list of {@link INotificationDTO} objects representing the notifications.
      */
     @Query(value = """
             SELECT n.notif_id, n.content, n.create_date, n.topic, u.status_read 
@@ -113,8 +120,8 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     /**
      * Marks all notifications as read for a specific user.
      *
-     * @param userId the ID of the user.
-     * @return the number of notifications marked as read.
+     * @param userId the ID of the user for whom notifications are to be marked as read.
+     * @return the number of notifications updated to read.
      */
     @Modifying
     @Transactional
@@ -126,30 +133,30 @@ public interface INotificationRepository extends JpaRepository<Notification, Lon
     int markAsRead(@Param("userId") Long userId);
 
     /**
-     * Updates the read status of a specific notification for a user.
+     * Updates the read status of a specific notification for a specific user.
      *
      * @param userId  the ID of the user.
-     * @param notifId the ID of the notification.
+     * @param notifId the ID of the notification to update.
      */
     @Modifying
     @Transactional
     @Query(value = """
             UPDATE user_notification u 
-            SET status_read = 1 
+            SET u.status_read = 1 
             WHERE u.user_id = :userId AND u.status_read = 0 AND u.notif_id = :notifId
             """, nativeQuery = true)
     void updateStatusRead(@Param("userId") Long userId, @Param("notifId") Long notifId);
 
     /**
-     * Checks if a notification with the given topic, content, and roles exists.
+     * Checks if a notification with the specified topic, content, and roles exists.
      *
      * @param topic     the topic of the notification.
      * @param content   the content of the notification.
-     * @param listRole  the list of role IDs.
-     * @return the number of matching notifications found.
+     * @param listRole  a list of role IDs to check for notification existence.
+     * @return the number of notifications that match the criteria.
      */
     @Query(value = """
-            SELECT COUNT(u.id)
+            SELECT COUNT(n.notif_id)
             FROM notification n
             JOIN user_notification u ON u.notif_id = n.notif_id
             JOIN app_user a ON a.user_id = u.user_id
