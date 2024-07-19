@@ -1,62 +1,62 @@
 package com.codegym.fashionshop.dto;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Data Transfer Object (DTO) for adding a new notification.
+ * Contains the information needed to create a notification.
+ *
+ * <p>Validation annotations are used to ensure that the data adheres to required constraints.</p>
+ *
+ * @author NhiNTY
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AddNewNotificationDTO {
+
+    /**
+     * The content of the notification.
+     * This field cannot be null or blank.
+     */
+    @NotNull(message = "Content cannot be null")
+    @NotBlank(message = "Content cannot be blank")
+    @Column(name = "content", columnDefinition = "TEXT")
     String content;
+
+    /**
+     * The topic of the notification.
+     * This field cannot be null or blank and must not exceed 255 characters.
+     */
+    @NotNull(message = "Topic cannot be null")
+    @NotBlank(message = "Topic cannot be blank")
+    @Size(max = 255, message = "Topic must be at most 255 characters long")
     String topic;
+
+    /**
+     * The date and time when the notification was created.
+     * This field cannot be empty and must be in the format "yyyy-MM-dd hh:mm:ss".
+     */
+    @NotEmpty(message = "Creation date cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Column(name = "create_date")
     LocalDateTime createDate;
+
+    /**
+     * List of role IDs that should receive the notification.
+     * This field cannot be empty and must contain at least one role ID.
+     */
+    @NotEmpty(message = "At least one role ID must be provided")
     List<Long> listRole;
-
-    public AddNewNotificationDTO() {
-    }
-
-
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public LocalDateTime getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(LocalDateTime createDate) {
-        this.createDate = createDate;
-    }
-
-    public List<Long> getListRole() {
-        return listRole;
-    }
-
-    public void setListRole(List<Long> listRole) {
-        this.listRole = listRole;
-    }
-    public AddNewNotificationDTO(String content, String topic, LocalDateTime createDate, List<Long> listRole) {
-        this.content = content;
-        this.topic = topic;
-        this.createDate = createDate;
-        this.listRole = listRole;
-    }
-    public AddNewNotificationDTO(String content, String topic, List<Long> listRole) {
-        this.content = content;
-        this.topic = topic;
-        this.listRole = listRole;
-    }
 }
