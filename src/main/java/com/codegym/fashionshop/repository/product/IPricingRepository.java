@@ -120,6 +120,7 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     boolean existsByPricingCode(@Param("pricingCode") String pricingCode);
 
     @Query("SELECT p FROM Pricing p WHERE p.product.productId = :productId " +
+            "AND p.enabled = true " +
             "AND (p.pricingCode LIKE %:search% " +
             "OR p.pricingName LIKE %:search% " +
             "OR p.size LIKE %:search% " +
@@ -144,4 +145,14 @@ public interface IPricingRepository extends JpaRepository<Pricing, Long> {
     void updatePricing(Long pricingId, String pricingName, String pricingCode, Double price, String size, String qrCode, Integer quantity, Color color, String pricingImgUrl, Inventory inventory);
 
     Pricing findPricingByPricingId(Long pricingId);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Pricing p " +
+            "SET p.enabled = :enabled " +
+            "WHERE p.pricingId = :pricingId")
+    void deletePricing(Long pricingId, Boolean enabled);
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Pricing p WHERE p.product.productId = :productId")
+    void deleteAllByProduct_ProductId(@Param("productId") Long productId);
 }

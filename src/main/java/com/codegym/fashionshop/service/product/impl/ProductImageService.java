@@ -12,7 +12,12 @@ public class ProductImageService implements IProductImageService {
     private IProductImageRepository productImageRepository;
 
     @Override
-    public void createImage(ProductImage productImage) {
-        productImageRepository.save(productImage);
+    public ProductImage createImage(ProductImage productImage) {
+        return productImageRepository.save(productImage);
+    }
+
+    @Override
+    public void deleteAllByProduct_ProductId(Long  id) {
+        productImageRepository.deleteAllByProduct_ProductId(id);
     }
 }
