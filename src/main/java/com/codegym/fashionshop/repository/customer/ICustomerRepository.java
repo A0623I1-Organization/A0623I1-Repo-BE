@@ -141,14 +141,21 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
     Page<Customer> searchCustomer(@Param("customerCode") String customerCode, @Param("customerName") String customerName, @Param("phoneNumber") String phoneNumber, Pageable pageable);
 
     /**
-     * Deletes a customer based on their ID.
+     * Updates the enable status of a customer.
      *
-     * @param customerId the ID of the customer to delete
+     * This method sets the enable status of a customer identified by their customer ID.
+     * The method is transactional and uses the `@Modifying` annotation to indicate that it modifies data.
+     *
+     * @param customerId the ID of the customer whose enable status is to be updated
+     * @param enable the new enable status to be set for the customer
      */
-    @Modifying
     @Transactional
-    @Query("delete from Customer c where c.customerId = :customerId")
-    void deleteCustomer(@Param("customerId") Long customerId);
+    @Modifying
+    @Query("update Customer c" +
+            "set c.enable = :enable" +
+            "where c.customerId = :customerId")
+    void deleteCustomer(@Param("customerId") Long productId,
+                       @Param("enable") Boolean enable);
 
     /**
      * Retrieves all customers.

@@ -113,16 +113,30 @@ public class CustomerRestController {
     }
 
     /**
-     * Deletes a customer based on their ID.
+     * Deletes a customer by updating their enable status to false.
      *
-     * @param customerId the ID of the customer to delete
-     * @return a response entity with no content if the deletion was successful
+     * This method handles HTTP DELETE requests for deleting a customer. It validates the request and, if there are
+     * validation errors, returns a response with error details. Otherwise, it proceeds to delete the customer
+     * by setting their enable status to false.
+     *
+     * @param customerId the ID of the customer to be deleted
+     * @param bindingResult the result of validation checks on the request parameters
+     * @return a ResponseEntity containing an error detail in case of validation errors, or an OK status if the
+     *         customer was deleted successfully
      */
     @DeleteMapping("/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
-        iCustomerService.deleteCustomer(customerId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerId, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            ErrorDetail errorDetail = new ErrorDetail("No find Customer");
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                errorDetail.addError(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errorDetail, HttpStatus.BAD_REQUEST);
+        }
+        iCustomerService.deleteCustomer(customerId, false);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     /**
      * Retrieves a paginated list of customers based on a search keyword, sort criteria, and pagination information.
