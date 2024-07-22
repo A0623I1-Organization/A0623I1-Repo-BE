@@ -124,9 +124,6 @@ public class CustomerRestController {
             page = 0;
         }
         Page<Customer> customers = iCustomerService.findAll(PageRequest.of(page, 2));
-        for (Customer customer: customers) {
-            System.out.println("ID : " +customer.getCustomerName()+" TotalBill = "+ billService.calculateTotalBillForCustomer(customer.getCustomerId()) );
-        }
         if (customers.isEmpty()) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin khách hàng");
         }

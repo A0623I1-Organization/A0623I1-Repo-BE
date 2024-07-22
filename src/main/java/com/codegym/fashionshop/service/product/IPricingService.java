@@ -37,4 +37,7 @@ public interface IPricingService  {
 
     Pricing findByPricingId(Long pricingId);
     void deletePricing(Long pricingId);
+
+    void deleteAllByProduct_ProductId(Long productId);
+    void addPricings(Long productId, List<Pricing> pricings);
 }

@@ -6,13 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -29,8 +28,6 @@ public class Product {
 
     @Column(name = "product_name")
     @NotBlank(message = "Tên sản phẩm không được để trống!")
-    @NotBlank(message = "Tên giá không được để trống!")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s_-]+$", message = "Tên sản phẩm không hợp lệ. Chỉ chấp nhận chữ cái, số, dấu cách, gạch ngang và gạch dưới.")
     @Size(min = 3, max = 50, message = "Tên sản phẩm phải có từ 3 đến 50 ký tự.")
     private String productName;
 
@@ -51,6 +48,6 @@ public class Product {
     @JsonManagedReference
     private List<ProductImage> productImages;
 
-    @Column(name = "enabled")
-    private Boolean enabled;
+    @Column(name = "enabled" ,nullable = false)
+    private Boolean enabled=true;
 }
