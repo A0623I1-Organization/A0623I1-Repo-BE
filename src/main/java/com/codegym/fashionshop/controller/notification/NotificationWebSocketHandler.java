@@ -36,7 +36,6 @@ public class NotificationWebSocketHandler {
     @MessageMapping("/warehouse/sendNotification")
     @SendTo("/topic/warehouse/createNotification")
     public AddNewNotificationDTO sendWarehouseNotification(AddNewNotificationDTO addNewNotificationDTO){
-
         return addNewNotificationDTO ;
     }
 

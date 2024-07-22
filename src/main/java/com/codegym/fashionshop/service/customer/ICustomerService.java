@@ -71,12 +71,16 @@ public interface ICustomerService {
      */
     boolean existsByEmailAndCustomerCodeNot(String email, String customerCode);
 
+
     /**
-     * Deletes a customer based on their ID.
+     * Updates the enable status of a customer.
      *
-     * @param customerId the ID of the customer to delete
+     * This method sets the enable status of a customer identified by their customer ID.
+     *
+     * @param customerId the ID of the customer whose enable status is to be updated
+     * @param enable the new enable status to be set for the customer
      */
-    void deleteCustomer(Long customerId);
+    void deleteCustomer(Long customerId, Boolean enable);
 
     /**
      * Retrieves a paginated list of customers based on a search keyword.
@@ -97,5 +101,5 @@ public interface ICustomerService {
      * @return a page of customers matching the search criteria
      */
     Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable);
-    void save(Customer customer);
+
 }
