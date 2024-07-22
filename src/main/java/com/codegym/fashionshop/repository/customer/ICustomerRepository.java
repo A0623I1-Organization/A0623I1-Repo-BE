@@ -151,11 +151,9 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      */
     @Transactional
     @Modifying
-    @Query("update Customer c" +
-            "set c.enable = :enable" +
-            "where c.customerId = :customerId")
-    void deleteCustomer(@Param("customerId") Long productId,
-                       @Param("enable") Boolean enable);
+    @Query("update Customer c set c.enable = :enable where c.customerId = :customerId")
+    void deleteCustomer(@Param("customerId") Long customerId, @Param("enable") Boolean enable);
+
 
     /**
      * Retrieves all customers.
