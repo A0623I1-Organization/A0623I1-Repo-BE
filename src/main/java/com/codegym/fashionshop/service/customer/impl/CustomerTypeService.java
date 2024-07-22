@@ -32,6 +32,6 @@ public class CustomerTypeService implements ICustomerTypeService {
 
     @Override
     public CustomerType findById(Long id) {
-        return iCustomerTypeRepository.findById(id).get();
+        return iCustomerTypeRepository.findById(id).orElse(null);
     }
 }

@@ -4,6 +4,7 @@ import com.codegym.fashionshop.dto.request.AppUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
 import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.AppRole;
+import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.authenticate.impl.RoleService;
 import com.codegym.fashionshop.service.authenticate.impl.UserService;
@@ -99,7 +100,6 @@ public class UserRestController {
     @GetMapping("/roles")
     public ResponseEntity<List<AppRole>> getAllRoles() {
         List<AppRole> roles = roleService.findAll();
-        System.out.println(roles);
         if (roles.isEmpty()) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin chức vụ");
         }
@@ -157,5 +157,15 @@ public class UserRestController {
         }
         AuthenticationResponse response = userService.updateUser(id, appUserRequest);
         return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        AppUser appUser = userService.findById(id);
+        if (appUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.remove(id);
+        return ResponseEntity.status(200).body("Xoá nhân viên thành công!");
     }
 }

@@ -1,6 +1,7 @@
 package com.codegym.fashionshop.service.authenticate.impl;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -37,7 +38,7 @@ public class JwtService {
         try {
             return extractClaims(token, Claims::getSubject);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid token", e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -54,7 +55,7 @@ public class JwtService {
             final Claims claims = extarctAllClaims(token);
             return claimsResolver.apply(claims);
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid token", e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -96,7 +97,7 @@ public class JwtService {
                     .signWith(getSignKey(), SignatureAlgorithm.HS256)
                     .compact();
         } catch (Exception e) {
-            throw new RuntimeException("Error generating token", e);
+            throw new JwtException("Error generating token", e);
         }
     }
 
@@ -123,7 +124,7 @@ public class JwtService {
         try {
             return extractExpiration(token).before(new Date());
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid token", e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
@@ -152,7 +153,7 @@ public class JwtService {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid token", e);
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 

@@ -1,26 +1,19 @@
 package com.codegym.fashionshop.controller.customer;
 
-import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.Customer;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
-import com.codegym.fashionshop.service.bill.IBillService;
 import com.codegym.fashionshop.service.customer.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -37,8 +30,8 @@ public class CustomerRestController {
 
     @Autowired
     private ICustomerService iCustomerService;
-    @Autowired
-    private IBillService billService;
+
+    private final Random random = new Random();
 
     /**
      * Creates a new customer.
@@ -51,7 +44,7 @@ public class CustomerRestController {
      * @throws HttpExceptions.BadRequestException if validation errors occur or customer code/email already exists
      */
     @PostMapping("/create")
-    public ResponseEntity< ? > createCustomer(@Validated @RequestBody Customer customer, BindingResult bindingResult) {
+    public ResponseEntity< Object > createCustomer(@Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorDetail errors = new ErrorDetail("Validation errors");
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -87,7 +80,7 @@ public class CustomerRestController {
      * @throws HttpExceptions.BadRequestException if validation errors occur or email already exists
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorDetail errors = new ErrorDetail("Validation errors");
             for (FieldError error : bindingResult.getFieldErrors()) {
@@ -111,52 +104,58 @@ public class CustomerRestController {
      * @return ResponseEntity with the customer data if found, otherwise NOT_FOUND status
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> findByIdCustomer(@PathVariable Long id) {
+    public ResponseEntity<Customer> findByIdCustomer(@PathVariable Long id) {
         Customer customer = iCustomerService.findById(id);
         if (customer == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
-    @GetMapping
-    public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(name = "page", defaultValue = "0") int page) {
-        if (page < 0) {
-            page = 0;
-        }
-        Page<Customer> customers = iCustomerService.findAll(PageRequest.of(page, 2));
-        if (customers.isEmpty()) {
-            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin khách hàng");
-        }
-        return new ResponseEntity<>(customers, HttpStatus.OK);
-    }
 
-
-
+    /**
+     * Deletes a customer based on their ID.
+     *
+     * @param customerId the ID of the customer to delete
+     * @return a response entity with no content if the deletion was successful
+     */
     @DeleteMapping("/{customerId}")
-    public ResponseEntity< Void > deleteCustomer(@PathVariable Long customerId) {
-
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
         iCustomerService.deleteCustomer(customerId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/list")
-    public ResponseEntity< List< Customer > > getAllCustomer() {
-        List< Customer > customerList = iCustomerService.getAllCustomers();
-        return ResponseEntity.ok(customerList);
+    /**
+     * Retrieves a paginated list of customers based on a search keyword, sort criteria, and pagination information.
+     *
+     * @param keyword the keyword to search for (can be part of customer name, code, etc.)
+     * @param sortBy the field to sort the results by
+     * @param ascending whether the sorting should be in ascending order
+     * @param page the page number to retrieve (0-indexed)
+     * @return a response entity containing a page of customers matching the search criteria
+     */
+    @GetMapping("")
+    public ResponseEntity<Page<Customer>> getAllCustomer(
+            @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "ascending", defaultValue = "true") boolean ascending,
+            @RequestParam(value = "page", defaultValue = "0") int page) {
+
+        if (page <= 0) {
+            page = 0;
+        }
+        Sort sort = Sort.unsorted();
+        if (sortBy != null && !sortBy.isEmpty()) {
+            sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        }
+
+        Page<Customer> customerList = iCustomerService.getAllCustomers(keyword, PageRequest.of(page, 10, sort));
+        if (customerList.isEmpty()) {
+            customerList = Page.empty();
+            return new ResponseEntity<>(customerList, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(customerList, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity< Page< Customer > > searchCustomer(@PageableDefault(page = 0, size = 5) org.springframework.data.domain.Pageable pageable,
-                                                             @RequestParam(required = false, defaultValue = "") String customerName,
-                                                             @RequestParam(required = false, defaultValue = "") String customerCode,
-                                                             @RequestParam(required = false, defaultValue = "") String phoneNumber,
-                                                             @RequestParam(required = false, defaultValue = "customerId") String sort) {
-        Sort sort1 = Sort.by(Sort.Direction.ASC, sort);
-        Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort1);
-        Pageable p = PageRequest.of(0, 5, Sort.Direction.ASC, "customerId");
-        Page<Customer> list = iCustomerService.searchCustomer("%" + customerCode + "%", "%" + customerName + "%", "%" + phoneNumber + "%", p);
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
     /**
      * Generates an auto-generated customer code that is unique in the database.
      * The generated code format is "KH-" followed by a 4-digit random number.
@@ -166,10 +165,10 @@ public class CustomerRestController {
      * @return ResponseEntity containing the auto-generated customer code if successful.
      */
     @GetMapping("/code-auto")
-    public ResponseEntity<?> autoCodeCustomer() {
+    public ResponseEntity<String> autoCodeCustomer() {
         String codeAuto;
         do {
-            int randomNumber = new Random().nextInt(10000);
+            int randomNumber = random.nextInt(10000);
             codeAuto = "KH-" + String.format("%04d", randomNumber);
         } while (iCustomerService.existsByCustomerCode(codeAuto));
         return new ResponseEntity<>(codeAuto, HttpStatus.OK);

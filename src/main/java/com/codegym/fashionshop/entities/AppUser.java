@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
@@ -21,8 +22,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "app_user", //
         uniqueConstraints = { //
-                @UniqueConstraint(name = "APP_USER_UK", columnNames = "user_name") })
-public class AppUser {
+                @UniqueConstraint(name = "APP_USER_UK", columnNames = "user_name"),
+                @UniqueConstraint(name = "APP_USER_CODE_UK", columnNames = "user_code")})
+public class AppUser implements Serializable {
+    private static final long serialVersionUID = 2L;
+
     /**
      * The unique identifier for the user.
      */
@@ -43,7 +47,7 @@ public class AppUser {
     @Column(name = "encrypted_password", length = 128)
     private String encryptedPassword;
 
-    @Column(name = "user_code")
+    @Column(name = "user_code", unique = true)
     private String userCode;
 
     @Column(name = "date_create")

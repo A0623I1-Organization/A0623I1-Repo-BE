@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * Entity class representing a role in the application.
  * Each role has a unique role ID and a name.
@@ -20,7 +22,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "app_role", //
         uniqueConstraints = { //
                 @UniqueConstraint(name = "APP_ROLE_UK", columnNames = "role_name") })
-public class AppRole{
+public class AppRole implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /**
      * The unique identifier for the role.
      */
@@ -36,11 +40,4 @@ public class AppRole{
     @Column(name = "role_name", length = 30, nullable = false)
     private String roleName;
 
-    @Override
-    public String toString() {
-        return "AppRole{" +
-                "roleId=" + roleId +
-                ", roleName='" + roleName + '\'' +
-                '}';
-    }
 }
