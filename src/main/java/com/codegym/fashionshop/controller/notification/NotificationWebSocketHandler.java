@@ -38,4 +38,10 @@ public class NotificationWebSocketHandler {
 
         return addNewNotificationDTO ;
     }
+
+    @MessageMapping("/detailNotification")
+    @SendTo("/topic/notification")
+    public String sendNotification(String message){
+        return message ;
+    }
 }
