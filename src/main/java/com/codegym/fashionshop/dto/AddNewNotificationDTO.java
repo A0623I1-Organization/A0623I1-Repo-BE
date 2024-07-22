@@ -48,7 +48,6 @@ public class AddNewNotificationDTO {
      * The date and time when the notification was created.
      * This field cannot be empty and must be in the format "yyyy-MM-dd hh:mm:ss".
      */
-    @NotEmpty(message = "Creation date cannot be empty")
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     @Column(name = "create_date")
     LocalDateTime createDate;
