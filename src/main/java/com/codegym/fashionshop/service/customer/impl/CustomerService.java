@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 /**
@@ -134,24 +133,42 @@ public class CustomerService implements ICustomerService {
         return iCustomerRepository.existsByEmailAndCustomerCodeNot(email, customerCode);
     }
 
+    /**
+     * Deletes a customer based on their ID.
+     *
+     * @param customerId the ID of the customer to delete
+     */
     @Override
     @Transactional
     public void deleteCustomer(Long customerId) {
         iCustomerRepository.deleteCustomer(customerId);
-//        System.out.println(customerId);
-//        iCustomerRepository.deleteById(customerId);
     }
 
+    /**
+     * Retrieves a paginated list of customers based on a search keyword.
+     *
+     * @param keyword the keyword to search for (can be part of customer name, code, etc.)
+     * @param pageable the pagination information
+     * @return a page of customers matching the search keyword
+     */
     @Override
-    public List<Customer> getAllCustomers() {
-        return iCustomerRepository.getAllCustomer();
+    public Page<Customer> getAllCustomers(String keyword, Pageable pageable) {
+        return iCustomerRepository.findAllCustomerAndSearch(keyword, keyword, keyword, keyword, pageable);
     }
 
+    /**
+     * Searches for customers based on their code, name, and phone number.
+     *
+     * @param customerCode the customer code to search for
+     * @param customerName the customer name to search for
+     * @param phoneNumber the phone number to search for
+     * @param pageable the pagination information
+     * @return a page of customers matching the search criteria
+     */
     @Override
-    public Page< Customer > searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
+    public Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
         return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
     }
-
     @Override
     public void save(Customer customer) {
         try{

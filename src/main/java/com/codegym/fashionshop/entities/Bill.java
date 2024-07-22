@@ -32,7 +32,7 @@ public class Bill {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @NotNull(message = "Người dùng không được để trống!")
+//    @NotNull(message = "Người dùng không được để trống!")
     private AppUser appUser;
 
     @ManyToOne

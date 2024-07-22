@@ -6,6 +6,10 @@ import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.entities.ProductImage;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
+import com.codegym.fashionshop.repository.product.IPricingRepository;
+import com.codegym.fashionshop.repository.product.IProductImageRepository;
+import com.codegym.fashionshop.service.product.IPricingService;
+import com.codegym.fashionshop.service.product.IProductImageService;
 import com.codegym.fashionshop.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +38,12 @@ public class ProductRestController {
 
     @Autowired
     private IProductService productService;
+    @Autowired
+    private IPricingService pricingService;
+    @Autowired
+    private IProductImageService productImageService;
+
+
 
     /**
      * GET endpoint to retrieve a page of products based on search keyword, sorting criteria, and pagination.
@@ -136,7 +146,7 @@ public class ProductRestController {
         return productCode;
     }
     @PreAuthorize("hasRole('ROLE_SALESMAN')")
-    @PutMapping("product/{productId}")
+    @PutMapping("update/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             ErrorDetail errors = new ErrorDetail("Validation errors");
@@ -145,20 +155,26 @@ public class ProductRestController {
             }
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        for (Pricing pricing : product.getPricingList()) {
-            pricing.setProduct(product);
-        }
-        for (ProductImage productImage : product.getProductImages()) {
-            productImage.setProduct(product);
-        }
-        productService.updateProduct(productId, product);
+        System.out.println(productId);
+
+        productImageService.deleteAllByProduct_ProductId(productId);
+        productService.save(product);
         return new ResponseEntity<>("product updated successfully", HttpStatus.CREATED);
     }
-    @PreAuthorize("hasRole('ROLE_SALESMAN')")
-    @PutMapping("/{productId}")
-    public ResponseEntity< Void > deleteProduct(@PathVariable Long productId) {
 
-        productService.deleteProduct(productId);
-        return ResponseEntity.noContent().build();
+    @PutMapping("delete/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId, @RequestBody Product product, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        productService.deleteProduct(productId, false);
+        return new ResponseEntity<>("product deleted successfully", HttpStatus.CREATED);
     }
+
 }
+

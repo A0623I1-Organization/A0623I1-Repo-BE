@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -243,5 +244,11 @@ public class PricingRestController {
 
         pricingService.deletePricing(pricingId);
         return ResponseEntity.noContent().build();
+    }
+    @PreAuthorize("hasRole('ROLE_SALESMAN')")
+    @PostMapping("/product/{productId}")
+    public ResponseEntity<Void> addPricings(@PathVariable Long productId, @RequestBody List<Pricing> pricings) {
+        pricingService.addPricings(productId, pricings);
+        return ResponseEntity.ok().build();
     }
 }

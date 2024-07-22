@@ -6,6 +6,8 @@ import com.codegym.fashionshop.repository.product.IProductImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public interface IProductImageService {
-    void createImage(ProductImage productImage);
+    ProductImage createImage(ProductImage productImage);
+    void deleteAllByProduct_ProductId(Long  id);
+
 
 }

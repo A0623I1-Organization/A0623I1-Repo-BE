@@ -68,4 +68,8 @@ public class Pricing {
     @JoinColumn(name = "inventory_id")
     private Inventory inventory;
 
+    @Column(name = "enabled" ,nullable = false)
+    private Boolean enabled=true;
+
+
 }
