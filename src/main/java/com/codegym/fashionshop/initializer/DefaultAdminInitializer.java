@@ -56,6 +56,9 @@ public class DefaultAdminInitializer implements CommandLineRunner {
             admin.setEncryptedPassword(passwordEncoder.encode("1234"));
             admin.setRole(adminRole);
             admin.setEnabled(true);
+            admin.setAccountNonExpired(true);
+            admin.setAccountNonLocked(true);
+            admin.setCredentialsNonExpired(true);
             userService.save(admin);
         }
     }

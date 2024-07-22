@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing users and roles.
@@ -101,7 +100,6 @@ public class UserRestController {
     @GetMapping("/roles")
     public ResponseEntity<List<AppRole>> getAllRoles() {
         List<AppRole> roles = roleService.findAll();
-        System.out.println(roles);
         if (roles.isEmpty()) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin chức vụ");
         }

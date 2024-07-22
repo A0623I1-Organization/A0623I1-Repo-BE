@@ -1,9 +1,15 @@
 package com.codegym.fashionshop.controller.product;
 
+import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
+import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.entities.ProductImage;
 import com.codegym.fashionshop.entities.Pricing;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
+import com.codegym.fashionshop.repository.product.IPricingRepository;
+import com.codegym.fashionshop.repository.product.IProductImageRepository;
+import com.codegym.fashionshop.service.product.IPricingService;
+import com.codegym.fashionshop.service.product.IProductImageService;
 import com.codegym.fashionshop.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * REST controller for managing products.
@@ -34,6 +38,12 @@ public class ProductRestController {
 
     @Autowired
     private IProductService productService;
+    @Autowired
+    private IPricingService pricingService;
+    @Autowired
+    private IProductImageService productImageService;
+
+
 
     /**
      * GET endpoint to retrieve a page of products based on search keyword, sorting criteria, and pagination.
@@ -64,6 +74,7 @@ public class ProductRestController {
 
         if (products.isEmpty()) {
             products = Page.empty();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
@@ -79,13 +90,12 @@ public class ProductRestController {
     @PreAuthorize("hasRole('ROLE_SALESMAN')")
     @PostMapping("")
     public ResponseEntity<Object> createProduct(@RequestBody @Validated Product product, BindingResult bindingResult) {
-       try{
            if (bindingResult.hasErrors()) {
-               Map<String, String> errors = new HashMap<>();
+               ErrorDetail errors = new ErrorDetail("Validation errors");
                for (FieldError error : bindingResult.getFieldErrors()) {
-                   errors.put(error.getField(), error.getDefaultMessage());
+                   errors.addError(error.getField(), error.getDefaultMessage());
                }
-               throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
+               return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
            }
            // Set relationships for pricing and product images
            for (Pricing pricing : product.getPricingList()) {
@@ -95,11 +105,8 @@ public class ProductRestController {
                productImage.setProduct(product);
            }
            productService.save(product);
-       }catch (Exception e)
-       {
-           System.out.println(e);
-       }
-        return new ResponseEntity<>(product, HttpStatus.CREATED);
+
+        return new ResponseEntity<>("Product created successfully", HttpStatus.CREATED);
     }
 
     /**
@@ -138,4 +145,36 @@ public class ProductRestController {
         } while (!productService.isProductCodeUnique(productCode));
         return productCode;
     }
+    @PreAuthorize("hasRole('ROLE_SALESMAN')")
+    @PutMapping("update/{productId}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        System.out.println(productId);
+
+        productImageService.deleteAllByProduct_ProductId(productId);
+        productService.save(product);
+        return new ResponseEntity<>("product updated successfully", HttpStatus.CREATED);
+    }
+
+    @PutMapping("delete/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Long productId, @RequestBody Product product, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        productService.deleteProduct(productId, false);
+        return new ResponseEntity<>("product deleted successfully", HttpStatus.CREATED);
+    }
+
 }
+

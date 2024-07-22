@@ -3,16 +3,21 @@ package com.codegym.fashionshop.service.product.impl;
 import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
 import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.entities.Pricing;
+import com.codegym.fashionshop.entities.Product;
 import com.codegym.fashionshop.repository.product.IInventoryRepository;
 import com.codegym.fashionshop.repository.product.IPricingRepository;
+import com.codegym.fashionshop.repository.product.IProductRepository;
 import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.product.IPricingService;
+import com.codegym.fashionshop.service.product.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class PricingService implements IPricingService {
     @Autowired
@@ -21,6 +26,8 @@ public class PricingService implements IPricingService {
     private IInventoryRepository inventoryRepository;
     @Autowired
     private IPricingRepository pricingRepository;
+    @Autowired
+    private IProductRepository productRepository;
     @Override
     public List<Pricing> findAllPricing() {
         return pricingRepository.findAllPricings();
@@ -73,6 +80,26 @@ public class PricingService implements IPricingService {
     }
 
     @Override
+    public void updatePricing(Long pricingId, Pricing pricing) {
+        pricingRepository.updatePricing(pricingId, pricing.getPricingName(), pricing.getPricingCode(), pricing.getPrice(), pricing.getSize(), pricing.getQrCode(), pricing.getQuantity(), pricing.getColor(), pricing.getPricingImgUrl(), pricing.getInventory());
+    }
+
+    @Override
+    public Pricing findByPricingId(Long pricingId) {
+        return pricingRepository.findPricingByPricingId(pricingId);
+    }
+
+    @Override
+    public void deletePricing(Long pricingId) {
+        pricingRepository.deleteById(pricingId);
+    }
+
+    @Override
+    public void deleteAllByProduct_ProductId(Long productId) {
+        pricingRepository.deleteAllByProduct_ProductId(productId);
+    }
+
+    @Override
     public void createPricing(Pricing pricing) {
         pricingRepository.createPricing(
                 pricing.getPricingName(),
@@ -87,6 +114,16 @@ public class PricingService implements IPricingService {
                 pricing.getPricingImgUrl()
                  // assuming this is the inventory_id field in Pricing entity
         );
+    }
+    @Override
+    public void addPricings(Long productId, List<Pricing> pricings) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        for (Pricing pricing : pricings) {
+            pricing.setProduct(product);
+            pricingRepository.save(pricing);
+        }
     }
 
   }

@@ -1,6 +1,7 @@
 package com.codegym.fashionshop.controller.bill;
 
 
+import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.*;
 import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
@@ -69,11 +70,11 @@ public class BillRestController {
     @PostMapping("")
     public ResponseEntity<Object> createBill(@Validated @RequestBody Bill bill, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
+            ErrorDetail errors = new ErrorDetail("Validation errors");
             for (FieldError error : bindingResult.getFieldErrors()) {
-                errors.put(error.getField(), error.getDefaultMessage());
+                errors.addError(error.getField(), error.getDefaultMessage());
             }
-            throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();

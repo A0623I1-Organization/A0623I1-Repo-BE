@@ -1,10 +1,10 @@
 package com.codegym.fashionshop.controller.product;
 
 import com.codegym.fashionshop.dto.WarehouseReceiptDTO;
+import com.codegym.fashionshop.dto.respone.ErrorDetail;
 import com.codegym.fashionshop.entities.Pricing;
-import com.codegym.fashionshop.entities.Product;
+
 import com.codegym.fashionshop.exceptions.HttpExceptions;
-import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.product.IPricingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,10 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -85,7 +87,14 @@ public class PricingRestController {
         }
         return new ResponseEntity<>(pricing, HttpStatus.OK);
     }
-
+    @GetMapping("/{pricingId}")
+    public ResponseEntity<Pricing> getPricingByPricingId(@PathVariable(name = "pricingId") Long pricingId) {
+        Pricing pricing = pricingService.findByPricingId(pricingId);
+        if (pricing == null) {
+            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin giá");
+        }
+        return new ResponseEntity<>(pricing, HttpStatus.OK);
+    }
     /**
      * GET endpoint to retrieve all pricings by product ID.
      *
@@ -118,14 +127,14 @@ public class PricingRestController {
     @PostMapping("/create")
     public ResponseEntity<Object> createPricing(@Validated @RequestBody Pricing pricing, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
+            ErrorDetail errors = new ErrorDetail("Validation errors");
             for (FieldError error : bindingResult.getFieldErrors()) {
-                errors.put(error.getField(), error.getDefaultMessage());
+                errors.addError(error.getField(), error.getDefaultMessage());
             }
-            throw new HttpExceptions.BadRequestException("Validation errors: " + errors.toString());
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         pricingService.createPricing(pricing);
-        return new ResponseEntity<>(pricing, HttpStatus.CREATED);
+        return new ResponseEntity<>("Pricing created successfully", HttpStatus.CREATED);
     }
 
     /**
@@ -139,8 +148,8 @@ public class PricingRestController {
     @GetMapping("/list")
     public ResponseEntity<?> getAllPricing() {
         List<Pricing> pricings = pricingService.findAllPricing();
-        if(pricings.isEmpty()) {
-            return new ResponseEntity<>("No pricings list found", HttpStatus.NO_CONTENT);
+        if (pricings.isEmpty()) {
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(pricings, HttpStatus.OK);
     }
@@ -157,7 +166,9 @@ public class PricingRestController {
         response.put("code", pricingCode);
         return ResponseEntity.ok(response);
     }
-     /** Generates a warehouse receipt with the current date and a new unique receipt ID.
+
+    /**
+     * Generates a warehouse receipt with the current date and a new unique receipt ID.
      *
      * <p>This method generates a new warehouse receipt with the current date and a unique ID,
      * and includes the list of all pricings.
@@ -173,6 +184,7 @@ public class PricingRestController {
         WarehouseReceiptDTO receipt = WarehouseReceiptDTO.builder().receiptId(id).date(date).pricingList(pricings).build();
         return new ResponseEntity<>(receipt, HttpStatus.OK);
     }
+
     /**
      * Updates the pricing quantities based on the provided warehouse receipt.
      *
@@ -213,5 +225,30 @@ public class PricingRestController {
             pricingCode = "H" + String.format("%06d", random.nextInt(1000000));
         } while (!pricingService.isPricingCodeUnique(pricingCode));
         return pricingCode;
+    }
+
+    @PutMapping("/{pricingId}")
+    public ResponseEntity<?> updatePricing(@PathVariable Long pricingId, @Validated @RequestBody Pricing pricing, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            ErrorDetail errors = new ErrorDetail("Validation errors");
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                errors.addError(error.getField(), error.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
+        pricingService.updatePricing(pricingId, pricing);
+        return new ResponseEntity<>("Pricing updated successfully", HttpStatus.OK);
+    }
+    @DeleteMapping("/{pricingId}")
+    public ResponseEntity< Void > deletePricing(@PathVariable Long pricingId) {
+
+        pricingService.deletePricing(pricingId);
+        return ResponseEntity.noContent().build();
+    }
+    @PreAuthorize("hasRole('ROLE_SALESMAN')")
+    @PostMapping("/product/{productId}")
+    public ResponseEntity<Void> addPricings(@PathVariable Long productId, @RequestBody List<Pricing> pricings) {
+        pricingService.addPricings(productId, pricings);
+        return ResponseEntity.ok().build();
     }
 }

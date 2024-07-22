@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * Service implementation for managing user authentication and registration.
@@ -65,7 +64,6 @@ public class AuthenticationService {
                     .message("Đăng nhập thành công!!!")
                     .build();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return AuthenticationResponse.builder()
                     .message("Đăng nhập thất bại")
                     .statusCode(500).build();
@@ -120,7 +118,6 @@ public class AuthenticationService {
                     .statusCode(404)
                     .message("Người dùng không được tìm thấy!")
                     .build();
-
         }
         if (!passwordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getEncryptedPassword())) {
             return AuthenticationResponse.builder()
@@ -211,11 +208,7 @@ public class AuthenticationService {
         Long userId = user.getUserId();
         String avatar = updateUserRequest.getAvatar();
         String backgroundImage = updateUserRequest.getBackgroundImage();
-        try {
-            userRepository.updateAvatarAndBackGroundImage(backgroundImage, avatar, userId);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        userRepository.updateAvatarAndBackGroundImage(backgroundImage, avatar, userId);
         user.setAvatar(updateUserRequest.getAvatar());
         user.setBackgroundImage(updateUserRequest.getBackgroundImage());
         return AuthenticationResponse.builder()

@@ -2,6 +2,7 @@ package com.codegym.fashionshop.repository.product;
 
 import com.codegym.fashionshop.entities.BillItem;
 import com.codegym.fashionshop.entities.Product;
+import com.codegym.fashionshop.entities.ProductType;
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,11 +69,35 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
      * @param pageable        pagination information
      * @return a page of products matching the search criteria
      */
-    Page<Product> findByProductCodeContainingIgnoreCaseOrProductNameContainingIgnoreCaseOrDescriptionContainingIgnoreCaseOrProductType_TypeNameContainingIgnoreCase(
-            String productCode,
-            String productName,
-            String description,
-            String productTypeName,
+    @Query("SELECT p FROM Product p " +
+            "WHERE p.enabled = true " +
+            "AND (LOWER(p.productCode) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(p.productName) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "OR LOWER(p.productType.typeName) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<Product> searchProduct(
+            @Param("search") String search,
             Pageable pageable
     );
+    @Transactional
+    @Modifying
+    @Query("UPDATE Product p " +
+            "SET p.productName = :productName, " +
+            "    p.productCode = :productCode, " +
+            "    p.description = :description, " +
+            "    p.productType = :productType " +
+            "WHERE p.productId = :productId")
+    void updateProduct(@Param("productId") Long productId,
+                       @Param("productName") String productName,
+                       @Param("productCode") String productCode,
+                       @Param("description") String description,
+                       @Param("productType") ProductType productType);
+    @Transactional
+    @Modifying
+    @Query("UPDATE Product p " +
+            "SET p.enabled = :enabled " +
+            "WHERE p.productId = :productId")
+    void deleteProduct(@Param("productId") Long productId,
+                       @Param("enabled") Boolean enabled);
+
 }
