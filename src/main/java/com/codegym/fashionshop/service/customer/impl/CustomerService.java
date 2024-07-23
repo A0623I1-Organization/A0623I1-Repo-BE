@@ -134,14 +134,18 @@ public class CustomerService implements ICustomerService {
     }
 
     /**
-     * Deletes a customer based on their ID.
+     * Updates the enable status of a customer.
      *
-     * @param customerId the ID of the customer to delete
+     * This method sets the enable status of a customer identified by their customer ID.
+     * The method is transactional, ensuring that the operation is atomic and consistent.
+     *
+     * @param customerId the ID of the customer whose enable status is to be updated
+     * @param enable the new enable status to be set for the customer
      */
     @Override
     @Transactional
-    public void deleteCustomer(Long customerId) {
-        iCustomerRepository.deleteCustomer(customerId);
+    public void deleteCustomer(Long customerId, Boolean enable) {
+        iCustomerRepository.deleteCustomer(customerId, enable);
     }
 
     /**
@@ -169,16 +173,4 @@ public class CustomerService implements ICustomerService {
     public Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
         return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
     }
-    @Override
-    public void save(Customer customer) {
-        try{
-            iCustomerRepository.save(customer);
-
-        }catch (Exception e)
-        {
-            System.out.print(e.getMessage());
-        }
-
-    }
-
 }

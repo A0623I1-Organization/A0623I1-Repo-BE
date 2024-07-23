@@ -8,12 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-/**
- * Entity class representing a role in the application.
- * Each role has a unique role ID and a name.
- * <p>
- * Author: KhangDV
- */
 @Data
 @Builder
 @NoArgsConstructor

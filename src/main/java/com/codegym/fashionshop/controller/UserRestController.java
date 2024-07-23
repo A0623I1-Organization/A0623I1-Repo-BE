@@ -168,4 +168,24 @@ public class UserRestController {
         userService.remove(id);
         return ResponseEntity.status(200).body("Xoá nhân viên thành công!");
     }
+
+    @PutMapping("/disable/{id}")
+    public ResponseEntity<?> disableUser(@PathVariable Long id) {
+        AppUser appUser = userService.findById(id);
+        if (appUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.disableUser(id);
+        return ResponseEntity.status(200).body("Khóa tài khoản nhân viên thành công!");
+    }
+
+    @PutMapping("/enable/{id}")
+    public ResponseEntity<?> enableUser(@PathVariable Long id) {
+        AppUser appUser = userService.findById(id);
+        if (appUser == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.enableUser(id);
+        return ResponseEntity.status(200).body("Khôi phục tài khoản nhân viên thành công!");
+    }
 }
