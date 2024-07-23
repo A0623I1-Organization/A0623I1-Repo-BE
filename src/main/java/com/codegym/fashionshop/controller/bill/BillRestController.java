@@ -43,7 +43,6 @@ public class BillRestController {
     @Autowired
     private IAppUserService userService;
 
-
     /**
      * GET endpoint to retrieve all bills.
      *
