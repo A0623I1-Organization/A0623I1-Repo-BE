@@ -136,27 +136,36 @@ public class AuthenticationService {
                     .statusCode(400)
                     .message("Mật khẩu không trùng khớp!").build();
         }
-        user.setEncryptedPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
-        Long userId = user.getUserId();
-        String encryptedPassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
-        String userCode = user.getUserCode();
-        LocalDate dateCreate = LocalDate.now();
-        String backgroundImage = user.getBackgroundImage();
-        String avatar = user.getAvatar();
-        String fullName = user.getFullName();
-        Integer gender = user.getGender();
-        LocalDate dateOfBirth = user.getDateOfBirth();
-        String phoneNumber = user.getPhoneNumber();
-        String email = user.getEmail();
-        String address = user.getAddress();
-        Long roleId = user.getRole().getRoleId();
-        Boolean accountNonExpired = user.getAccountNonExpired();
-        Boolean credentialsNonExpired = user.getCredentialsNonExpired();
-        Boolean accountNonLocked = user.getAccountNonLocked();
-        Boolean enabled = user.getEnabled();
-        userRepository.updateUser(username, encryptedPassword, userCode, dateCreate, backgroundImage, avatar, fullName, gender,
-                dateOfBirth, phoneNumber, email, address, roleId, accountNonExpired, credentialsNonExpired, accountNonLocked,
-                enabled, userId);
+        try {
+            user.setEncryptedPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+            Long userId = user.getUserId();
+            String encryptedPassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
+            String userCode = user.getUserCode();
+            LocalDate dateCreate = LocalDate.now();
+            String backgroundImage = user.getBackgroundImage();
+            String avatar = user.getAvatar();
+            String fullName = user.getFullName();
+            Integer gender = user.getGender();
+            LocalDate dateOfBirth = user.getDateOfBirth();
+            String phoneNumber = user.getPhoneNumber();
+            String email = user.getEmail();
+            String address = user.getAddress();
+            Long roleId = user.getRole().getRoleId();
+            Boolean accountNonExpired = user.getAccountNonExpired();
+            Boolean credentialsNonExpired = user.getCredentialsNonExpired();
+            Boolean accountNonLocked = user.getAccountNonLocked();
+            Boolean enabled = user.getEnabled();
+            userRepository.updateUser(username, encryptedPassword, userCode, dateCreate, backgroundImage, avatar, fullName, gender,
+                    dateOfBirth, phoneNumber, email, address, roleId, accountNonExpired, credentialsNonExpired, accountNonLocked,
+                    enabled, userId);
+
+        } catch (Exception e) {
+            return AuthenticationResponse.builder()
+                    .statusCode(401)
+                    .message("Cập nhật mật khẩu thất bại")
+                    .error(e.getMessage())
+                    .build();
+        }
         UserInforUserDetails userDetails = new UserInforUserDetails(user);
         var jwtToken = jwtService.generateToken(userDetails);
         return AuthenticationResponse.builder()
@@ -205,10 +214,18 @@ public class AuthenticationService {
         if (updateUserRequest.getBackgroundImage() == null) {
             updateUserRequest.setBackgroundImage(user.getBackgroundImage());
         }
-        Long userId = user.getUserId();
-        String avatar = updateUserRequest.getAvatar();
-        String backgroundImage = updateUserRequest.getBackgroundImage();
-        userRepository.updateAvatarAndBackGroundImage(backgroundImage, avatar, userId);
+        try {
+            Long userId = user.getUserId();
+            String avatar = updateUserRequest.getAvatar();
+            String backgroundImage = updateUserRequest.getBackgroundImage();
+            userRepository.updateAvatarAndBackGroundImage(backgroundImage, avatar, userId);
+        } catch (Exception e) {
+            return AuthenticationResponse.builder()
+                    .statusCode(401)
+                    .message("Cập nhật hình ảnh thất bại")
+                    .error(e.getMessage())
+                    .build();
+        }
         user.setAvatar(updateUserRequest.getAvatar());
         user.setBackgroundImage(updateUserRequest.getBackgroundImage());
         return AuthenticationResponse.builder()

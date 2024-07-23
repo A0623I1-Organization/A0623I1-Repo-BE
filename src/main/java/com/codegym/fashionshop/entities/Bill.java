@@ -31,7 +31,7 @@ public class Bill {
     private LocalDate dateCreate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
 //    @NotNull(message = "Người dùng không được để trống!")
     private AppUser appUser;
 

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -191,8 +192,18 @@ public class UserService implements IAppUserService {
      * @param id The ID of the user to remove.
      */
     @Override
-    public void remove(Long id) {
+    public void remove(Long id){
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public void disableUser(Long id) {
         userRepository.disableUser(id);
+    }
+
+    @Override
+    public void enableUser(Long id) {
+        userRepository.enableUser(id);
     }
 
     /**

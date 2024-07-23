@@ -102,6 +102,18 @@ public interface IUserRepository extends JpaRepository<AppUser, Long> {
 
 
     /**
+     * Enable an AppUser entity by user ID.
+     * <p>
+     * @param userId the user ID to enable
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE app_user SET account_non_expired = 1, account_non_locked = 1, credentials_non_expired = 1, " +
+            "enabled = 1 WHERE user_id = :userId", nativeQuery = true)
+    void enableUser(@Param("userId") Long userId);
+
+
+    /**
      * Inserts a new AppUser entity into the database.
      * <p>
      * @param username             the username of the new AppUser

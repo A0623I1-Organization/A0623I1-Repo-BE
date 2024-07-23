@@ -47,4 +47,18 @@ public interface IAppUserService extends IGeneralService<AppUser>{
      * @return an {@link AuthenticationResponse} indicating the outcome of the save operation
      */
     AuthenticationResponse save(AppUserRequest appUserRequest);
+
+    /**
+     * Disable an entity by its ID.
+     *
+     * @param id the ID of the entity to disable
+     */
+    void disableUser(Long id);
+
+    /**
+     * Enable an entity by its ID.
+     *
+     * @param id the ID of the entity to enable
+     */
+    void enableUser(Long id);
 }
