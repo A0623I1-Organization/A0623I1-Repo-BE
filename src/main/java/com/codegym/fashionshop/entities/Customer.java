@@ -70,7 +70,7 @@ public class Customer {
     private LocalDate dateRegister;
 
     @Column(name = "enable")
-    private Boolean enable;
+    private Boolean enable = true;
 
     @Min(value = 0, message = "Điểm phải lớn hơn hoặc bằng 0 !")
     @Column(name = "accumulated_points")
