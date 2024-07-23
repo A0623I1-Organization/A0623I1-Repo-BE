@@ -147,12 +147,12 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      * The method is transactional and uses the `@Modifying` annotation to indicate that it modifies data.
      *
      * @param customerId the ID of the customer whose enable status is to be updated
-     * @param enable the new enable status to be set for the customer
+     * @param enabled the new enable status to be set for the customer
      */
     @Transactional
     @Modifying
-    @Query("update Customer c set c.enable = :enable where c.customerId = :customerId")
-    void deleteCustomer(@Param("customerId") Long customerId, @Param("enable") Boolean enable);
+    @Query("UPDATE Customer c SET c.enabled = :enabled WHERE c.customerId = :customerId")
+    void deleteCustomer(@Param("customerId") Long customerId, @Param("enabled") Boolean enabled);
 
 
     /**
@@ -160,7 +160,7 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      *
      * @return a list of all customers
      */
-    @Query("select c from Customer c")
+    @Query("select c from Customer c where c.enabled = true ")
     List<Customer> getAllCustomer();
 
     /**
@@ -192,4 +192,6 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
             @Param("customerTypeName") String customerTypeName,
             @Param("phoneNumber") String phoneNumber,
             Pageable pageable);
+
+
 }
