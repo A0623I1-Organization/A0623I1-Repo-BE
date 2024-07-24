@@ -120,23 +120,14 @@ public class CustomerRestController {
      * by setting their enable status to false.
      *
      * @param customerId the ID of the customer to be deleted
-     * @param bindingResult the result of validation checks on the request parameters
      * @return a ResponseEntity containing an error detail in case of validation errors, or an OK status if the
      *         customer was deleted successfully
      */
-    @DeleteMapping("/{customerId}")
-    public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerId, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            ErrorDetail errorDetail = new ErrorDetail("No find Customer");
-            for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                errorDetail.addError(fieldError.getField(), fieldError.getDefaultMessage());
-            }
-            return new ResponseEntity<>(errorDetail, HttpStatus.BAD_REQUEST);
-        }
+    @PatchMapping("/{customerId}")
+    public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerId) {
         iCustomerService.deleteCustomer(customerId, false);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     /**
      * Retrieves a paginated list of customers based on a search keyword, sort criteria, and pagination information.
