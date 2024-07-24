@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -23,6 +23,7 @@ public class Bill {
     private Long billId;
 
     @Column(name = "bill_code", nullable = false, unique = true)
+    @Pattern(regexp = "^HD-\\d{6,}$", message = "Mã hóa đơn phải có định dạng HD-XXXXXX")
     @NotBlank(message = "Mã hóa đơn không được để trống!")
     private String billCode;
 
@@ -31,8 +32,7 @@ public class Bill {
     private LocalDate dateCreate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-//    @NotNull(message = "Người dùng không được để trống!")
+    @JoinColumn(name = "user_id", nullable = false)
     private AppUser appUser;
 
     @ManyToOne
