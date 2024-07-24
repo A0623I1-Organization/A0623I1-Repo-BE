@@ -39,7 +39,7 @@ public class DashboardController {
      *
      * @return A {@link ResponseEntity} containing the {@link TotalCustomerDTO}.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/total-customer")
     public ResponseEntity<TotalCustomerDTO> getTotalCustomer() {
         return ResponseEntity.ok(totalCustomerService.getTotalCustomerAndGrowth());
@@ -50,7 +50,7 @@ public class DashboardController {
      *
      * @return A {@link ResponseEntity} containing the {@link TotalBillDTO}.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/total-bill")
     public ResponseEntity<TotalBillDTO> getTotalBill() {
         return ResponseEntity.ok(totalBillService.getTotalBillAndGrowth());
@@ -62,7 +62,7 @@ public class DashboardController {
      * @param option The option indicating the time period for revenue data.
      * @return A {@link ResponseEntity} containing the {@link RevenueDTO}.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/revenues/{option}")
     public ResponseEntity<RevenueDTO> getRevenues(@PathVariable(name = "option") int option) {
         return ResponseEntity.ok(revenuesService.getRevenueData(option));
@@ -73,7 +73,7 @@ public class DashboardController {
      *
      * @return A {@link ResponseEntity} containing a list of {@link BestSalespersonDTO}.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/best-salesperson")
     public ResponseEntity<List<BestSalespersonDTO>> getBestSalespersons() {
         return ResponseEntity.ok(salespersonService.getBestSalespersons());
@@ -84,7 +84,7 @@ public class DashboardController {
      *
      * @return A {@link ResponseEntity} containing a list of {@link NewBillDTO}.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/new-bills")
     public ResponseEntity<List<NewBillDTO>> getNewBills() {
         return ResponseEntity.ok(newBillService.getAllNewBills());

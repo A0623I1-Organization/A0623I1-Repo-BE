@@ -145,6 +145,7 @@ public class ProductRestController {
         } while (!productService.isProductCodeUnique(productCode));
         return productCode;
     }
+
     @PreAuthorize("hasRole('ROLE_SALESMAN')")
     @PutMapping("update/{productId}")
     public ResponseEntity<?> updateProduct(@PathVariable Long productId, @RequestBody Product product, BindingResult bindingResult) {

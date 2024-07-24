@@ -41,7 +41,7 @@ public class AuthenticationController {
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      * @throws RuntimeException if an error occurs while retrieving user information.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/get-profile")
     public ResponseEntity<?> getMyProfile(){
         System.out.println("call");
@@ -57,7 +57,7 @@ public class AuthenticationController {
      * @param updatePasswordRequest The updated user information.
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @PutMapping("/update-password")
     public ResponseEntity<?> updateUser(@Validated @RequestBody UpdatePasswordRequest updatePasswordRequest
             , BindingResult bindingResult){
@@ -75,7 +75,7 @@ public class AuthenticationController {
      * @param updateUserRequest The updated user information.
      * @return A {@link ResponseEntity} containing the {@link AuthenticationResponse}.
      */
-    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER')")
+    @PreAuthorize("hasAnyRole('ROLE_SALESMAN', 'ROLE_WAREHOUSE', 'ROLE_MANAGER', 'ROLE_ADMIN')")
     @PatchMapping("/update-image")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
         AuthenticationResponse response = authenticationService.updateAvatarAndBackgroundImage(updateUserRequest);
