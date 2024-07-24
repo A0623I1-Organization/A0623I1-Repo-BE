@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +44,7 @@ public class CustomerRestController {
      * @return ResponseEntity with the result of the creation operation
      * @throws HttpExceptions.BadRequestException if validation errors occur or customer code/email already exists
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/create")
     public ResponseEntity< Object > createCustomer(@Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -79,6 +81,7 @@ public class CustomerRestController {
      * @return ResponseEntity with the result of the update operation
      * @throws HttpExceptions.BadRequestException if validation errors occur or email already exists
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -123,6 +126,7 @@ public class CustomerRestController {
      * @return a ResponseEntity containing an error detail in case of validation errors, or an OK status if the
      *         customer was deleted successfully
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PatchMapping("/{customerId}")
     public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerId) {
         iCustomerService.deleteCustomer(customerId, false);
