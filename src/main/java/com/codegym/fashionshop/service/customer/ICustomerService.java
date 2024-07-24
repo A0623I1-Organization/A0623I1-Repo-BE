@@ -80,7 +80,7 @@ public interface ICustomerService {
      * @param customerId the ID of the customer whose enable status is to be updated
      * @param enable the new enable status to be set for the customer
      */
-    void deleteCustomer(Long customerId, Boolean enable);
+    void deleteCustomer(Long customerId, Boolean enabled);
 
     /**
      * Retrieves a paginated list of customers based on a search keyword.

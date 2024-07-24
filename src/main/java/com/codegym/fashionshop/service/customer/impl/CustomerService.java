@@ -140,14 +140,12 @@ public class CustomerService implements ICustomerService {
      * The method is transactional, ensuring that the operation is atomic and consistent.
      *
      * @param customerId the ID of the customer whose enable status is to be updated
-     * @param enable the new enable status to be set for the customer
+     * @param enabled the new enable status to be set for the customer
      */
     @Override
-    @Transactional
-    public void deleteCustomer(Long customerId, Boolean enable) {
-        iCustomerRepository.deleteCustomer(customerId, enable);
+    public void deleteCustomer(Long customerId, Boolean enabled) {
+        iCustomerRepository.deleteCustomer(customerId, enabled);
     }
-
     /**
      * Retrieves a paginated list of customers based on a search keyword.
      *
