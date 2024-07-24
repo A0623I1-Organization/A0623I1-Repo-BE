@@ -140,14 +140,12 @@ public class CustomerService implements ICustomerService {
      * The method is transactional, ensuring that the operation is atomic and consistent.
      *
      * @param customerId the ID of the customer whose enable status is to be updated
-     * @param enable the new enable status to be set for the customer
+     * @param enabled the new enable status to be set for the customer
      */
     @Override
-    @Transactional
-    public void deleteCustomer(Long customerId, Boolean enable) {
-        iCustomerRepository.deleteCustomer(customerId, enable);
+    public void deleteCustomer(Long customerId, Boolean enabled) {
+        iCustomerRepository.deleteCustomer(customerId, enabled);
     }
-
     /**
      * Retrieves a paginated list of customers based on a search keyword.
      *
@@ -158,19 +156,5 @@ public class CustomerService implements ICustomerService {
     @Override
     public Page<Customer> getAllCustomers(String keyword, Pageable pageable) {
         return iCustomerRepository.findAllCustomerAndSearch(keyword, keyword, keyword, keyword, pageable);
-    }
-
-    /**
-     * Searches for customers based on their code, name, and phone number.
-     *
-     * @param customerCode the customer code to search for
-     * @param customerName the customer name to search for
-     * @param phoneNumber the phone number to search for
-     * @param pageable the pagination information
-     * @return a page of customers matching the search criteria
-     */
-    @Override
-    public Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
-        return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
     }
 }

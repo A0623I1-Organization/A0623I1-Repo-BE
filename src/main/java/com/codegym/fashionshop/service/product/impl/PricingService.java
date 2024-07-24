@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -116,6 +117,7 @@ public class PricingService implements IPricingService {
         );
     }
     @Override
+    @Transactional
     public void addPricings(Long productId, List<Pricing> pricings) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
@@ -124,6 +126,16 @@ public class PricingService implements IPricingService {
             pricing.setProduct(product);
             pricingRepository.save(pricing);
         }
+    }
+    public void updateQuantity(Long pricingId, int quantity) {
+        Pricing pricing = pricingRepository.findById(pricingId)
+                .orElseThrow(() -> new RuntimeException("Pricing not found"));
+        int updatedQuantity = pricing.getQuantity() - quantity;
+        if (updatedQuantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be less than zero");
+        }
+        pricing.setQuantity(updatedQuantity);
+        pricingRepository.save(pricing);
     }
 
   }

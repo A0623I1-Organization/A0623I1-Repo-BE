@@ -24,6 +24,7 @@ public class Product {
 
     @Column(name = "product_code", unique = true)
     @NotBlank(message = "Mã sản phẩm không được để trống!")
+    @Pattern(regexp = "^P-\\d{6,}$", message = "Mã hóa đơn phải có định dạng P-XXXXXX")
     private String productCode;
 
     @Column(name = "product_name")

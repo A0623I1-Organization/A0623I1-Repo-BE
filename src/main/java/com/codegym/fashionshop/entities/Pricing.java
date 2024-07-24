@@ -24,12 +24,12 @@ public class Pricing {
 
     @Column(name = "pricing_name", nullable = false)
     @NotBlank(message = "Tên giá không được để trống!")
-    @Pattern(regexp = "^[a-zA-Z0-9\\s_-]+$", message = "Tên giá không hợp lệ. Chỉ chấp nhận chữ cái, số, dấu cách, gạch ngang và gạch dưới.")
     @Size(min = 3, max = 50, message = "Tên giá phải có từ 3 đến 50 ký tự.")
     private String pricingName;
 
     @Column(name = "pricing_code", nullable = false, unique = true)
     @NotBlank(message = "Mã giá không được để trống!")
+    @Pattern(regexp = "^H-\\d{6,}$", message = "Mã hóa đơn phải có định dạng H-XXXXXX")
     private String pricingCode;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -70,6 +70,5 @@ public class Pricing {
 
     @Column(name = "enabled" ,nullable = false)
     private Boolean enabled=true;
-
 
 }
