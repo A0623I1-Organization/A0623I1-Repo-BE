@@ -78,7 +78,7 @@ public interface ICustomerService {
      * This method sets the enable status of a customer identified by their customer ID.
      *
      * @param customerId the ID of the customer whose enable status is to be updated
-     * @param enable the new enable status to be set for the customer
+     * @param enabled the new enable status to be set for the customer
      */
     void deleteCustomer(Long customerId, Boolean enabled);
 
