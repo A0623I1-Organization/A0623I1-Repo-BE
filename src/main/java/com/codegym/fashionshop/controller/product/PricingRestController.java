@@ -222,7 +222,7 @@ public class PricingRestController {
         String pricingCode;
         Random random = new Random();
         do {
-            pricingCode = "H" + String.format("%06d", random.nextInt(1000000));
+            pricingCode = "H-" + String.format("%06d", random.nextInt(1000000));
         } while (!pricingService.isPricingCodeUnique(pricingCode));
         return pricingCode;
     }

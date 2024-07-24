@@ -44,9 +44,9 @@ public class UpdatePasswordRequest implements Validator {
     public void validate(Object target, Errors errors) {
 
         UpdatePasswordRequest updatePasswordRequest = (UpdatePasswordRequest) target;
-        String newPassword = updatePasswordRequest.getNewPassword();
-        String confirmPassword = updatePasswordRequest.getConfirmPassword();
-        if (!confirmPassword.equals(newPassword)){
+        String newPasswordCheck = updatePasswordRequest.getNewPassword();
+        String confirmPasswordCheck = updatePasswordRequest.getConfirmPassword();
+        if (!confirmPasswordCheck.equals(newPasswordCheck)){
             errors.rejectValue("confirmPassword","", "Mật khẩu không trùng khớp!!");
         }
     }

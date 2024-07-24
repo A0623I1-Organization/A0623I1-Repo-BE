@@ -11,6 +11,7 @@ import com.codegym.fashionshop.entities.Bill;
 import com.codegym.fashionshop.exceptions.HttpExceptions;
 import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.bill.IBillService;
+import com.codegym.fashionshop.service.product.IPricingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,8 @@ public class BillRestController {
     private IBillService billService;
     @Autowired
     private IAppUserService userService;
+    @Autowired
+    private IPricingService pricingService;
 
 
     /**
@@ -82,7 +85,8 @@ public class BillRestController {
         System.out.println(username);
         for (BillItem billItem : bill.getBillItemList()) {
             billItem.setBill(bill);
-            System.out.println("billItem = " + billItem.getQuantity());
+            // Update the quantity in the Pricing entity
+            pricingService.updateQuantity(billItem.getPricing().getPricingId(), billItem.getQuantity());
         }
         int pointsToAdd = calculatePoints(bill);
         bill.setAppUser(user);
@@ -160,7 +164,7 @@ public class BillRestController {
         String billCode;
         Random random = new Random();
         do {
-            billCode = "HD" + String.format("%06d", random.nextInt(1000000));
+            billCode = "HD-" + String.format("%06d", random.nextInt(1000000));
         } while (!billService.isBillCodeUnique(billCode));
         return billCode;
     }

@@ -117,9 +117,16 @@ public class UserService implements IAppUserService {
         Boolean credentialsNonExpired = true;
         Boolean accountNonLocked = true;
         Boolean enabled = true;
+        try {
         userRepository.saveUser(username, encryptedPassword, userCode, dateCreate, backgroundImage, avatar, fullName,
                 gender, dateOfBirth, phoneNumber, email, address, roleId, accountNonExpired, credentialsNonExpired,
                 accountNonLocked, enabled);
+        }catch (Exception e) {
+            return AuthenticationResponse.builder()
+                    .statusCode(400)
+                    .message("Không thể thêm mới nhân viên, có thể nhân viên đã tồn tại!")
+                    .build();
+        }
         return AuthenticationResponse.builder()
                 .statusCode(200)
                 .message("Thêm mới thành công!\n" + "Tên đăng nhập: " + username + "\n" + "Mật khẩu: " + appUserRequest.getPassword())
@@ -162,9 +169,16 @@ public class UserService implements IAppUserService {
         Boolean credentialsNonExpired = appUserRequest.getCredentialsNonExpired();
         Boolean accountNonLocked = appUserRequest.getAccountNonLocked();
         Boolean enabled = appUserRequest.getEnabled();
+        try {
         userRepository.updateUser(username, encryptedPassword, userCode, dateCreate, backgroundImage, avatar, fullName,
                 gender, dateOfBirth, phoneNumber, email, address, roleId, accountNonExpired, credentialsNonExpired,
                 accountNonLocked, enabled, userId);
+        }catch (Exception e) {
+            return AuthenticationResponse.builder()
+                    .statusCode(400)
+                    .message("Không thể cập nhật nhân viên, lỗi hệ thống!")
+                    .build();
+        }
         return AuthenticationResponse.builder()
                 .statusCode(200)
                 .message("Cập nhật thành công!")
@@ -178,7 +192,7 @@ public class UserService implements IAppUserService {
      */
     @Override
     public void remove(Long id) {
-        userRepository.deleteById(id);
+        userRepository.disableUser(id);
     }
 
     /**
