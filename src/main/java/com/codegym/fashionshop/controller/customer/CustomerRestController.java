@@ -111,6 +111,7 @@ public class CustomerRestController {
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
+<<<<<<< HEAD
 //    @GetMapping
 //    public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(name = "page", defaultValue = "0") int page) {
 //        if (page < 0) {
@@ -124,6 +125,8 @@ public class CustomerRestController {
 //    }
 
 
+=======
+>>>>>>> ea2dcf74828289be087e481fa458a2f0ca03b812
 
     /**
      * Deletes a customer based on their ID.
