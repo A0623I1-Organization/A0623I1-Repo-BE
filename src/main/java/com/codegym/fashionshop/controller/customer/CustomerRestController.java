@@ -114,19 +114,6 @@ public class CustomerRestController {
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
-    
-//    @GetMapping
-//    public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(name = "page", defaultValue = "0") int page) {
-//        if (page < 0) {
-//            page = 0;
-//        }
-//        Page<Customer> customers = iCustomerService.findAll(PageRequest.of(page, 2));
-//        if (customers.isEmpty()) {
-//            throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin khách hàng");
-//        }
-//        return new ResponseEntity<>(customers, HttpStatus.OK);
-//    }
-
 
     /**
      * Deletes a customer by updating their enable status to false.
