@@ -59,7 +59,7 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT \n" +
             "    SUM(\n" +
             "        CASE \n" +
-            "            WHEN p.discount IS NOT NULL AND b.total_amount >= p.required_bill THEN \n" +
+            "            WHEN p.discount IS NOT NULL THEN \n" +
             "                CASE \n" +
             "                    WHEN p.discount < 1 THEN (bi.quantity * pr.price) * (1 - p.discount) \n" +
             "                    ELSE (bi.quantity * pr.price) - p.discount \n" +
@@ -96,7 +96,7 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT \n" +
             "    SUM(\n" +
             "        CASE \n" +
-            "            WHEN p.discount IS NOT NULL AND b.total_amount >= p.required_bill THEN \n" +
+            "            WHEN p.discount IS NOT NULL THEN \n" +
             "                CASE \n" +
             "                    WHEN p.discount < 1 THEN (bi.quantity * pr.price) * (1 - p.discount) \n" +
             "                    ELSE (bi.quantity * pr.price) - p.discount \n" +
@@ -135,7 +135,7 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
             "    DAY(b.date_create) AS day, \n" +
             "    SUM(\n" +
             "        CASE \n" +
-            "            WHEN p.discount IS NOT NULL AND b.total_amount >= p.required_bill THEN \n" +
+            "            WHEN p.discount IS NOT NULL THEN \n" +
             "                CASE \n" +
             "                    WHEN p.discount < 1 THEN (bi.quantity * pr.price) * (1 - p.discount) \n" +
             "                    ELSE (bi.quantity * pr.price) - p.discount \n" +
