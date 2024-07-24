@@ -20,7 +20,7 @@ public class PublicProductRestController {
     private IProductService iProductService;
 
     @GetMapping("/new")
-    public ResponseEntity<Page<Product>> getAllProductNew(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<Page<Product>> getAllProductNew(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,@RequestParam(name = "page", defaultValue = "0") int page) {
 
         final int MAX_PAGES = 2;
         final int PAGE_SIZE = 5;
@@ -32,7 +32,7 @@ public class PublicProductRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        Page<Product> products = iProductService.findAllProduct(PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "productId")));
+        Page<Product> products = iProductService.searchAndSortProducts(keyword,PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "productId")));
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -40,11 +40,11 @@ public class PublicProductRestController {
     }
 
     @GetMapping("/nam-nu")
-    public ResponseEntity<Page<Product>> getAllProductGender(@RequestParam(name = "page", defaultValue = "0") int page) {
+    public ResponseEntity<Page<Product>> getAllProductGender(@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,@RequestParam(name = "page", defaultValue = "0") int page) {
         if (page < 0) {
             page = 0;
         }
-        Page<Product> products = iProductService.findAllProduct(PageRequest.of(page, 10));
+        Page<Product> products = iProductService.searchAndSortProducts(keyword,PageRequest.of(page, 10));
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

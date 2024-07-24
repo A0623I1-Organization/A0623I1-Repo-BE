@@ -141,7 +141,7 @@ public class ProductRestController {
         String productCode;
         Random random = new Random();
         do {
-            productCode = "P" + String.format("%06d", random.nextInt(1000000));
+            productCode = "P-" + String.format("%06d", random.nextInt(1000000));
         } while (!productService.isProductCodeUnique(productCode));
         return productCode;
     }

@@ -40,4 +40,6 @@ public interface IPricingService  {
 
     void deleteAllByProduct_ProductId(Long productId);
     void addPricings(Long productId, List<Pricing> pricings);
+
+    void updateQuantity(Long pricingId, int quantity);
 }
