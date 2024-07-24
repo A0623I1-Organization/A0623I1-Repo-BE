@@ -157,18 +157,4 @@ public class CustomerService implements ICustomerService {
     public Page<Customer> getAllCustomers(String keyword, Pageable pageable) {
         return iCustomerRepository.findAllCustomerAndSearch(keyword, keyword, keyword, keyword, pageable);
     }
-
-    /**
-     * Searches for customers based on their code, name, and phone number.
-     *
-     * @param customerCode the customer code to search for
-     * @param customerName the customer name to search for
-     * @param phoneNumber the phone number to search for
-     * @param pageable the pagination information
-     * @return a page of customers matching the search criteria
-     */
-    @Override
-    public Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
-        return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
-    }
 }

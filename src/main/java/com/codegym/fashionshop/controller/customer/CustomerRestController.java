@@ -123,7 +123,7 @@ public class CustomerRestController {
      * @return a ResponseEntity containing an error detail in case of validation errors, or an OK status if the
      *         customer was deleted successfully
      */
-    @DeleteMapping("/{customerId}")
+    @PatchMapping("/{customerId}")
     public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerId) {
         iCustomerService.deleteCustomer(customerId, false);
         return new ResponseEntity<>(HttpStatus.OK);

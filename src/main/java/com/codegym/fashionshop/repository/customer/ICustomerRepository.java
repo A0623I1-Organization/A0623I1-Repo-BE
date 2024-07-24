@@ -23,13 +23,6 @@ import java.util.List;
  * <p>Author: [QuyLV]</p>
  */
 public interface ICustomerRepository extends JpaRepository<Customer, Long> {
-    /**
-     * Finds all customers with pagination support.
-     *
-     * @param pageable the pagination information
-     * @return a paginated list of customers
-     */
-    Page<Customer> findAll(Pageable pageable);
 
     /**
      * Creates a new customer with the specified details.
@@ -129,39 +122,18 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByEmailAndCustomerCodeNot(String email, String customerCode);
 
     /**
-     * Searches for customers based on their code, name, and phone number.
-     *
-     * @param customerCode the customer code to search for
-     * @param customerName the customer name to search for
-     * @param phoneNumber the phone number to search for
-     * @param pageable the pagination information
-     * @return a page of customers matching the search criteria
-     */
-    @Query("select c from Customer c where c.customerCode like :customerCode and c.customerName like :customerName and c.phoneNumber like :phoneNumber")
-    Page<Customer> searchCustomer(@Param("customerCode") String customerCode, @Param("customerName") String customerName, @Param("phoneNumber") String phoneNumber, Pageable pageable);
-
-    /**
      * Updates the enable status of a customer.
      *
      * This method sets the enable status of a customer identified by their customer ID.
      * The method is transactional and uses the `@Modifying` annotation to indicate that it modifies data.
      *
      * @param customerId the ID of the customer whose enable status is to be updated
-     * @param enabled the new enable status to be set for the customer
+     * @param enable the new enable status to be set for the customer
      */
     @Transactional
     @Modifying
-    @Query("UPDATE Customer c SET c.enabled = :enabled WHERE c.customerId = :customerId")
-    void deleteCustomer(@Param("customerId") Long customerId, @Param("enabled") Boolean enabled);
-
-
-    /**
-     * Retrieves all customers.
-     *
-     * @return a list of all customers
-     */
-    @Query("select c from Customer c where c.enabled = true ")
-    List<Customer> getAllCustomer();
+    @Query("update Customer c set c.enable = :enable where c.customerId = :customerId")
+    void deleteCustomer(@Param("customerId") Long customerId, @Param("enable") Boolean enable);
 
     /**
      * Searches for customers based on their code, name, phone number, and type name.
@@ -175,16 +147,18 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
      */
     @Query(value = "SELECT c.* FROM customers c " +
             "LEFT JOIN customer_types ct ON c.type_id = ct.type_id " +
-            "WHERE LOWER(c.customer_code) LIKE LOWER(CONCAT('%', :customerCode, '%')) " +
+            "WHERE c.enable = true AND (" +
+            "LOWER(c.customer_code) LIKE LOWER(CONCAT('%', :customerCode, '%')) " +
             "OR LOWER(c.customer_name) LIKE LOWER(CONCAT('%', :customerName, '%')) " +
             "OR LOWER(c.phone_number) LIKE LOWER(CONCAT('%', :phoneNumber, '%')) " +
-            "OR LOWER(ct.type_name) LIKE LOWER(CONCAT('%', :customerTypeName, '%'))",
+            "OR LOWER(ct.type_name) LIKE LOWER(CONCAT('%', :customerTypeName, '%')))",
             countQuery = "SELECT COUNT(*) FROM customers c " +
                     "LEFT JOIN customer_types ct ON c.type_id = ct.type_id " +
-                    "WHERE LOWER(c.customer_code) LIKE LOWER(CONCAT('%', :customerCode, '%')) " +
+                    "WHERE c.enable = true AND (" +
+                    "LOWER(c.customer_code) LIKE LOWER(CONCAT('%', :customerCode, '%')) " +
                     "OR LOWER(c.customer_name) LIKE LOWER(CONCAT('%', :customerName, '%')) " +
                     "OR LOWER(c.phone_number) LIKE LOWER(CONCAT('%', :phoneNumber, '%')) " +
-                    "OR LOWER(ct.type_name) LIKE LOWER(CONCAT('%', :customerTypeName, '%'))",
+                    "OR LOWER(ct.type_name) LIKE LOWER(CONCAT('%', :customerTypeName, '%')))",
             nativeQuery = true)
     Page<Customer> findAllCustomerAndSearch(
             @Param("customerCode") String customerCode,
@@ -192,6 +166,4 @@ public interface ICustomerRepository extends JpaRepository<Customer, Long> {
             @Param("customerTypeName") String customerTypeName,
             @Param("phoneNumber") String phoneNumber,
             Pageable pageable);
-
-
 }
