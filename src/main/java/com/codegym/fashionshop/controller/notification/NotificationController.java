@@ -73,11 +73,11 @@ public class NotificationController {
      * Creates a new notification.
      *
      * @param addNewNotificationDTO Data transfer object containing the details of the new notification.
-     * @param bindingResult Binding result containing validation errors, if any.
+     * @param bindingResult         Binding result containing validation errors, if any.
      * @return ResponseEntity indicating the result of the creation operation or validation errors.
      */
-    @PostMapping("/create")
     @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PostMapping("/create")
     public ResponseEntity<Object> createNotification(@Validated @RequestBody AddNewNotificationDTO addNewNotificationDTO, BindingResult bindingResult) {
         if (addNewNotificationDTO == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

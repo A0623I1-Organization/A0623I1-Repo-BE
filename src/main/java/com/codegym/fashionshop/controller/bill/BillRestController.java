@@ -46,7 +46,6 @@ public class BillRestController {
     @Autowired
     private IPricingService pricingService;
 
-
     /**
      * GET endpoint to retrieve all bills.
      *
