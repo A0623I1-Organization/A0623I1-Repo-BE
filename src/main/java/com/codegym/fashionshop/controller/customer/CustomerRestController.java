@@ -115,7 +115,6 @@ public class CustomerRestController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-
     /**
      * Deletes a customer by updating their enable status to false.
      *
