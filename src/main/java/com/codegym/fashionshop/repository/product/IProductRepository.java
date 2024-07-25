@@ -73,7 +73,6 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             "WHERE p.enabled = true " +
             "AND (LOWER(p.productCode) LIKE LOWER(CONCAT('%', :search, '%')) " +
             "OR LOWER(p.productName) LIKE LOWER(CONCAT('%', :search, '%')) " +
-            "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :search, '%')) " +
             "OR LOWER(p.productType.typeName) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Product> searchProduct(
             @Param("search") String search,

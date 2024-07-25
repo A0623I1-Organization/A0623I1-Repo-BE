@@ -144,8 +144,8 @@ public class BillService implements IBillService {
         // Tính tổng số tiền từ trước đến giờ của khách hàng sau khi tạo hóa đơn mới
         double totalAmount = this.calculateTotalBillForCustomer(bill.getCustomer().getCustomerId());
         System.out.println(totalAmount);
-        // Kiểm tra tổng số tiền với bảng RequiredBill để nâng cấp loại khách hàng
-        List<RequiredBill> requiredBills = requiredBillService.findAll();
+        // Kiểm tra tổng số tiền với bảng RequiredBill để nâng cấp loại kh
+            List<RequiredBill> requiredBills = requiredBillService.findAll();
         CustomerType newCustomerType = null;
 
         for (RequiredBill requiredBill : requiredBills) {

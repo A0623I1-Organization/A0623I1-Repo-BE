@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +44,7 @@ public class CustomerRestController {
      * @return ResponseEntity with the result of the creation operation
      * @throws HttpExceptions.BadRequestException if validation errors occur or customer code/email already exists
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/create")
     public ResponseEntity< Object > createCustomer(@Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -79,6 +81,7 @@ public class CustomerRestController {
      * @return ResponseEntity with the result of the update operation
      * @throws HttpExceptions.BadRequestException if validation errors occur or email already exists
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @Validated @RequestBody Customer customer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -111,7 +114,6 @@ public class CustomerRestController {
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
-<<<<<<< HEAD
 //    @GetMapping
 //    public ResponseEntity<Page<Customer>> getAllCustomer(@RequestParam(name = "page", defaultValue = "0") int page) {
 //        if (page < 0) {
@@ -125,19 +127,23 @@ public class CustomerRestController {
 //    }
 
 
-=======
->>>>>>> ea2dcf74828289be087e481fa458a2f0ca03b812
 
     /**
-     * Deletes a customer based on their ID.
+     * Deletes a customer by updating their enable status to false.
      *
-     * @param customerId the ID of the customer to delete
-     * @return a response entity with no content if the deletion was successful
+     * This method handles HTTP DELETE requests for deleting a customer. It validates the request and, if there are
+     * validation errors, returns a response with error details. Otherwise, it proceeds to delete the customer
+     * by setting their enable status to false.
+     *
+     * @param customerId the ID of the customer to be deleted
+     * @return a ResponseEntity containing an error detail in case of validation errors, or an OK status if the
+     *         customer was deleted successfully
      */
-    @DeleteMapping("/{customerId}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Long customerId) {
-        iCustomerService.deleteCustomer(customerId);
-        return ResponseEntity.noContent().build();
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PatchMapping("/{customerId}")
+    public ResponseEntity<Object> deleteCustomer(@PathVariable Long customerId) {
+        iCustomerService.deleteCustomer(customerId, false);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**

@@ -32,7 +32,7 @@ public class Bill {
     private LocalDate dateCreate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private AppUser appUser;
 
     @ManyToOne

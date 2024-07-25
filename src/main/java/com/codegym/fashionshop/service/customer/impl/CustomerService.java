@@ -134,16 +134,18 @@ public class CustomerService implements ICustomerService {
     }
 
     /**
-     * Deletes a customer based on their ID.
+     * Updates the enable status of a customer.
      *
-     * @param customerId the ID of the customer to delete
+     * This method sets the enable status of a customer identified by their customer ID.
+     * The method is transactional, ensuring that the operation is atomic and consistent.
+     *
+     * @param customerId the ID of the customer whose enable status is to be updated
+     * @param enabled the new enable status to be set for the customer
      */
     @Override
-    @Transactional
-    public void deleteCustomer(Long customerId) {
-        iCustomerRepository.deleteCustomer(customerId);
+    public void deleteCustomer(Long customerId, Boolean enabled) {
+        iCustomerRepository.deleteCustomer(customerId, enabled);
     }
-
     /**
      * Retrieves a paginated list of customers based on a search keyword.
      *
@@ -155,30 +157,4 @@ public class CustomerService implements ICustomerService {
     public Page<Customer> getAllCustomers(String keyword, Pageable pageable) {
         return iCustomerRepository.findAllCustomerAndSearch(keyword, keyword, keyword, keyword, pageable);
     }
-
-    /**
-     * Searches for customers based on their code, name, and phone number.
-     *
-     * @param customerCode the customer code to search for
-     * @param customerName the customer name to search for
-     * @param phoneNumber the phone number to search for
-     * @param pageable the pagination information
-     * @return a page of customers matching the search criteria
-     */
-    @Override
-    public Page<Customer> searchCustomer(String customerCode, String customerName, String phoneNumber, Pageable pageable) {
-        return iCustomerRepository.searchCustomer(customerCode, customerName, phoneNumber, pageable);
-    }
-    @Override
-    public void save(Customer customer) {
-        try{
-            iCustomerRepository.save(customer);
-
-        }catch (Exception e)
-        {
-            System.out.print(e.getMessage());
-        }
-
-    }
-
 }

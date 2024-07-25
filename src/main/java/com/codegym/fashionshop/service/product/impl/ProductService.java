@@ -57,18 +57,18 @@ public class ProductService implements IProductService {
         return productRepository.findById(id).orElse(null);
     }
 
-
+    @Override
     public void save(Product product) {
         productRepository.save(product);
     }
 
     @Override
     public void updateProduct(Long productId, Product product) {
-      productRepository.save(product);
+        productRepository.save(product);
     }
 
     @Override
-    public void deleteProduct(Long productId,Boolean enabled) {
-        productRepository.deleteProduct(productId,enabled);
+    public void deleteProduct(Long productId, Boolean enabled) {
+        productRepository.deleteProduct(productId, enabled);
     }
 }
