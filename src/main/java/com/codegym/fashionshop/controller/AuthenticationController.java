@@ -39,13 +39,15 @@ public class AuthenticationController {
             @RequestBody AuthenticationRequest request, HttpServletResponse response
     ){
         AuthenticationResponse authRespone = authenticationService.authentication(request);
-        // Thiết lập cookie HTTP-only
-        Cookie cookie = new Cookie("token", authRespone.getToken());
-        cookie.setHttpOnly(true);
-        // cookie.setSecure(true); // Chỉ gửi cookie qua HTTPS trong môi trường sản xuất
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60); // Thời gian tồn tại của cookie (1 ngày)
-        response.addCookie(cookie);
+        if (authRespone.getStatusCode() == 200) {
+            // Thiết lập cookie HTTP-only
+            Cookie cookie = new Cookie("token", authRespone.getToken());
+            cookie.setHttpOnly(true);
+            // cookie.setSecure(true); // Chỉ gửi cookie qua HTTPS trong môi trường sản xuất
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60); // Thời gian tồn tại của cookie (1 ngày)
+            response.addCookie(cookie);
+        }
         return ResponseEntity.ok(authRespone);
     }
 
