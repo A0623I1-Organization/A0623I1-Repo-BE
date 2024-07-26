@@ -24,7 +24,6 @@ import java.util.List;
  *
  * @author NhiNTY
  */
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth/notification")
 public class NotificationController {

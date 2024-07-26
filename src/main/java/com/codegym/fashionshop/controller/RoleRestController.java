@@ -20,7 +20,6 @@ import java.util.List;
  * Author: KhangDV
  */
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/api/auth/roles")
 public class RoleRestController {
 

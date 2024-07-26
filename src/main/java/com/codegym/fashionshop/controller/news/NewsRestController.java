@@ -28,7 +28,6 @@ import java.time.LocalDate;
  */
 @RestController
 @RequestMapping("/api")
-@CrossOrigin("*")
 public class NewsRestController {
 
     @Autowired

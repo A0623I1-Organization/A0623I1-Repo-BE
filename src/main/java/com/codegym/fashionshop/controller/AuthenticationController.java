@@ -4,7 +4,11 @@ import com.codegym.fashionshop.dto.request.AuthenticationRequest;
 import com.codegym.fashionshop.dto.request.UpdatePasswordRequest;
 import com.codegym.fashionshop.dto.request.UpdateUserRequest;
 import com.codegym.fashionshop.dto.respone.AuthenticationResponse;
+import com.codegym.fashionshop.entities.AppUser;
 import com.codegym.fashionshop.service.authenticate.impl.AuthenticationService;
+import com.codegym.fashionshop.service.authenticate.impl.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +26,51 @@ import org.springframework.web.bind.annotation.*;
  * Author: KhangDV
  */
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/auth")
 public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticate(
-            @RequestBody AuthenticationRequest request
+            @RequestBody AuthenticationRequest request, HttpServletResponse response
     ){
-        return ResponseEntity.ok(authenticationService.authentication(request));
+        AuthenticationResponse authRespone = authenticationService.authentication(request);
+        // Thiết lập cookie HTTP-only
+        Cookie cookie = new Cookie("token", authRespone.getToken());
+        cookie.setHttpOnly(true);
+        // cookie.setSecure(true); // Chỉ gửi cookie qua HTTPS trong môi trường sản xuất
+        cookie.setPath("/");
+        cookie.setMaxAge(24 * 60 * 60); // Thời gian tồn tại của cookie (1 ngày)
+        response.addCookie(cookie);
+        return ResponseEntity.ok(authRespone);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logOut(HttpServletResponse response){
+        // Thiết lập cookie HTTP-only
+        Cookie cookie = new Cookie("token", null);
+        cookie.setHttpOnly(true);
+        // cookie.setSecure(true); // Chỉ gửi cookie qua HTTPS trong môi trường sản xuất
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Thời gian tồn tại của cookie (0)
+        response.addCookie(cookie);
+        return ResponseEntity.status(200).body("Đăng xuất thành công!");
+    }
+
+    @GetMapping("/user-role")
+    public ResponseEntity<String> getUserRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        AppUser user = userService.findByUsername(username);
+        if (user == null) {
+            return ResponseEntity.noContent().build();
+        }
+        String roleName = user.getRole().getRoleName();
+        return ResponseEntity.status(200).body(roleName);
     }
 
     /**

@@ -15,7 +15,6 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/api/auth/color")
-@CrossOrigin("*")
 public class ColorRestController {
 
     @Autowired

@@ -36,7 +36,6 @@ import java.util.Random;
  */
 @RestController
 @RequestMapping("/api/auth/bills")
-@CrossOrigin("*")
 public class BillRestController {
 
     @Autowired
