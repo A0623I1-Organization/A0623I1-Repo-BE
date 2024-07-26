@@ -28,7 +28,6 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/api/auth/pricing")
-@CrossOrigin("*")
 public class PricingRestController {
 
     @Autowired

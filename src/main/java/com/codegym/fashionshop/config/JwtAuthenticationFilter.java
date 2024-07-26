@@ -3,6 +3,7 @@ package com.codegym.fashionshop.config;
 import com.codegym.fashionshop.service.authenticate.impl.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +41,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
+        String jwt = "";
         final String username;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                }
+            }
+        }
+
+        if(jwt == null){
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
-            if(authHeader == null || !authHeader.startsWith("Bearer ")){
+            if(authHeader == null || !authHeader.startsWith("Bearer")){
                 filterChain.doFilter(request, response);
                 return;
             }
-            jwt = authHeader.substring(7);
             username = jwtService.extractUsername(jwt);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);

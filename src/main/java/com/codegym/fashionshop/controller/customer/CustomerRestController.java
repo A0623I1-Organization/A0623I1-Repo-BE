@@ -26,7 +26,6 @@ import java.util.Random;
  */
 @RestController
 @RequestMapping("/api/auth/customer")
-@CrossOrigin("*")
 public class CustomerRestController {
 
     @Autowired

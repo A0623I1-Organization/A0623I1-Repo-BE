@@ -20,7 +20,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/auth/bill-items")
-@CrossOrigin("*")
 public class BillItemRestController {
 
     @Autowired
