@@ -13,6 +13,10 @@ import com.codegym.fashionshop.service.authenticate.IAppUserService;
 import com.codegym.fashionshop.service.bill.IBillService;
 import com.codegym.fashionshop.service.product.IPricingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,8 +57,11 @@ public class BillRestController {
      * @throws HttpExceptions.NotFoundException if no bills are found
      */
     @GetMapping
-    public ResponseEntity<List<Bill>> getAllBills() {
-        List<Bill> bills = billService.findAll();
+    public ResponseEntity<Page<Bill>> getAllBills(@RequestParam(value = "search", required = false, defaultValue = "") String search,
+                                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                                  @RequestParam(value = "dateCreate", required = false)  LocalDate dateCreate
+                                                  ) {
+        Page<Bill> bills = billService.findAllBill(PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "dateCreate")), dateCreate,search);
         if (bills.isEmpty()) {
             throw new HttpExceptions.NotFoundException("Không tìm thấy thông tin hóa đơn");
         }
@@ -109,7 +116,6 @@ public class BillRestController {
     }
 
     /**
-
      * Retrieves the daily sales revenue for a specific date.
      *
      * @param date The date for which to retrieve the daily sales revenue.
@@ -124,6 +130,7 @@ public class BillRestController {
         }
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
+
     /**
      * Retrieves the monthly sales revenue for a specific month.
      *
@@ -139,6 +146,7 @@ public class BillRestController {
         }
         return new ResponseEntity<>(monthlyRevenue, HttpStatus.OK);
     }
+
     /**
      * Retrieves the daily sales revenue for each day in a specific month.
      *
@@ -154,6 +162,7 @@ public class BillRestController {
         }
         return new ResponseEntity<>(dailyRevenue, HttpStatus.OK);
     }
+
     /**
      * Generates a unique bill code.
      *
@@ -167,6 +176,7 @@ public class BillRestController {
         } while (!billService.isBillCodeUnique(billCode));
         return billCode;
     }
+
     /**
      * Calculates points to be added based on the bill.
      *
@@ -200,6 +210,7 @@ public class BillRestController {
             return new ResponseEntity<>("Invalid date format. Please use yyyy-MM-dd.", HttpStatus.BAD_REQUEST);
         }
     }
+
     /**
      * Retrieves monthly sold pricings for a given year and month.
      *

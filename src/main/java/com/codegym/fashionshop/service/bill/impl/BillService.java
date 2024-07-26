@@ -18,6 +18,8 @@ import com.codegym.fashionshop.service.customer.ICustomerService;
 import com.codegym.fashionshop.service.customer.ICustomerTypeService;
 import com.codegym.fashionshop.service.promotion.IPromotionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +42,7 @@ public class BillService implements IBillService {
 
     @Autowired
     private IPromotionService promotionService;
-    ;
+
     @Autowired
     private IRequiredBillService requiredBillService;
 
@@ -69,6 +71,12 @@ public class BillService implements IBillService {
     public List<Bill> findAll() {
         return repository.findAll();
     }
+
+    @Override
+    public Page<Bill> findAllBill(Pageable pageable,LocalDate date, String search) {
+        return repository.findAllBill(pageable,date,search);
+    }
+
     /**
      * Finds all bills associated with a specific customer ID.
      *

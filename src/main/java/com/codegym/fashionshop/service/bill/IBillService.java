@@ -3,6 +3,8 @@ package com.codegym.fashionshop.service.bill;
 import com.codegym.fashionshop.dto.DailyRevenueDTO;
 import com.codegym.fashionshop.dto.SoldPricingsDTO;
 import com.codegym.fashionshop.entities.Bill;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
@@ -45,6 +47,8 @@ public interface IBillService  {
     void createBillAndUpdatePoints(Bill bill, int pointsToAdd);
     void updateCustomerTypeOfCustomer(Bill bill);
     List<Bill> findAll();
+    Page<Bill> findAllBill(Pageable pageable,LocalDate date, String search);
+
     /**
      * Fetches daily sold pricings as SoldPricings objects for a given date.
      *

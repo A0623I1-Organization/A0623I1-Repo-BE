@@ -1,6 +1,8 @@
 package com.codegym.fashionshop.repository.bill;
 
 import com.codegym.fashionshop.entities.Bill;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -197,4 +199,7 @@ public interface IBillRepository extends JpaRepository<Bill, Long> {
             nativeQuery = true)
     List<Object[]> getMonthlySoldPricings(@Param("year") int year, @Param("month") int month);
 
+    @Query("SELECT b FROM Bill b WHERE (:dateCreate IS NULL OR b.dateCreate = :dateCreate) " +
+            "AND (LOWER(b.billCode) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<Bill> findAllBill(Pageable pageable,@Param("dateCreate") LocalDate dateCreate, @Param("search") String search);
 }
